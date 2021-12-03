@@ -25,8 +25,9 @@ public class MainMenu {
 	//	private JScrollPane scrollPane;
 	private JTable usertable;
 
-	public MainMenu() {
+	public MainMenu(String pseudo) {
 
+		this.pseudo = pseudo;
 		String[] columnNames = {"Pseudo"};
 
 		String userlist[][] = {
@@ -69,7 +70,7 @@ public class MainMenu {
 	}
 
 		public static void main(String[] args) {
-			new MainMenu();
+			new MainMenu("toto");
 		}
 
 }
