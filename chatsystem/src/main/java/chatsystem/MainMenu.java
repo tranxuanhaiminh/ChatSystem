@@ -42,11 +42,8 @@ public class MainMenu {
 
 		//		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
 
-		userPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		userPanel = new JPanel();
 		userPanel.setBackground(Color.gray);
-		//		userPanel.setLayout(null);
-		//		userPanel.setPreferredSize(new Dimension(500, 50));
-		//		listPanel.setSize(690, 300);
 
 		pseudoLabel = new JLabel(pseudo);
 		pseudoLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 30));
@@ -57,17 +54,13 @@ public class MainMenu {
 		userPanel.add(changepseudo);
 
 		usertable = new JTable(userlist, columnNames);
-		//		usertable.setBounds(10, 50, 200, 300);
 		usertable.setTableHeader(null);
-
-		//		scrollPane = new JScrollPane(usertable);
-		//		scrollPane.setPreferredSize(new Dimension(950, 300));
-		//		usertable.setFillsViewportHeight(true);
 
 		listPanel = new JPanel();
 		listPanel.add(new JScrollPane(usertable));
 
 		frame.getContentPane().add(BorderLayout.NORTH, userPanel);
+		frame.getContentPane().add(BorderLayout.CENTER, listPanel);
 		frame.setVisible(true);
 
 		System.out.print(listPanel.getSize());
