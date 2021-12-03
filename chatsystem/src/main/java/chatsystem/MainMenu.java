@@ -14,9 +14,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-public class MainMenu {
+public class MainMenu{
 
-	private static String pseudo = "toto";
+	//Informations
+	private ContactList contactList;
+	private Contact me;
+	
+	private Action modifypseudo;
+	
+	//private static String pseudo = "toto";
+	
 	private JFrame frame;
 	private JPanel userPanel;
 	private JPanel listPanel;
@@ -25,7 +32,12 @@ public class MainMenu {
 	//	private JScrollPane scrollPane;
 	private JTable usertable;
 
-	public MainMenu() {
+	public MainMenu(Contact m, ContactList l) {
+		
+		this.me = m;
+		this.contactList = l;
+		
+		//this.modifypseudo = new Action
 
 		String[] columnNames = {"Pseudo"};
 
@@ -48,10 +60,11 @@ public class MainMenu {
 		//		userPanel.setPreferredSize(new Dimension(500, 50));
 		//		listPanel.setSize(690, 300);
 
-		pseudoLabel = new JLabel(pseudo);
+		pseudoLabel = new JLabel(me.getPseudo());
 		pseudoLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 30));
 
 		changepseudo = new JButton("Modify");
+		//changepseudo.addActionListener(modifypseudo);
 
 		userPanel.add(pseudoLabel);
 		userPanel.add(changepseudo);
@@ -75,8 +88,8 @@ public class MainMenu {
 
 	}
 
-		public static void main(String[] args) {
+		/*public static void main(String[] args) {
 			new MainMenu();
-		}
+		}*/
 
 }

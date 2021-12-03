@@ -76,11 +76,13 @@ public class Connection implements ActionListener{
 	        Timer t = new Timer(500, new ActionListener() {
 	            public void actionPerformed(ActionEvent e) {
 	            	okFrame.setVisible(false);
-	    			MainMenu Main = new MainMenu();
+	    			MainMenu Main = new MainMenu(me, contactList);
 	            }
 	        });
 	        t.setRepeats(false); // Only execute once
 	        t.start();
+			
+			
 		}
     }
 
