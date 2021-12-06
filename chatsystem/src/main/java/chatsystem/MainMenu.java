@@ -41,8 +41,6 @@ public class MainMenu{
 		
 		this.me = m; 
 		this.contactList = l;
-		
-		//this.modifypseudo = new Action
 
 		String[] columnNames = {"Pseudo"};
 
