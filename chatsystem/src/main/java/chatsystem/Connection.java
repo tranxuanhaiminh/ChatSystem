@@ -75,6 +75,9 @@ public class Connection implements ActionListener{
 		final JFrame okFrame = new JFrame("Connecting....");
 		
 		me.setPseudo(enterpseudo.getText());
+		
+		//creer le msg de demande de contact l'envoyer à tout le monde 
+		// recevoir les contacts et les mettre dans la liste des contacts
 
 		if (contactList.comparePseudo(me)==false) {
 				okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));

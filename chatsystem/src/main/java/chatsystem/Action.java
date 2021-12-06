@@ -19,6 +19,7 @@ public class Action implements ActionListener{
 	
 	public Connection pageC;
 	public MainMenu pageM;
+	public ChatWindow pageW;
 	
 	public Action(Connection c){
 		super();
@@ -28,6 +29,11 @@ public class Action implements ActionListener{
 	public Action(MainMenu m)  {
 		super();
 		this.pageM = m;
+	}
+	
+	public Action(ChatWindow c) {
+		super();
+		this.pageW = c;
 	}
 
 	public void actionPerformed(ActionEvent event) {
@@ -78,6 +84,10 @@ public class Action implements ActionListener{
 			}
 			
 			}
+		
+		else if (event.getSource()== pageW.getSendMess()) {
+			//to do envoie du message
+		}
     }
 	
 
