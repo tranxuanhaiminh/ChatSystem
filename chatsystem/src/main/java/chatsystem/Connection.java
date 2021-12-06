@@ -10,16 +10,17 @@ public class Connection implements ActionListener{
 	private ContactList contactList;
 	private Contact me;
 	JTextField enterpseudo;
+	JFrame connectionFrame;
 	
 	public Connection() {
 		
 		contactList = new ContactList();
 		Contact c = new Contact("toto","120.1.1.0");
 		contactList.addContact(c);
-		me = new Contact();
+		me =new Contact();
 		
         //Create and set up the window.
-        JFrame connectionFrame = new JFrame("Connection to the Chat System");
+        connectionFrame = new JFrame("Connection to the Chat System");
         //connectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         
@@ -34,7 +35,7 @@ public class Connection implements ActionListener{
         
         
         JButton verifyPseudo = new JButton("Connect");
-        verifyPseudo.addActionListener(this);
+        verifyPseudo.addActionListener(this); //new ActionButtonConnect());
         
         connectionPanel.add(enterpseudo);
         connectionPanel.add(verifyPseudo);
@@ -48,14 +49,33 @@ public class Connection implements ActionListener{
         
 	}
 
+
+
+	private static void createAndShowGUI() {
+        //Make sure we have nice window decorations.
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        Connection connection = new Connection();
+    }
 	
-	
-	
+	public static void main(String[] args) {
+        //Schedule a job for the event-dispatching thread:
+        //creating and showing this application's GUI.
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
+    }
+
+
+
+
 	public void actionPerformed(ActionEvent event) {
+		
 		final JFrame okFrame = new JFrame("Connecting....");
 		
 		me.setPseudo(enterpseudo.getText());
-		
+
 		if (contactList.comparePseudo(me)==false) {
 				okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));
 				
@@ -76,29 +96,29 @@ public class Connection implements ActionListener{
 	        Timer t = new Timer(500, new ActionListener() {
 	            public void actionPerformed(ActionEvent e) {
 	            	okFrame.setVisible(false);
+	            	okFrame.dispose();
+	            	connectionFrame.setVisible(false);
+	            	connectionFrame.dispose();
 	    			MainMenu Main = new MainMenu(me, contactList);
 	            }
 	        });
 	        t.setRepeats(false); // Only execute once
 	        t.start();
-			
-			
 		}
     }
 
-	private static void createAndShowGUI() {
-        //Make sure we have nice window decorations.
-        JFrame.setDefaultLookAndFeelDecorated(true);
-        Connection connection = new Connection();
-    }
+	public Contact getMe() {
+		return me;
+	}
 	
-	public static void main(String[] args) {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
+
+	public ContactList getContactList() {
+		return contactList;
+	}
+	
+	public JTextField geText() {
+		return enterpseudo;
+	}
+
+
 }

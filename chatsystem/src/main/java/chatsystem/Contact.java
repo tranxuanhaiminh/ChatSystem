@@ -15,6 +15,11 @@ public class Contact {
 		this.pseudo = p;
 		this.ipaddress = ip;
 	}
+	
+	public Contact(String p) {
+		this.pseudo = p;
+		this.ipaddress = null;
+	}
 
 	public String getPseudo() {
 		return pseudo;
