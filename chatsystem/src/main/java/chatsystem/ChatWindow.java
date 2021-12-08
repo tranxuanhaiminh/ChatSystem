@@ -17,13 +17,19 @@ public class ChatWindow {
 	private JTextField chatInput;
 	private JButton sendChat;
 	private JPanel chatHistory;
-	private String pseudo;
+	private Contact dest;
 	
-	public ChatWindow(String pseudo) {
+	//
+	private Action sendMess;
+	
+	public ChatWindow(Contact dest) {
 		
-		this.pseudo = pseudo;
-		frame = new JFrame(this.pseudo);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.dest = dest;
+		
+		this.sendMess = new Action(this);
+		
+		frame = new JFrame(this.dest.getPseudo());
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(550, 400);
 		
 		chatPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -34,6 +40,7 @@ public class ChatWindow {
 		chatInput.setLayout(new BorderLayout(30, 30));
 		
 		sendChat = new JButton("Send");
+		sendChat.addActionListener(this.sendMess);
 		
 		chatPanel.add(chatInput);
 		chatPanel.add(sendChat);
@@ -48,9 +55,15 @@ public class ChatWindow {
 		
 	}
 
+	
+	public Action getSendMess() {
+		return this.sendMess;
+	}
+	
+	
 	public static void main(String[] args) {
-
-		new ChatWindow("titi");
+		Contact p = new Contact("titi");
+		new ChatWindow(p);
 
 	}
 

@@ -14,18 +14,33 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-public class MainMenu {
+public class MainMenu{
 
-	private static String pseudo = "toto";
-	private JFrame frame;
-	private JPanel userPanel;
-	private JPanel listPanel;
-	private JButton changepseudo;
-	private JLabel pseudoLabel;
+	//Informations
+	private ContactList contactList;
+	private Contact me;
+	
+	//private Action modifypseudo;
+	
+	//private static String pseudo = "toto";
+	
+	final private JFrame frame;
+	final private JPanel userPanel;
+	final private JPanel listPanel;
+	final private JButton changepseudo;
+	final private JLabel pseudoLabel;
 	//	private JScrollPane scrollPane;
-	private JTable usertable;
+	final private JTable usertable;
+	
+	//modifying pseudo frame
+	final private JFrame modifyFrame;
+	final private JButton verifyPseudo;
+	final private JTextField enterpseudo;
 
-	public MainMenu(String pseudo) {
+	public MainMenu(Contact m, ContactList l) {
+		
+		this.me = m; 
+		this.contactList = l;
 
 		this.pseudo = pseudo;
 		String[] columnNames = {"Pseudo"};
@@ -46,13 +61,14 @@ public class MainMenu {
 		userPanel = new JPanel();
 		userPanel.setBackground(Color.gray);
 
-		pseudoLabel = new JLabel(pseudo);
+		pseudoLabel = new JLabel(me.getPseudo());
 		pseudoLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 30));
 
-		changepseudo = new JButton("Modify");
+		this.changepseudo = new JButton("Modify");
+		changepseudo.addActionListener(new Action(this));
 
 		userPanel.add(pseudoLabel);
-		userPanel.add(changepseudo);
+		userPanel.add(getChangepseudo());
 
 		usertable = new JTable(userlist, columnNames);
 		usertable.setTableHeader(null);
@@ -66,11 +82,72 @@ public class MainMenu {
 
 		System.out.print(listPanel.getSize());
 		System.out.print(usertable.getSize());
+		
+		/////////////////////////////////////////////////////////////////////////////
+		
+		//modify pseudo 
+		//Create and set up the window.
+        this.modifyFrame = new JFrame("Modify your username");
+        //connectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        modifyFrame.setSize(new Dimension(200, 100));
+        
+        //Create and set up the panel.
+        JPanel modifyPanel = new JPanel(new GridLayout(2, 1));
+        
+        //widgets
+        enterpseudo = new JTextField();
+        enterpseudo.setSize(new Dimension(10, 100));
+        
+        
+        this.verifyPseudo = new JButton("Modify");
+        getVerifyPseudo().addActionListener(new Action(this));
+        
+        modifyPanel.add(enterpseudo);
+        modifyPanel.add(getVerifyPseudo());
+        
+        //Add the panel to the window.
+        modifyFrame.getContentPane().add(modifyPanel, BorderLayout.CENTER);
+        
+        /////////////////////////////////////////////////////////////////////////////
 
 	}
 
-		public static void main(String[] args) {
-			new MainMenu("toto");
-		}
+
+		/*public static void main(String[] args) {
+			new MainMenu();
+		}*/
+	
+
+	public Contact getMe() {
+		return me;
+	}
+	
+	
+	
+	public ContactList getContactList() {
+		return contactList;
+	}
+
+	public JButton getChangepseudo() {
+		return changepseudo;
+	}
+
+	public JFrame getModifyFrame() {
+		return modifyFrame;
+	}
+
+	public JButton getVerifyPseudo() {
+		return verifyPseudo;
+	}
+
+	public JTextField getEnterpseudo() {
+		return enterpseudo;
+	}
+	
+	public JLabel getPseudoLabel() {
+		return pseudoLabel;
+	}
+
 
 }
