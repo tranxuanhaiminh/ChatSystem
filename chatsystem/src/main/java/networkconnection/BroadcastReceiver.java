@@ -7,27 +7,27 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public class UDPReceiver extends Thread {
-
-	private DatagramSocket socket;
+public class BroadcastReceiver extends Thread {
+	
+	private static DatagramSocket socket;
 	private boolean running;
-	private int port = 4445;
-	private byte[] buf = new byte[256];
-
-	public UDPReceiver() {
+	private int port = 5723;
+    private byte[] buf = new byte[256];
+	
+	public BroadcastReceiver() {
 		super();
 		start();
 	}
-
 	public void run() {
-
-		running = true;
-
+		
+		String pseudo = "toTO";
+		
 		try {
 			socket = new DatagramSocket(port, InetAddress.getByName("localhost"));
-
-			while (running) {
-				System.out.println(getClass().getName() + ">>>Ready to receive UDP packets!");
+			socket.setBroadcast(true);
+			
+			while(true) {
+				System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets!");
 				
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
 				socket.receive(packet);
@@ -35,30 +35,22 @@ public class UDPReceiver extends Thread {
 				System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
 		        System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()));
 		        
-		        String msg = new String(packet.getData(), 0, packet.getLength());
-
-		        packet = new DatagramPacket(buf, buf.length, packet.getAddress(), packet.getPort());
-
-				if (msg.equals("end")) {
-					running = false;
-					continue;
-				}
-
-				try {
-					socket.send(packet);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		        String msg = new String(packet.getData()).trim();
+		        
+		        if(msg == "RequestPseudos") {
+		        	byte[] sendData = pseudo.getBytes();
+		        	DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
+		        	socket.send(sendPacket);
+		        }
 			}
-			socket.close();
-
-		} catch (SocketException e1) {
+			
+			
+		} catch (SocketException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UnknownHostException e1) {
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
