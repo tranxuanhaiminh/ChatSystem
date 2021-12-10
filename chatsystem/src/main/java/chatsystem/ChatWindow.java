@@ -17,14 +17,12 @@ public class ChatWindow {
 	private JPanel chatHistory;
 	private Contact dest;
 	
-	//
+	//listeners
 	private Action sendMess;
 	
 	public ChatWindow(Contact dest) {
 		
 		this.dest = dest;
-		
-		this.sendMess = new Action(this);
 		
 		frame = new JFrame(this.dest.getPseudo());
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,6 +43,8 @@ public class ChatWindow {
 		frame.getContentPane().add(BorderLayout.SOUTH, chatPanel);
 		frame.getContentPane().add(BorderLayout.CENTER, chatHistory);
 		frame.setVisible(true);
+		
+		this.sendMess = new Action(this);
 		
 	}
 

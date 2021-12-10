@@ -28,6 +28,4 @@ public class Message implements Serializable{
 		this.dest = dest;
 		this.msg = msg;
 	}
-
-
 }
