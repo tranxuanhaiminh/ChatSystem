@@ -38,7 +38,7 @@ public class BroadcastReceiver extends Thread {
 	public void run() {
 		
 		try {
-			socket = new DatagramSocket(port, InetAddress.getByName("10.1.5.17"));
+			socket = new DatagramSocket(port);
 			socket.setBroadcast(true);
 			
 			while(true) {

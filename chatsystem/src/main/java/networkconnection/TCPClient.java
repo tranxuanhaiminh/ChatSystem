@@ -1,5 +1,6 @@
 package networkconnection;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,29 +10,25 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class TCPClient extends Thread {
-	public TCPClient() {
+	
+	private Socket clientSocket;
+	
+	public TCPClient(Socket clientSocket) {
 		super();
+		this.clientSocket = clientSocket;
 		start();
 	}
 	public void run() {
-		Socket clientSocket;
-		String host = "127.0.0.1";
-		int port = 5000;
+		
 		Scanner s = new Scanner(System.in);
 		PrintWriter out;
 		String msg;
 		BufferedReader input;
 		
-		try {
-			/**
-			 * Create the connection on the corresponding port
-			 */
-			clientSocket = new Socket(host,port);
-			
+		try {			
 			/**
 			 * Receive the connection time from the server
 			 */
-			System.out.println("Waiting for connection");
 			input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			msg = input.readLine();
 			System.out.println("Connection Successful on " + msg);
