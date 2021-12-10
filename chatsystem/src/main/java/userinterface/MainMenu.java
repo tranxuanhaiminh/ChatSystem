@@ -4,16 +4,32 @@
  */
 package userinterface;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+import chatsystem.Contact;
+import chatsystem.ContactList;
+
+
 /**
  *
  * @author Minh
  */
 public class MainMenu extends javax.swing.JFrame {
 
+	private ContactList contactList;
+	private Contact me;
+	
     /**
      * Creates new form MainMenu
      */
-    public MainMenu() {
+    public MainMenu(Contact m, ContactList l) {
+
+		this.me = m; 
+		this.contactList = l;
+		
         initComponents();
     }
 
@@ -124,7 +140,7 @@ public class MainMenu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainMenu().setVisible(true);
+                //new MainMenu().setVisible(true);
             }
         });
     }
@@ -135,4 +151,36 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+    
+    
+    public Contact getMe() {
+		return me;
+	}
+	
+	
+	
+	public ContactList getContactList() {
+		return contactList;
+	}
+
+	public JButton getChangepseudo() {
+		return jButton1;
+	}
+
+	public JFrame getModifyFrame() {
+		return modifyFrame;
+	}
+
+	public JButton getVerifyPseudo() {
+		return verifyPseudo;
+	}
+
+	public JTextField getEnterpseudo() {
+		return enterpseudo;
+	}
+	
+	public JLabel getPseudoLabel() {
+		return pseudoLabel;
+	}
+
 }
