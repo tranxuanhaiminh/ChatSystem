@@ -42,7 +42,6 @@ public class MainMenu{
 		this.me = m; 
 		this.contactList = l;
 
-		this.pseudo = pseudo;
 		String[] columnNames = {"Pseudo"};
 
 		String userlist[][] = {
