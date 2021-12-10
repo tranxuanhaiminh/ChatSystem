@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class ChatWindow {
+public class ChatWindow1 {
 	
 	private JFrame frame;
 	private JPanel chatPanel;
@@ -22,10 +22,10 @@ public class ChatWindow {
 	//listeners
 	private Action sendMess;
 	
-	public ChatWindow(Contact dest) {
+	public ChatWindow1(Contact dest) {
 		
 		this.dest = dest;
-		
+		this.sendMess = new Action(this);
 		frame = new JFrame(this.dest.getPseudo());
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(550, 400);
@@ -58,10 +58,20 @@ public class ChatWindow {
 		return this.sendMess;
 	}
 	
+	public JTextField getChatInput() {
+		return chatInput;
+	}
+	
+	public Contact getDest() {
+		return dest;
+	}
+	public JButton getSendChat() {
+		return sendChat;
+	}
 	
 	public static void main(String[] args) {
 		Contact p = new Contact("titi");
-		new ChatWindow(p);
+		new ChatWindow1(p);
 
 	}
 

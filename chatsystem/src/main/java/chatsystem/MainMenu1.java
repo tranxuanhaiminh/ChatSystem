@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-public class MainMenu{
+public class MainMenu1{
 
 	//Informations
 	private ContactList contactList;
@@ -29,6 +29,7 @@ public class MainMenu{
 	final private JPanel listPanel;
 	final private JButton changepseudo;
 	final private JLabel pseudoLabel;
+	
 	//	private JScrollPane scrollPane;
 	final private JTable usertable;
 	
@@ -37,7 +38,7 @@ public class MainMenu{
 	final private JButton verifyPseudo;
 	final private JTextField enterpseudo;
 
-	public MainMenu(Contact m, ContactList l) {
+	public MainMenu1(Contact m, ContactList l) {
 		
 		this.me = m; 
 		this.contactList = l;

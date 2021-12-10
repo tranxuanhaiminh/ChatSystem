@@ -6,6 +6,9 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -15,38 +18,108 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
+import networkconnection.BroadcastReceiver;
+import networkconnection.BroadcastSender;
+
 public class Action implements ActionListener{
 	
 	public Connection pageC;
-	public MainMenu pageM;
-	public ChatWindow pageW;
+	public MainMenu1 pageM;
+	public ChatWindow1 pageW;
 	
 	public Action(Connection c){
 		super();
 		this.pageC = c;
 	}
 	
-	public Action(MainMenu m)  {
+	public Action(MainMenu1 m)  {
 		super();
 		this.pageM = m;
 	}
 	
-	public Action(ChatWindow c) {
+	public Action(ChatWindow1 c) {
 		super();
 		this.pageW = c;
 	}
 
 	public void actionPerformed(ActionEvent event) {
 		
-		final JFrame modifyFrame = pageM.getModifyFrame();
-		if(event.getSource() == pageM.getChangepseudo()) {
+		
+		
+		// pour la premiere connection
+		if(pageC != null && event.getSource() == pageC.getVerifyPseudo()) {
+			
+			final JFrame okFrame = new JFrame("Connecting....");
+			
+			final Contact me = pageC.getMe();
+        	me.setPseudo(pageC.geText().getText());			
+        	final ContactList contactList = pageC.getContactList();
+			final JFrame connectionFrame = pageC.getConnectionFrame();
+			
+			//creer le msg de demande de contact l'envoyer à tout le monde 
+			BroadcastSender bs = new BroadcastSender();
+			
+			try {
+				bs.broadcastToAllUsers("RequestPseudos",InetAddress.getByName("10.1.255.255"));
+				
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				System.out.println("erreur");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				System.out.println("erreur");
+
+			}
+			
+			// recevoir les contacts et les mettre dans la liste des contacts
+			BroadcastReceiver br = new BroadcastReceiver(pageC);
+
+			if (contactList.comparePseudo(me)==false) {
+					okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));
+					
+					//Display the window.
+					okFrame.setSize(500, 100);
+			        okFrame.setLocationRelativeTo(null);
+			        okFrame.setVisible(true);
+			        me.setPseudo(null);
+			} else {
+
+				okFrame.add(new JLabel("Welcome to the ChatSystem !"));
+				//Display the window.
+				okFrame.setSize(250, 100);
+		        okFrame.setLocationRelativeTo(null);
+		        okFrame.setVisible(true);
+		        
+		        Timer t = new Timer(500, new ActionListener() {
+		            public void actionPerformed(ActionEvent e) {
+		            	okFrame.setVisible(false);
+		            	okFrame.dispose();
+		            	connectionFrame.setVisible(false);
+		            	connectionFrame.dispose();
+		    			MainMenu1 Main = new MainMenu1(me, contactList);
+		            }
+		        });
+		        t.setRepeats(false); // Only execute once
+		        t.start();
+			}
+			
+			
+		} else if(pageM != null && event.getSource() == pageM.getChangepseudo()) {
+			
+			final JFrame modifyFrame = pageM.getModifyFrame();
 			
 	        //Display the window.
 	        modifyFrame.setLocationRelativeTo(null); // au centre
 	        modifyFrame.setVisible(true);
 	        
 			
-		} else if (event.getSource() == pageM.getVerifyPseudo()) {
+		} else if (pageM != null && event.getSource() == pageM.getVerifyPseudo()) {
+			
+
+			final JFrame modifyFrame = pageM.getModifyFrame();
+			
 			ContactList contactList = pageM.getContactList();
 
 			
@@ -85,8 +158,14 @@ public class Action implements ActionListener{
 			
 			}
 		
-		else if (event.getSource()== pageW.getSendMess()) {
-			//to do envoie du message
+		else if (pageW != null && event.getSource()== pageW.getSendChat()) {
+			//to do envoi du message
+			
+			JTextField chatInput = pageW.getChatInput();
+			Message msg = new Message(pageW.getDest(), chatInput.getText());
+			msg.printMsg(null);
+			//to do envoi tcp au dest + affichage
+			
 		}
     }
 	
