@@ -1,6 +1,8 @@
 package chatsystem;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -28,9 +30,12 @@ public class ChatWindow {
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(550, 400);
 		
-		chatPanel = new JPanel();
+		chatPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		
-		chatInput = new JTextField(30);
+		chatInput = new JTextField(40);
+		chatInput.setMaximumSize(new Dimension(1000, 30));
+		chatInput.setMinimumSize(new Dimension(300, 30));
+		chatInput.setLayout(new BorderLayout(30, 30));
 		
 		sendChat = new JButton("Send");
 		sendChat.addActionListener(this.sendMess);
@@ -44,7 +49,7 @@ public class ChatWindow {
 		frame.getContentPane().add(BorderLayout.CENTER, chatHistory);
 		frame.setVisible(true);
 		
-		this.sendMess = new Action(this);
+		System.out.print(chatInput.getSize());
 		
 	}
 
