@@ -12,6 +12,7 @@ import chatsystem.Contact;
 import chatsystem.ContactList;
 import chatsystem.MainMenu1;
 
+
 public class BroadcastReceiver extends Thread {
 	
 	private static DatagramSocket socket;
@@ -50,7 +51,7 @@ public class BroadcastReceiver extends Thread {
 		        System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()));
 		        
 		        String msg = new String(packet.getData()).trim();
-		        
+		       
 		        if (mm != null) {
 		        	
 			        Contact c;
@@ -91,4 +92,3 @@ public class BroadcastReceiver extends Thread {
 	public void setMe(String pseudo) {
 		//mm.getMe().setPseudo(pseudo);
 	}
-}
