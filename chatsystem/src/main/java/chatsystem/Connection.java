@@ -5,12 +5,14 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class Connection implements ActionListener{
+public class Connection {
 	
 	private ContactList contactList;
 	private Contact me;
 	JTextField enterpseudo;
-	JFrame connectionFrame;
+	private JFrame connectionFrame;
+	private Action verify;
+	private JButton verifyPseudo;
 	
 	public Connection() {
 		
@@ -18,6 +20,8 @@ public class Connection implements ActionListener{
 		Contact c = new Contact("toto","120.1.1.0");
 		contactList.addContact(c);
 		me =new Contact();
+		
+		this.verify = new Action(this);
 		
         //Create and set up the window.
         connectionFrame = new JFrame("Connection to the Chat System");
@@ -34,8 +38,8 @@ public class Connection implements ActionListener{
         enterpseudo.setSize(new Dimension(10, 100));
         
         
-        JButton verifyPseudo = new JButton("Connect");
-        verifyPseudo.addActionListener(this); //new ActionButtonConnect());
+        verifyPseudo = new JButton("Connect");
+        verifyPseudo.addActionListener(verify);
         
         connectionPanel.add(enterpseudo);
         connectionPanel.add(verifyPseudo);
@@ -70,7 +74,7 @@ public class Connection implements ActionListener{
 
 
 
-	public void actionPerformed(ActionEvent event) {
+/*	public void actionPerformed(ActionEvent event) {
 		
 		final JFrame okFrame = new JFrame("Connecting....");
 		
@@ -109,7 +113,7 @@ public class Connection implements ActionListener{
 	        t.start();
 		}
     }
-
+*/
 	public Contact getMe() {
 		return me;
 	}
@@ -122,6 +126,15 @@ public class Connection implements ActionListener{
 	public JTextField geText() {
 		return enterpseudo;
 	}
+
+	public JFrame getConnectionFrame() {
+		return connectionFrame;
+	}
+
+	public JButton getVerifyPseudo() {
+		return verifyPseudo;
+	}
+
 
 
 }

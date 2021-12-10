@@ -7,23 +7,37 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import chatsystem.Connection;
+import chatsystem.Contact;
+import chatsystem.ContactList;
+import chatsystem.MainMenu1;
+
 public class BroadcastReceiver extends Thread {
 	
 	private static DatagramSocket socket;
 	private boolean running;
 	private int port = 5723;
     private byte[] buf = new byte[256];
+    private MainMenu1 mm=null;
+    private Connection mc=null;
+    
 	
-	public BroadcastReceiver() {
+	public BroadcastReceiver(MainMenu1 me) {
 		super();
 		start();
+		this.mm = me;
 	}
+	
+	public BroadcastReceiver(Connection me) {
+		super();
+		start();
+		this.mc = me;
+	}
+	
 	public void run() {
 		
-		String pseudo = "toTO";
-		
 		try {
-			socket = new DatagramSocket(port, InetAddress.getByName("localhost"));
+			socket = new DatagramSocket(port, InetAddress.getByName("10.1.5.17"));
 			socket.setBroadcast(true);
 			
 			while(true) {
@@ -37,11 +51,28 @@ public class BroadcastReceiver extends Thread {
 		        
 		        String msg = new String(packet.getData()).trim();
 		        
+		        if (mm != null) {
+		        	
+			        Contact c;
+			        ContactList cl = mm.getContactList();
+			        c = cl.exists(packet.getAddress().getHostAddress());
+			        if (c != null)
+			        	cl.removeContact(c);
+			        cl.addContact(new Contact(msg, packet.getAddress().getHostAddress()));
+			        
+		        } else   {
+		        	
+			        ContactList cl = mc.getContactList();
+			        cl.addContact(new Contact(msg, packet.getAddress().getHostAddress()));
+			        
+		        }
+		        
 		        if(msg == "RequestPseudos") {
-		        	byte[] sendData = pseudo.getBytes();
+		        	
+		        	byte[] sendData = mm.getMe().getPseudo().getBytes();
 		        	DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
 		        	socket.send(sendPacket);
-		        }
+		        } 
 			}
 			
 			
@@ -55,5 +86,9 @@ public class BroadcastReceiver extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void setMe(String pseudo) {
+		//mm.getMe().setPseudo(pseudo);
 	}
 }
