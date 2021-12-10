@@ -1,5 +1,6 @@
 package networkconnection;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,7 +9,10 @@ import java.net.Socket;
 import java.util.Date;
 
 public class TCPServer extends Thread {
+	
 	final Socket clientSocket;
+	private String msg;
+	
 	public TCPServer(Socket clientSocket) {
 		super();
 		this.clientSocket = clientSocket;
@@ -16,18 +20,16 @@ public class TCPServer extends Thread {
 	}
 	public void run() {
 		BufferedReader input;
-		String msg;
 		Date date = new java.util.Date();
 		PrintWriter out_date;
 		
-		try {			
+		try {
 			/**
 			 * Send Connection time to client
 			 */
 			out_date = new PrintWriter(clientSocket.getOutputStream());
 			out_date.println(date);
 			out_date.flush();
-			System.out.println("Connection Successful");
 			
 			/**
 			 * Create a variable that wait for messages from clients
@@ -52,5 +54,9 @@ public class TCPServer extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public String getMsg() {
+		return this.msg;
 	}
 }

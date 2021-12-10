@@ -44,12 +44,8 @@ public class UDPReceiver extends Thread {
 					continue;
 				}
 
-				try {
-					socket.send(packet);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				socket.send(packet);
+				
 			}
 			socket.close();
 

@@ -23,7 +23,7 @@ public class BroadcastReceiver extends Thread {
 		String pseudo = "toTO";
 		
 		try {
-			socket = new DatagramSocket(port, InetAddress.getByName("localhost"));
+			socket = new DatagramSocket(port);
 			socket.setBroadcast(true);
 			
 			while(true) {

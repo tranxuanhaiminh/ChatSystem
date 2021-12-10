@@ -8,7 +8,7 @@ import java.net.InetAddress;
 public class BroadcastSender {
 	
 	private static DatagramSocket socket;
-	private static int userlistPort = 5723;
+	private static int port = 5723;
 	
 	public void broadcastToAllUsers(String msg, InetAddress address) throws IOException {
 		socket = new DatagramSocket();
@@ -17,9 +17,9 @@ public class BroadcastSender {
 		
 		byte[] buffer = msg.getBytes();
 		
-		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, userlistPort);
+		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
 		socket.send(packet);
-		System.out.println("Sent packet with data : " + msg + " to address " + address.toString() + " of name " + address.getCanonicalHostName() + " on port " + String.valueOf(userlistPort));
+		System.out.println("Sent packet with data : " + msg + " to address " + address.toString() + " of name " + address.getCanonicalHostName() + " on port " + String.valueOf(port));
 		socket.close();
 		System.out.println("socket closed");
 	}
