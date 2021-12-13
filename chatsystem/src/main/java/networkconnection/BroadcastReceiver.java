@@ -63,9 +63,9 @@ public class BroadcastReceiver extends Thread {
 				        ContactList cl = mm.getContactList();
 				        c = cl.exists(packet.getAddress().getHostAddress());
 				        
-			        
 				        if (c != null)
 				        	cl.removeContact(c);
+				        
 				        cl.addContact(new Contact(msg, packet.getAddress().getHostAddress()));
 			        
 				        
