@@ -167,7 +167,7 @@ public class MainMenu extends javax.swing.JFrame {
 		return jButton1;
 	}
 
-	public JFrame getModifyFrame() {
+	/*public JFrame getModifyFrame() {
 		return modifyFrame;
 	}
 
@@ -181,6 +181,6 @@ public class MainMenu extends javax.swing.JFrame {
 	
 	public JLabel getPseudoLabel() {
 		return pseudoLabel;
-	}
+	}*/
 
 }
