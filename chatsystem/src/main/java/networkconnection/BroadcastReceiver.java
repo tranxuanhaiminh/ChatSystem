@@ -42,6 +42,9 @@ public class BroadcastReceiver extends Thread {
 			socket.setBroadcast(true);
 			
 			while(true) {
+				
+				buf = new byte[256];
+				
 				System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets!");
 				
 				DatagramPacket packet = new DatagramPacket(buf, buf.length);
@@ -51,29 +54,36 @@ public class BroadcastReceiver extends Thread {
 		        System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()));
 		        
 		        String msg = new String(packet.getData()).trim();
-		       
-		        if (mm != null) {
-		        	
-			        Contact c;
-			        ContactList cl = mm.getContactList();
-			        c = cl.exists(packet.getAddress().getHostAddress());
-			        if (c != null)
-			        	cl.removeContact(c);
-			        cl.addContact(new Contact(msg, packet.getAddress().getHostAddress()));
+
+				if (packet.getAddress() != InetAddress.getLocalHost()) {
+					
+			        if (mm != null) {
+			        	
+				        Contact c;
+				        ContactList cl = mm.getContactList();
+				        c = cl.exists(packet.getAddress().getHostAddress());
+				        
 			        
-		        } else   {
-		        	
-			        ContactList cl = mc.getContactList();
-			        cl.addContact(new Contact(msg, packet.getAddress().getHostAddress()));
+				        if (c != null)
+				        	cl.removeContact(c);
+				        cl.addContact(new Contact(msg, packet.getAddress().getHostAddress()));
 			        
-		        }
-		        
-		        if(msg == "RequestPseudos") {
-		        	
-		        	byte[] sendData = mm.getMe().getPseudo().getBytes();
-		        	DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
-		        	socket.send(sendPacket);
-		        } 
+				        
+			        } else   {
+			        
+				        ContactList cl = mc.getContactList();
+				        cl.addContact(new Contact(msg, packet.getAddress().getHostAddress()));
+			        
+			        }
+			        
+			        if(msg == "RequestPseudos") {
+		        		byte[] sendData = mm.getMe().getPseudo().getBytes();
+		        		DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
+		        		socket.send(sendPacket);
+			        } 
+				} else {
+					System.out.println(getClass().getName() + "paquet non traité" + "\n\n");
+				}
 			}
 			
 			
@@ -92,3 +102,5 @@ public class BroadcastReceiver extends Thread {
 	public void setMe(String pseudo) {
 		//mm.getMe().setPseudo(pseudo);
 	}
+	
+}

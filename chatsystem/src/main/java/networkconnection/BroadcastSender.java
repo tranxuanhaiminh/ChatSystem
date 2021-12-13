@@ -5,6 +5,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import chatsystem.Connection;
+import chatsystem.MainMenu1;
+
 public class BroadcastSender {
 	
 	private static DatagramSocket socket;
@@ -16,6 +19,7 @@ public class BroadcastSender {
 		System.out.println("Socket on port " + socket.getPort() + " of type broadcast : "+ socket.getBroadcast() + " ready!");
 		
 		byte[] buffer = msg.getBytes();
+		
 		
 		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
 		socket.send(packet);

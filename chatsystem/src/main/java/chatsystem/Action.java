@@ -57,7 +57,9 @@ public class Action implements ActionListener{
 			final JFrame connectionFrame = pageC.getConnectionFrame();
 			
 			//creer le msg de demande de contact l'envoyer à tout le monde 
-			BroadcastSender bs = new BroadcastSender();
+			final BroadcastSender bs = new BroadcastSender();
+
+			System.out.println("erreur");
 			
 			try {
 				bs.broadcastToAllUsers("RequestPseudos",InetAddress.getByName("10.1.255.255"));
@@ -99,6 +101,19 @@ public class Action implements ActionListener{
 		            	connectionFrame.setVisible(false);
 		            	connectionFrame.dispose();
 		    			MainMenu1 Main = new MainMenu1(me, contactList);
+		    			
+		    			//envoyer son pseudo aux autres 
+		    			try {
+		    				bs.broadcastToAllUsers(Main.getMe().getPseudo(),InetAddress.getByName("10.1.255.255"));
+		    				
+		    			} catch (UnknownHostException e1) {
+		    				e1.printStackTrace();
+		    				System.out.println("erreur");
+		    			} catch (IOException e1) {
+		    				e1.printStackTrace();
+		    				System.out.println("erreur");
+
+		    			}
 		            }
 		        });
 		        t.setRepeats(false); // Only execute once
@@ -122,6 +137,7 @@ public class Action implements ActionListener{
 			
 			ContactList contactList = pageM.getContactList();
 
+			final BroadcastSender bs = new BroadcastSender();
 			
 			final JFrame okFrame = new JFrame("...");
 			final String pseudo = pageM.getEnterpseudo().getText();
@@ -150,6 +166,19 @@ public class Action implements ActionListener{
 		            	modifyFrame.setVisible(false);
 		    			pageM.getMe().setPseudo(pseudo);
 		    			pageM.getPseudoLabel().setText(pageM.getMe().getPseudo());
+		    			
+		    			//envoyer son pseudo aux autres 
+		    			try {
+		    				bs.broadcastToAllUsers(pageM.getMe().getPseudo(),InetAddress.getByName("10.1.255.255"));
+		    				
+		    			} catch (UnknownHostException e1) {
+		    				e1.printStackTrace();
+		    				System.out.println("erreur");
+		    			} catch (IOException e1) {
+		    				e1.printStackTrace();
+		    				System.out.println("erreur");
+
+		    			}
 		            }
 		        });
 		        t.setRepeats(false); // Only execute once
