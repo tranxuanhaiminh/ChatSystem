@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import chatsystem.Connection;
 import chatsystem.Contact;
@@ -54,8 +56,32 @@ public class BroadcastReceiver extends Thread {
 		        System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()));
 		        
 		        String msg = new String(packet.getData()).trim();
+		        
+		        //recuperer la bonne add
+		        InetAddress m;
+		        Enumeration e = NetworkInterface.getNetworkInterfaces();
+				while(e.hasMoreElements())
+				{
+					// Get all ip addresses of each interfaces (Normally only 1 each and not treated if many)
+				    NetworkInterface n = (NetworkInterface) e.nextElement();
+				    Enumeration ee = n.getInetAddresses();
+				    
+				    // For each ip address on this machine 
+				    while (ee.hasMoreElements())
+				    {
+				    	System.out.println("this is an ip adress");
+				        InetAddress i = (InetAddress) ee.nextElement();
+				        System.out.println(i.getHostAddress());
+				        //System.out.println(i.isAnyLocalAddress());
+				        //System.out.println(i.isLinkLocalAddress());
+				        //System.out.println(i.isLoopbackAddress());
+				        System.out.println(i.isSiteLocalAddress());
+				        
+				        // Return the address correspond to this machine in INSA network
+				        if (i.isSiteLocalAddress()) 
+				        	m=i;
 
-				if (packet.getAddress() != InetAddress.getLocalHost()) {
+				if (packet.getAddress() != m) {
 					
 			        if (mm != null) {
 			        	
