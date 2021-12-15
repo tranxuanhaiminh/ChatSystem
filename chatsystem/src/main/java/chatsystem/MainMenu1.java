@@ -14,6 +14,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import networkconnection.BroadcastReceiver;
+
 public class MainMenu1{
 
 	//Informations
@@ -37,8 +39,15 @@ public class MainMenu1{
 	final private JFrame modifyFrame;
 	final private JButton verifyPseudo;
 	final private JTextField enterpseudo;
+	
+	// recevoir les contacts et les mettre dans la liste des contacts
+	private BroadcastReceiver br;
 
 	public MainMenu1(Contact m, ContactList l) {
+		
+		// recevoir les contacts et les mettre dans la liste des contacts
+		this.br = new BroadcastReceiver(this);
+		br.start();
 		
 		this.me = m; 
 		this.contactList = l;
@@ -147,6 +156,10 @@ public class MainMenu1{
 	
 	public JLabel getPseudoLabel() {
 		return pseudoLabel;
+	}
+	
+	public BroadcastReceiver getBr() {
+		return br;
 	}
 
 

@@ -11,9 +11,11 @@ import chatsystem.MainMenu1;
 public class BroadcastSender {
 	
 	private static DatagramSocket socket;
-	private static int port = 5723;
+	private static int port = 57200;
 	
-	public void broadcastToAllUsers(String msg, InetAddress address) throws IOException {
+	public void broadcastToAllUsers(String msg) throws IOException {
+		
+		InetAddress address = InetAddress.getByName("10.1.255.255");
 		socket = new DatagramSocket();
 		socket.setBroadcast(true);
 		System.out.println("Socket on port " + socket.getPort() + " of type broadcast : "+ socket.getBroadcast() + " ready!");

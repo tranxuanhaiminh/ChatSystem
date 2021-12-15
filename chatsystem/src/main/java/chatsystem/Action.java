@@ -47,22 +47,26 @@ public class Action implements ActionListener{
 		
 		
 		// pour la premiere connection
-		if(pageC != null && event.getSource() == pageC.getVerifyPseudo()) {
+		if(pageC != null && event.getSource().equals(pageC.getVerifyPseudo())) {
 			
 			final JFrame okFrame = new JFrame("Connecting....");
 			
 			final Contact me = pageC.getMe();
         	me.setPseudo(pageC.geText().getText());			
-        	final ContactList contactList = pageC.getContactList();
 			final JFrame connectionFrame = pageC.getConnectionFrame();
-			
-			//creer le msg de demande de contact l'envoyer à tout le monde 
-			final BroadcastSender bs = new BroadcastSender();
 
-			System.out.println("erreur");
 			
 			try {
-				bs.broadcastToAllUsers("RequestPseudos",InetAddress.getByName("10.1.255.255"));
+				
+				//on lance e thread de reception de contacts
+				pageC.getBr().start();
+				
+				//creer le msg de demande de contact l'envoyer à tout le monde 
+				final BroadcastSender bs = new BroadcastSender();
+				bs.broadcastToAllUsers("RequestPseudos");
+				
+				//on attend de finir de recevoir les contacts
+				//Thread.sleep(3300);
 				
 			} catch (UnknownHostException e1) {
 				// TODO Auto-generated catch block
@@ -73,11 +77,18 @@ public class Action implements ActionListener{
 				e1.printStackTrace();
 				System.out.println("erreur");
 
-			}
+			} /*catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
 			
-			// recevoir les contacts et les mettre dans la liste des contacts
-			BroadcastReceiver br = new BroadcastReceiver(pageC);
-
+			
+			final ContactList contactList = pageC.getContactList();
+			
+			for (Contact i : contactList.getList())
+				System.out.println(i.getPseudo());
+        	
+			
 			if (contactList.comparePseudo(me)==false) {
 					okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));
 					
@@ -86,6 +97,9 @@ public class Action implements ActionListener{
 			        okFrame.setLocationRelativeTo(null);
 			        okFrame.setVisible(true);
 			        me.setPseudo(null);
+			        //arreter le thread 
+			        pageC.getBr().interrupt();
+			        pageC.resetBr();
 			} else {
 
 				okFrame.add(new JLabel("Welcome to the ChatSystem !"));
@@ -102,16 +116,18 @@ public class Action implements ActionListener{
 		            	connectionFrame.dispose();
 		    			MainMenu1 Main = new MainMenu1(me, contactList);
 		    			
-		    			//envoyer son pseudo aux autres 
+		    			//on envoye son pseudo aux autres 
 		    			try {
-		    				bs.broadcastToAllUsers(Main.getMe().getPseudo(),InetAddress.getByName("10.1.255.255"));
+		    				//creer le msg de demande de contact l'envoyer à tout le monde 
+		    				final BroadcastSender bs = new BroadcastSender();
+		    				bs.broadcastToAllUsers(Main.getMe().getPseudo());
 		    				
 		    			} catch (UnknownHostException e1) {
 		    				e1.printStackTrace();
-		    				System.out.println("erreur");
+		    				System.out.println("erreur\n");
 		    			} catch (IOException e1) {
 		    				e1.printStackTrace();
-		    				System.out.println("erreur");
+		    				System.out.println("erreur\n");
 
 		    			}
 		            }
@@ -121,7 +137,7 @@ public class Action implements ActionListener{
 			}
 			
 			
-		} else if(pageM != null && event.getSource() == pageM.getChangepseudo()) {
+		} else if(pageM != null && event.getSource().equals(pageM.getChangepseudo())) {
 			
 			final JFrame modifyFrame = pageM.getModifyFrame();
 			
@@ -130,18 +146,19 @@ public class Action implements ActionListener{
 	        modifyFrame.setVisible(true);
 	        
 			
-		} else if (pageM != null && event.getSource() == pageM.getVerifyPseudo()) {
+		} else if (pageM != null && event.getSource().equals(pageM.getVerifyPseudo())) {
 			
 
 			final JFrame modifyFrame = pageM.getModifyFrame();
 			
 			ContactList contactList = pageM.getContactList();
-
-			final BroadcastSender bs = new BroadcastSender();
 			
 			final JFrame okFrame = new JFrame("...");
 			final String pseudo = pageM.getEnterpseudo().getText();
 			Contact p = new Contact(pseudo);
+			
+			//creer le msg de demande de contact l'envoyer à tout le monde 
+			final BroadcastSender bs1 = new BroadcastSender();
 			
 			if (contactList.comparePseudo(p)==false) {
 					okFrame.add(new JLabel("This username is already used ! Please enter a new one !"));
@@ -169,7 +186,7 @@ public class Action implements ActionListener{
 		    			
 		    			//envoyer son pseudo aux autres 
 		    			try {
-		    				bs.broadcastToAllUsers(pageM.getMe().getPseudo(),InetAddress.getByName("10.1.255.255"));
+		    				bs1.broadcastToAllUsers(pageM.getMe().getPseudo());
 		    				
 		    			} catch (UnknownHostException e1) {
 		    				e1.printStackTrace();
@@ -187,7 +204,7 @@ public class Action implements ActionListener{
 			
 			}
 		
-		else if (pageW != null && event.getSource()== pageW.getSendChat()) {
+		else if (pageW != null && event.getSource().equals(pageW.getSendChat())) {
 			//to do envoi du message
 			
 			JTextField chatInput = pageW.getChatInput();

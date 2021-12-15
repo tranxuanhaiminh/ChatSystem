@@ -37,7 +37,7 @@ public class ContactList {
 		Contact res= null;
 		int n = list.size();
 		Contact c = null;
-		for (int i=1; i<n+1; i++) {
+		for (int i=0; i<n; i++) {
 			c= list.get(i);
 			if (ip.compareTo(c.getIpaddress())==0)
 				res = c;
