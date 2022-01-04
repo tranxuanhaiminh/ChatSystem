@@ -1,4 +1,5 @@
-chatsystem/target/
+/.metadata/
 .classpath
-.project
 .settings
+.project
+chatsystem/target/

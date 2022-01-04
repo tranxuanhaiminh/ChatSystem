@@ -92,3 +92,4 @@ public class BroadcastReceiver extends Thread {
 	public void setMe(String pseudo) {
 		//mm.getMe().setPseudo(pseudo);
 	}
+}
