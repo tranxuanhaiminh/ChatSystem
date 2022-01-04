@@ -44,8 +44,6 @@ public class Action implements ActionListener{
 
 	public void actionPerformed(ActionEvent event) {
 		
-		
-		
 		// pour la premiere connection
 		if(pageC != null && event.getSource().equals(pageC.getVerifyPseudo())) {
 			
@@ -55,9 +53,10 @@ public class Action implements ActionListener{
         	me.setPseudo(pageC.geText().getText());			
 			final JFrame connectionFrame = pageC.getConnectionFrame();
 
-			//on lance e thread de gestion de contacts
+			//on crée et on lance le contact manager
+			pageC.setCm(new ContactsManager(pageC));
 			pageC.getCm().start();
-				
+			
 			try {
 				//on attend de finir de recevoir les contacts
 				Thread.sleep(3300);
@@ -81,9 +80,11 @@ public class Action implements ActionListener{
 			        okFrame.setLocationRelativeTo(null);
 			        okFrame.setVisible(true);
 			        me.setPseudo(null);
+			        //supprime le contact manager
+			        pageC.setCm(null);
 			        
 			} else {
-
+				
 				okFrame.add(new JLabel("Welcome to the ChatSystem !"));
 				//Display the window.
 				okFrame.setSize(250, 100);
@@ -96,7 +97,9 @@ public class Action implements ActionListener{
 		            	okFrame.dispose();
 		            	connectionFrame.setVisible(false);
 		            	connectionFrame.dispose();
-		    			MainMenu1 Main = new MainMenu1(me, contactList);
+		            	pageC.setMain(new MainMenu1(me, contactList,pageC.getCm()));
+				        //stop la partie connection du contact manager
+				        pageC.getCm().setRun_co(false); // la phase de connection est finie
 		    			
 		            }
 		        });

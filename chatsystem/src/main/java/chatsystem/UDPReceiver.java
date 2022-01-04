@@ -1,12 +1,7 @@
 package chatsystem;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
@@ -19,11 +14,13 @@ public class UDPReceiver{
 	private DatagramPacket in;
 	
 	public UDPReceiver(){
+		
 		this.port = 52799;
 		this.running=true;
 		try {
 			this.receiversocket = new DatagramSocket(port);
 		} catch (SocketException e) {
+			e.printStackTrace();
 			System.out.println("Erreur lors de la creation du socket de reception \n");
 		}
 
@@ -35,22 +32,7 @@ public class UDPReceiver{
 		}
 	}
 	
-	/*public void run(){
-		
-		while (running) {
-
-			
-			
-			if (msg.equals("ASK"){
-				System.out.println("RECEIVED : "+msg +" FROM "+ in.getAddress().getHostName()+"\n");
-				UDPSender s = new UPDSender()
-			}
-			//System.out.println("RECEIVED : "+msg +" FROM "+ in.getAddress().getHostName()+"\n");
-		}
-		
-		receiversocket.close();
-		
-	}*/
+	
 	
 	public String[] receive() {
 		

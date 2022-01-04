@@ -19,6 +19,9 @@ public class Connection {
 	// recevoir les contacts et les mettre dans la liste des contacts
 	private ContactsManager cm;
 	
+	//page principale
+	private MainMenu1 main;
+	
 	
 	public Connection() {
 		
@@ -30,7 +33,7 @@ public class Connection {
 		me =new Contact();
 		
 		// iNitailisation du contacts manager
-		cm = new ContactsManager(this);
+		cm = null;
 		
 		this.verify = new Action(this);
 		
@@ -108,6 +111,19 @@ public class Connection {
 
 	public ContactsManager getCm() {
 		return cm;
+	}
+	
+	public void setCm(ContactsManager m) {
+		cm = m;
+	}
+
+	public MainMenu1 getMain() {
+		return main;
+	}
+
+
+	public void setMain(MainMenu1 main) {
+		this.main = main;
 	}
 
 }

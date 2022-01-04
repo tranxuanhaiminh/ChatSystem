@@ -21,10 +21,9 @@ public class MainMenu1{
 	//Informations
 	private ContactList contactList;
 	private Contact me;
+	// recevoir les contacts et les mettre dans la liste des contacts
+	private ContactsManager cm=null;
 	
-	//private Action modifypseudo;
-	
-	//private static String pseudo = "toto";
 	
 	final private JFrame frame;
 	final private JPanel userPanel;
@@ -40,14 +39,11 @@ public class MainMenu1{
 	final private JButton verifyPseudo;
 	final private JTextField enterpseudo;
 	
-	// recevoir les contacts et les mettre dans la liste des contacts
-	private ContactsManager cm;
 
-	public MainMenu1(Contact m, ContactList l) {
+	public MainMenu1(Contact m, ContactList l, ContactsManager cm) {
 		
 		// recevoir les contacts et les mettre dans la liste des contacts
-		this.cm = new ContactsManager(this);
-		cm.start();
+		this.cm = cm;
 		
 		this.me = m; 
 		this.contactList = l;
