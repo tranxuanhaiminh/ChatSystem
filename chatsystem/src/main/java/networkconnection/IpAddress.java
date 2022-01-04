@@ -2,6 +2,7 @@ package networkconnection;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -11,35 +12,49 @@ import java.util.List;
 
 public class IpAddress {
 
-	public static void main(String[] args) throws IOException {
-		System.out.println("Hello World");
+	public static InetAddress getAddress() throws IOException {
 		
+		InetAddress iaddress = null;
+		
+		ArrayList<InterfaceAddress> addresslist = new ArrayList<InterfaceAddress>();
+
 		// Get all network interfaces
 		Enumeration e = NetworkInterface.getNetworkInterfaces();
-		while(e.hasMoreElements())
-		{
+		while (e.hasMoreElements()) {
 			// Get all ip addresses of each interfaces (Normally only 1 each and not treated if many)
-		    NetworkInterface n = (NetworkInterface) e.nextElement();
-		    Enumeration ee = n.getInetAddresses();
-		    
-		    // For each ip address on this machine 
-		    while (ee.hasMoreElements())
-		    {
-		    	System.out.println("this is an ip adress");
-		        InetAddress i = (InetAddress) ee.nextElement();
-		        System.out.println(i.getHostAddress());
-		        //System.out.println(i.isAnyLocalAddress());
-		        //System.out.println(i.isLinkLocalAddress());
-		        //System.out.println(i.isLoopbackAddress());
-		        System.out.println(i.isSiteLocalAddress());
-		        
-		        // Return the address correspond to this machine in INSA network
-		        if (i.isSiteLocalAddress()) {
-		        	// return i;
-		        	System.out.println("The ip address of this machine is : " + i.getHostAddress());
-		        }
-		        
-		    }
+			NetworkInterface n = (NetworkInterface) e.nextElement();
+			
+			for (InterfaceAddress interfaceAddress : n.getInterfaceAddresses()) {
+				InetAddress i = interfaceAddress.getAddress();
+//				System.out.println("this is an ip adress");
+//				System.out.println(i.getHostAddress());
+//				System.out.println(i.isAnyLocalAddress());
+//				System.out.println(i.isLinkLocalAddress());
+//				System.out.println(i.isLoopbackAddress());
+//				System.out.println(i.isSiteLocalAddress());
+//				InetAddress broadcast = interfaceAddress.getBroadcast();
+//				if (broadcast != null) {
+//					System.out.println(interfaceAddress.toString());
+//					System.out.println("address : " + i.toString() + " and broadcast : " + broadcast.toString());					
+//				}
+				if (i.isSiteLocalAddress()) {
+					iaddress = i;
+				}
+			}
+		}
+		return iaddress;
+	}
+
+	public static void main(String[] args) {
+		IpAddress ipAddress = new IpAddress();
+		try {
+			ArrayList<InterfaceAddress> addresslist = ipAddress.getAddress();
+			for (InterfaceAddress i : addresslist) {
+				System.out.println(i.toString());
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
