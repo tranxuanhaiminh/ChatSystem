@@ -21,6 +21,13 @@ public class MainMenu extends javax.swing.JFrame {
 
 	private ContactList contactList;
 	private Contact me;
+        
+	final private JLabel pseudoLabel;
+	
+	//modifying pseudo frame
+	final private JFrame modifyFrame;
+	final private JButton verifyPseudo;
+	final private JTextField enterpseudo;
 	
     /**
      * Creates new form MainMenu
