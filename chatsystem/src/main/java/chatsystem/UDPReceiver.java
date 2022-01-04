@@ -3,7 +3,12 @@ package chatsystem;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 public class UDPReceiver{
 	
@@ -47,7 +52,7 @@ public class UDPReceiver{
 		
 	}*/
 	
-	public String receive() {
+	public String[] receive() {
 		
 		System.out.println("Pret à recevoir \n");
 		buffer = new byte[256];
@@ -60,10 +65,43 @@ public class UDPReceiver{
 		}
 		
 		String msg = new String(in.getData(),0,in.getLength());
+		String addr = in.getAddress().getHostName();
 		
-		//recuperer l'add et la retourner avec le msg
+		//On récupère toutes nos addresses pour filtrer les messages
+		ArrayList<InetAddress> m= new ArrayList<InetAddress>();
+        Enumeration<NetworkInterface> e = null;
+		try {
+			e = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		while(e.hasMoreElements())
+		{
+			// Get all ip addresses of each interfaces (Normally only 1 each and not treated if many)
+		    NetworkInterface n = (NetworkInterface) e.nextElement();
+		    Enumeration<InetAddress> ee = n.getInetAddresses();
+		    
+		    // For each ip address on this machine 
+		    while (ee.hasMoreElements())
+		    {
+		        InetAddress i = (InetAddress) ee.nextElement();
+		        m.add(i);
+		    }
+		}
 		
-		return msg;
+		
+		boolean cond = false;
+		try {
+			cond = !(m.contains(InetAddress.getByName(addr)));
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if (cond) // on ne peut pas recevoir un msg u'on a envoyé nous même
+			return new String[]{msg,addr};
+		else 
+			return null;
 	}
 	
 	
