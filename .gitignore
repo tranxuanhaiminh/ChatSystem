@@ -2,5 +2,6 @@
 .classpath
 .settings
 .project
+.db
 chatsystem/target/
 chatsystem/bin/target
