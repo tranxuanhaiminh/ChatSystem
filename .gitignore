@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 /.metadata/
 .classpath
 .settings
 .project
 target/
+=======
+/target/
+.classpath
+.project
+.settings
+>>>>>>> fff6affcc59dde14d7132999730cb4954e104646
