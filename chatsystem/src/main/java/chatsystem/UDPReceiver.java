@@ -19,7 +19,7 @@ public class UDPReceiver{
 	private DatagramPacket in;
 	
 	public UDPReceiver(){
-		this.port = 58799;
+		this.port = 52799;
 		this.running=true;
 		try {
 			this.receiversocket = new DatagramSocket(port);

@@ -9,6 +9,7 @@ public class ContactsManager extends Thread{
 	private Connection cc;
 	private UDPReceiver ContactReceiver;
 	private UDPSender ContactSender;
+	private boolean sendMe= false;
 	
 	
 	public ContactsManager(MainMenu1 mm) {
@@ -31,7 +32,7 @@ public class ContactsManager extends Thread{
 			InetAddress broadcast= null;
 			
 			try {
-				broadcast = InetAddress.getByName("10.1.255.255");
+				broadcast = InetAddress.getByName("255.255.255.255");
 			} catch (UnknownHostException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -78,8 +79,29 @@ public class ContactsManager extends Thread{
 				
 				
 			} else if (this.mm != null) { //Contact manager après la phase de connection
+				
+				//on envoie son contact aux autres 
+				InetAddress broadcast= null;
+				
+				try {
+					broadcast = InetAddress.getByName("255.255.255.255");
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				this.setSendMe(); //pour envoyer son contact
+				
+				//lancement du receiver
 				this.ContactReceiver.setRunning(true);
 				while (this.ContactReceiver.isRunning()) {
+					
+					//gestion de l'envoi de son contact
+					if (sendMe = true) {
+						this.ContactSender = new UDPSender(this.mm.getMe().getPseudo(), broadcast);
+						sendMe = false;
+					}
+						
 					String[] response = ContactReceiver.receive();
 					if (response!=null) {
 						String msg = response[0];
@@ -127,6 +149,13 @@ public class ContactsManager extends Thread{
 	
 	public UDPReceiver getContactReceiver() {
 		return this.ContactReceiver;
+	}
+	public UDPSender getContactSender() {
+		return this.ContactSender;
+	}
+	
+	public void setSendMe() {
+		sendMe = true;
 	}
 
 }

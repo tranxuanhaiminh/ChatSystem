@@ -41,13 +41,13 @@ public class MainMenu1{
 	final private JTextField enterpseudo;
 	
 	// recevoir les contacts et les mettre dans la liste des contacts
-	private BroadcastReceiver br;
+	private ContactsManager cm;
 
 	public MainMenu1(Contact m, ContactList l) {
 		
 		// recevoir les contacts et les mettre dans la liste des contacts
-		this.br = new BroadcastReceiver(this);
-		br.start();
+		this.cm = new ContactsManager(this);
+		cm.start();
 		
 		this.me = m; 
 		this.contactList = l;
@@ -123,11 +123,6 @@ public class MainMenu1{
 	}
 
 
-		/*public static void main(String[] args) {
-			new MainMenu();
-		}*/
-	
-
 	public Contact getMe() {
 		return me;
 	}
@@ -158,8 +153,8 @@ public class MainMenu1{
 		return pseudoLabel;
 	}
 	
-	public BroadcastReceiver getBr() {
-		return br;
+	public ContactsManager getCm() {
+		return cm;
 	}
 
 

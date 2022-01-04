@@ -15,9 +15,10 @@ public class Connection {
 	private JFrame connectionFrame;
 	private Action verify;
 	private JButton verifyPseudo;
-	
+
 	// recevoir les contacts et les mettre dans la liste des contacts
-	private BroadcastReceiver br;
+	private ContactsManager cm;
+	
 	
 	public Connection() {
 		
@@ -28,8 +29,8 @@ public class Connection {
 		
 		me =new Contact();
 		
-		// recevoir les contacts et les mettre dans la liste des contacts
-		br = new BroadcastReceiver(this);
+		// iNitailisation du contacts manager
+		cm = new ContactsManager(this);
 		
 		this.verify = new Action(this);
 		
@@ -105,13 +106,8 @@ public class Connection {
 		return verifyPseudo;
 	}
 
-	public BroadcastReceiver getBr() {
-		return br;
+	public ContactsManager getCm() {
+		return cm;
 	}
-	
-	public void resetBr() {
-		br = new BroadcastReceiver(this);
-	}
-
 
 }

@@ -55,32 +55,17 @@ public class Action implements ActionListener{
         	me.setPseudo(pageC.geText().getText());			
 			final JFrame connectionFrame = pageC.getConnectionFrame();
 
-			
+			//on lance e thread de gestion de contacts
+			pageC.getCm().start();
+				
 			try {
-				
-				//on lance e thread de reception de contacts
-				pageC.getBr().start();
-				
-				//creer le msg de demande de contact l'envoyer à tout le monde 
-				final BroadcastSender bs = new BroadcastSender();
-				bs.broadcastToAllUsers("RequestPseudos");
-				
 				//on attend de finir de recevoir les contacts
-				//Thread.sleep(3300);
-				
-			} catch (UnknownHostException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				System.out.println("erreur");
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				System.out.println("erreur");
-
-			} /*catch (InterruptedException e) {
+				Thread.sleep(3300);
+			
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
+			}
 			
 			
 			final ContactList contactList = pageC.getContactList();
@@ -88,7 +73,6 @@ public class Action implements ActionListener{
 			for (Contact i : contactList.getList())
 				System.out.println(i.getPseudo());
         	
-			
 			if (contactList.comparePseudo(me)==false) {
 					okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));
 					
@@ -97,9 +81,7 @@ public class Action implements ActionListener{
 			        okFrame.setLocationRelativeTo(null);
 			        okFrame.setVisible(true);
 			        me.setPseudo(null);
-			        //arreter le thread 
-			        pageC.getBr().interrupt();
-			        pageC.resetBr();
+			        
 			} else {
 
 				okFrame.add(new JLabel("Welcome to the ChatSystem !"));
@@ -116,20 +98,6 @@ public class Action implements ActionListener{
 		            	connectionFrame.dispose();
 		    			MainMenu1 Main = new MainMenu1(me, contactList);
 		    			
-		    			//on envoye son pseudo aux autres 
-		    			try {
-		    				//creer le msg de demande de contact l'envoyer à tout le monde 
-		    				final BroadcastSender bs = new BroadcastSender();
-		    				bs.broadcastToAllUsers(Main.getMe().getPseudo());
-		    				
-		    			} catch (UnknownHostException e1) {
-		    				e1.printStackTrace();
-		    				System.out.println("erreur\n");
-		    			} catch (IOException e1) {
-		    				e1.printStackTrace();
-		    				System.out.println("erreur\n");
-
-		    			}
 		            }
 		        });
 		        t.setRepeats(false); // Only execute once
@@ -157,9 +125,6 @@ public class Action implements ActionListener{
 			final String pseudo = pageM.getEnterpseudo().getText();
 			Contact p = new Contact(pseudo);
 			
-			//creer le msg de demande de contact l'envoyer à tout le monde 
-			final BroadcastSender bs1 = new BroadcastSender();
-			
 			if (contactList.comparePseudo(p)==false) {
 					okFrame.add(new JLabel("This username is already used ! Please enter a new one !"));
 					
@@ -185,17 +150,8 @@ public class Action implements ActionListener{
 		    			pageM.getPseudoLabel().setText(pageM.getMe().getPseudo());
 		    			
 		    			//envoyer son pseudo aux autres 
-		    			try {
-		    				bs1.broadcastToAllUsers(pageM.getMe().getPseudo());
-		    				
-		    			} catch (UnknownHostException e1) {
-		    				e1.printStackTrace();
-		    				System.out.println("erreur");
-		    			} catch (IOException e1) {
-		    				e1.printStackTrace();
-		    				System.out.println("erreur");
-
-		    			}
+		    			ContactsManager cm = pageM.getCm();
+		    			cm.setSendMe();
 		            }
 		        });
 		        t.setRepeats(false); // Only execute once
