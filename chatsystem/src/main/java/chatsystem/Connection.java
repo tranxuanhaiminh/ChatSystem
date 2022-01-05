@@ -33,7 +33,8 @@ public class Connection {
 		me =new Contact();
 		
 		// iNitailisation du contacts manager
-		cm = null;
+		cm = new ContactsManager(this);
+		cm.start();
 		
 		this.verify = new Action(this);
 		

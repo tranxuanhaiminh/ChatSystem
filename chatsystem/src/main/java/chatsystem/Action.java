@@ -54,8 +54,7 @@ public class Action implements ActionListener{
 			final JFrame connectionFrame = pageC.getConnectionFrame();
 
 			//on crée et on lance le contact manager
-			pageC.setCm(new ContactsManager(pageC));
-			pageC.getCm().start();
+			pageC.getCm().setRunning(true);
 			
 			try {
 				//on attend de finir de recevoir les contacts
@@ -66,22 +65,24 @@ public class Action implements ActionListener{
 				e.printStackTrace();
 			}
 			
-			
+			pageC.getCm().setRunning(false);
 			final ContactList contactList = pageC.getContactList();
 			
 			for (Contact i : contactList.getList())
 				System.out.println(i.getPseudo());
         	
 			if (contactList.comparePseudo(me)==false) {
-					okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));
-					
-					//Display the window.
-					okFrame.setSize(500, 100);
-			        okFrame.setLocationRelativeTo(null);
-			        okFrame.setVisible(true);
-			        me.setPseudo(null);
-			        //supprime le contact manager
-			        pageC.setCm(null);
+				//on arrête le contact manager	
+				pageC.getCm().setRunning(false);
+
+				okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));
+				
+				//Display the window.
+				okFrame.setSize(500, 100);
+		        okFrame.setLocationRelativeTo(null);
+		        okFrame.setVisible(true);
+		        me.setPseudo(null);
+		        
 			        
 			} else {
 				
@@ -97,10 +98,9 @@ public class Action implements ActionListener{
 		            	okFrame.dispose();
 		            	connectionFrame.setVisible(false);
 		            	connectionFrame.dispose();
+		            	pageC.getCm().setState(); // mode Main
+		            	pageC.getCm().setRunning(true);
 		            	pageC.setMain(new MainMenu1(me, contactList,pageC.getCm()));
-				        //stop la partie connection du contact manager
-				        pageC.getCm().setRun_co(false); // la phase de connection est finie
-		    			
 		            }
 		        });
 		        t.setRepeats(false); // Only execute once
@@ -108,7 +108,7 @@ public class Action implements ActionListener{
 			}
 			
 			
-		} else if(pageM != null && event.getSource().equals(pageM.getChangepseudo())) {
+		} else if(pageM != null && event.getSource().equals(pageM.getChangepseudo())) { //modif pseudo
 			
 			final JFrame modifyFrame = pageM.getModifyFrame();
 			
