@@ -1,25 +1,12 @@
 package chatsystem;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
-import networkconnection.BroadcastReceiver;
-import networkconnection.BroadcastSender;
 
 public class Action implements ActionListener{
 	
@@ -44,48 +31,48 @@ public class Action implements ActionListener{
 
 	public void actionPerformed(ActionEvent event) {
 		
-		
-		
 		// pour la premiere connection
-		if(pageC != null && event.getSource() == pageC.getVerifyPseudo()) {
+		if(pageC != null && event.getSource().equals(pageC.getVerifyPseudo())) {
 			
 			final JFrame okFrame = new JFrame("Connecting....");
 			
 			final Contact me = pageC.getMe();
         	me.setPseudo(pageC.geText().getText());			
-        	final ContactList contactList = pageC.getContactList();
 			final JFrame connectionFrame = pageC.getConnectionFrame();
-			
-			//creer le msg de demande de contact l'envoyer à tout le monde 
-			BroadcastSender bs = new BroadcastSender();
+
+			//on crée et on lance le contact manager
+			pageC.getCm().setRunning(true);
 			
 			try {
-				bs.broadcastToAllUsers("RequestPseudos",InetAddress.getByName("10.1.255.255"));
-				
-			} catch (UnknownHostException e1) {
+				//on attend de finir de recevoir les contacts
+				Thread.sleep(3300);
+			
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				System.out.println("erreur");
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				System.out.println("erreur");
-
+				e.printStackTrace();
 			}
 			
-			// recevoir les contacts et les mettre dans la liste des contacts
-			BroadcastReceiver br = new BroadcastReceiver(pageC);
-
+			pageC.getCm().setRunning(false);
+			final ContactList contactList = pageC.getContactList();
+			
+			for (Contact i : contactList.getList())
+				System.out.println(i.getPseudo());
+        	
 			if (contactList.comparePseudo(me)==false) {
-					okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));
-					
-					//Display the window.
-					okFrame.setSize(500, 100);
-			        okFrame.setLocationRelativeTo(null);
-			        okFrame.setVisible(true);
-			        me.setPseudo(null);
-			} else {
+				//on arrête le contact manager	
+				pageC.getCm().setRunning(false);
 
+				okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));
+				
+				//Display the window.
+				okFrame.setSize(500, 100);
+		        okFrame.setLocationRelativeTo(null);
+		        okFrame.setVisible(true);
+		        me.setPseudo(null);
+		        
+			        
+			} else {
+				
 				okFrame.add(new JLabel("Welcome to the ChatSystem !"));
 				//Display the window.
 				okFrame.setSize(250, 100);
@@ -98,7 +85,9 @@ public class Action implements ActionListener{
 		            	okFrame.dispose();
 		            	connectionFrame.setVisible(false);
 		            	connectionFrame.dispose();
-		    			MainMenu1 Main = new MainMenu1(me, contactList);
+		            	pageC.getCm().setState(); // mode Main
+		            	pageC.getCm().setRunning(true);
+		            	pageC.setMain(new MainMenu1(me, contactList,pageC.getCm()));
 		            }
 		        });
 		        t.setRepeats(false); // Only execute once
@@ -106,7 +95,7 @@ public class Action implements ActionListener{
 			}
 			
 			
-		} else if(pageM != null && event.getSource() == pageM.getChangepseudo()) {
+		} else if(pageM != null && event.getSource().equals(pageM.getChangepseudo())) { //modif pseudo
 			
 			final JFrame modifyFrame = pageM.getModifyFrame();
 			
@@ -115,13 +104,12 @@ public class Action implements ActionListener{
 	        modifyFrame.setVisible(true);
 	        
 			
-		} else if (pageM != null && event.getSource() == pageM.getVerifyPseudo()) {
+		} else if (pageM != null && event.getSource().equals(pageM.getVerifyPseudo())) {
 			
 
 			final JFrame modifyFrame = pageM.getModifyFrame();
 			
 			ContactList contactList = pageM.getContactList();
-
 			
 			final JFrame okFrame = new JFrame("...");
 			final String pseudo = pageM.getEnterpseudo().getText();
@@ -150,6 +138,10 @@ public class Action implements ActionListener{
 		            	modifyFrame.setVisible(false);
 		    			pageM.getMe().setPseudo(pseudo);
 		    			pageM.getPseudoLabel().setText(pageM.getMe().getPseudo());
+		    			
+		    			//envoyer son pseudo aux autres 
+		    			ContactsManager cm = pageM.getCm();
+		    			cm.setSendMe();
 		            }
 		        });
 		        t.setRepeats(false); // Only execute once
@@ -158,7 +150,7 @@ public class Action implements ActionListener{
 			
 			}
 		
-		else if (pageW != null && event.getSource()== pageW.getSendChat()) {
+		else if (pageW != null && event.getSource().equals(pageW.getSendChat())) {
 			//to do envoi du message
 			
 			JTextField chatInput = pageW.getChatInput();

@@ -35,14 +35,11 @@ public class ContactList {
 	
 	public Contact exists(String ip) {
 		Contact res= null;
-		int n = list.size();
-		Contact c = null;
-		for (int i=1; i<n+1; i++) {
-			c= list.get(i);
+		for (Contact c : this.list) {
 			if (ip.compareTo(c.getIpaddress())==0)
 				res = c;
 		}
-			return res;
+		return res;
 	}
 	
 	public ArrayList<Contact> getList() {

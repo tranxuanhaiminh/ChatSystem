@@ -1,11 +1,8 @@
 package chatsystem;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,15 +11,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+
 public class MainMenu1{
 
 	//Informations
 	private ContactList contactList;
 	private Contact me;
+	// recevoir les contacts et les mettre dans la liste des contacts
+	private ContactsManager cm=null;
 	
-	//private Action modifypseudo;
-	
-	//private static String pseudo = "toto";
 	
 	final private JFrame frame;
 	final private JPanel userPanel;
@@ -37,8 +34,12 @@ public class MainMenu1{
 	final private JFrame modifyFrame;
 	final private JButton verifyPseudo;
 	final private JTextField enterpseudo;
+	
 
-	public MainMenu1(Contact m, ContactList l) {
+	public MainMenu1(Contact m, ContactList l, ContactsManager cm) {
+		
+		// recevoir les contacts et les mettre dans la liste des contacts
+		this.cm = cm;
 		
 		this.me = m; 
 		this.contactList = l;
@@ -114,11 +115,6 @@ public class MainMenu1{
 	}
 
 
-		/*public static void main(String[] args) {
-			new MainMenu();
-		}*/
-	
-
 	public Contact getMe() {
 		return me;
 	}
@@ -147,6 +143,10 @@ public class MainMenu1{
 	
 	public JLabel getPseudoLabel() {
 		return pseudoLabel;
+	}
+	
+	public ContactsManager getCm() {
+		return cm;
 	}
 
 

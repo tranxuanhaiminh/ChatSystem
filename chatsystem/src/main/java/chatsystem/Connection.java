@@ -1,7 +1,6 @@
 package chatsystem;
 
 import java.awt.*;
-import java.awt.event.*;
 
 import javax.swing.*;
 
@@ -13,13 +12,26 @@ public class Connection {
 	private JFrame connectionFrame;
 	private Action verify;
 	private JButton verifyPseudo;
+
+	// recevoir les contacts et les mettre dans la liste des contacts
+	private ContactsManager cm;
+	
+	//page principale
+	private MainMenu1 main;
+	
 	
 	public Connection() {
 		
 		contactList = new ContactList();
+		
 		Contact c = new Contact("toto","120.1.1.0");
 		contactList.addContact(c);
+		
 		me =new Contact();
+		
+		// iNitailisation du contacts manager
+		cm = new ContactsManager(this);
+		cm.start();
 		
 		this.verify = new Action(this);
 		
@@ -52,6 +64,7 @@ public class Connection {
         connectionFrame.setVisible(true);
         
 	}
+	
 
 
 
@@ -73,47 +86,6 @@ public class Connection {
 
 
 
-
-/*	public void actionPerformed(ActionEvent event) {
-		
-		final JFrame okFrame = new JFrame("Connecting....");
-		
-		me.setPseudo(enterpseudo.getText());
-		
-		//creer le msg de demande de contact l'envoyer à tout le monde 
-		// recevoir les contacts et les mettre dans la liste des contacts
-
-		if (contactList.comparePseudo(me)==false) {
-				okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));
-				
-				//Display the window.
-				okFrame.setSize(500, 100);
-		        okFrame.setLocationRelativeTo(null);
-		        okFrame.setVisible(true);
-		        me.setPseudo(null);
-		        
-		} else {
-
-			okFrame.add(new JLabel("Welcome to the ChatSystem !"));
-			//Display the window.
-			okFrame.setSize(250, 100);
-	        okFrame.setLocationRelativeTo(null);
-	        okFrame.setVisible(true);
-	        
-	        Timer t = new Timer(500, new ActionListener() {
-	            public void actionPerformed(ActionEvent e) {
-	            	okFrame.setVisible(false);
-	            	okFrame.dispose();
-	            	connectionFrame.setVisible(false);
-	            	connectionFrame.dispose();
-	    			MainMenu Main = new MainMenu(me, contactList);
-	            }
-	        });
-	        t.setRepeats(false); // Only execute once
-	        t.start();
-		}
-    }
-*/
 	public Contact getMe() {
 		return me;
 	}
@@ -135,6 +107,21 @@ public class Connection {
 		return verifyPseudo;
 	}
 
+	public ContactsManager getCm() {
+		return cm;
+	}
+	
+	public void setCm(ContactsManager m) {
+		cm = m;
+	}
 
+	public MainMenu1 getMain() {
+		return main;
+	}
+
+
+	public void setMain(MainMenu1 main) {
+		this.main = main;
+	}
 
 }
