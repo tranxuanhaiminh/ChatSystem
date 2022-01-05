@@ -24,18 +24,21 @@ public class TCPServer extends Thread {
 		PrintWriter out_date;
 		
 		try {
+			System.out.println("Server Thread started");
 			/**
 			 * Send Connection time to client
 			 */
 			out_date = new PrintWriter(clientSocket.getOutputStream());
-			out_date.println(date);
-			out_date.flush();
+//			out_date.println(date);
+//			out_date.flush();
+			System.out.println("Server sent connection time");
 			
 			/**
 			 * Create a variable that wait for messages from clients
 			 */
 			input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			msg = input.readLine();
+			System.out.println("Server accept message from client");
 			
 			/**
 			 * Print message sent from client everytime it's received
