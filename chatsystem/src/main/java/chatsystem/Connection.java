@@ -1,11 +1,8 @@
 package chatsystem;
 
 import java.awt.*;
-import java.awt.event.*;
 
 import javax.swing.*;
-
-import networkconnection.BroadcastReceiver;
 
 public class Connection {
 	

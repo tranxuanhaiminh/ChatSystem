@@ -1,63 +1,109 @@
 package networkconnection;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
-public class UDPReceiver extends Thread {
-
-	private DatagramSocket socket;
+public class UDPReceiver{
+	
 	private boolean running;
-	private int port = 4445;
-	private byte[] buf = new byte[256];
-
-	public UDPReceiver() {
-		super();
-		start();
-	}
-
-	public void run() {
-
-		running = true;
+	private DatagramSocket receiversocket;
+	private int port;
+	private byte[] buffer;
+	private DatagramPacket in;
+	
+	public UDPReceiver(){
+		
+		this.port = 52799;
+		this.running=true;
+		try {
+			this.receiversocket = new DatagramSocket(port);
+		} catch (SocketException e) {
+			e.printStackTrace();
+			System.out.println("Erreur lors de la creation du socket de reception \n");
+		}
 
 		try {
-			socket = new DatagramSocket(port, InetAddress.getByName("localhost"));
-
-			while (running) {
-				System.out.println(getClass().getName() + ">>>Ready to receive UDP packets!");
-				
-				DatagramPacket packet = new DatagramPacket(buf, buf.length);
-				socket.receive(packet);
-				
-				System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
-		        System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()));
-		        
-		        String msg = new String(packet.getData(), 0, packet.getLength());
-
-		        packet = new DatagramPacket(buf, buf.length, packet.getAddress(), packet.getPort());
-
-				if (msg.equals("end")) {
-					running = false;
-					continue;
-				}
-
-				socket.send(packet);
-				
-			}
-			socket.close();
-
-		} catch (SocketException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UnknownHostException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e) {
+			receiversocket.setBroadcast(true);
+		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	public String[] receive() {
+		
+		String[] ret = null;
+		
+		System.out.println("Pret à recevoir \n");
+		buffer = new byte[256];
+		in = new DatagramPacket(buffer, buffer.length);
+		
+		try {
+			
+			receiversocket.receive(in);
+			String msg = new String(in.getData(),0,in.getLength());
+			String addr = in.getAddress().getHostName();
+			
+			//On récupère toutes nos addresses pour filtrer les messages
+			ArrayList<InetAddress> m= new ArrayList<InetAddress>();
+	        Enumeration<NetworkInterface> e = null;
+			try {
+				e = NetworkInterface.getNetworkInterfaces();
+			} catch (SocketException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			while(e.hasMoreElements())
+			{
+				// Get all ip addresses of each interfaces (Normally only 1 each and not treated if many)
+			    NetworkInterface n = (NetworkInterface) e.nextElement();
+			    Enumeration<InetAddress> ee = n.getInetAddresses();
+			    
+			    // For each ip address on this machine 
+			    while (ee.hasMoreElements())
+			    {
+			        InetAddress i = (InetAddress) ee.nextElement();
+			        m.add(i);
+			    }
+			}
+			
+			
+			boolean cond = false;
+			try {
+				cond = !(m.contains(InetAddress.getByName(addr)));
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if (cond) // on ne peut pas recevoir un msg u'on a envoyé nous même
+				ret = new String[] {msg,addr};
+			
+		} catch (SocketTimeoutException e) {
+			System.out.println("Timer expiré fin du receive (connection\n");
+		} catch (IOException e) {
+			System.out.println("Erreur lors de la reception du mess\n");
+			e.printStackTrace();
+		}
+		
+		return ret;
+		
+	}
+	
+	
+	public void setRunning (boolean b) {
+		this.running= b;
+	}
+	
+	public boolean isRunning() {
+		return this.running;
+	}
+	
+	public DatagramSocket getReceiversocket() {
+		return receiversocket;
+	}
+	
 }

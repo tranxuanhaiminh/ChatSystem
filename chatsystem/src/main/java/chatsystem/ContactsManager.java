@@ -5,13 +5,15 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import networkconnection.UDPReceiver;
+import networkconnection.UDPSender;
+
 public class ContactsManager extends Thread{
 	
 	private Connection cc;
 	private UDPReceiver ContactReceiver;
 	private UDPSender ContactSender;
 	private boolean sendMe= false;
-	private boolean run_co=false;
 	private boolean state; // false = connecting phase true = Main 
 	private boolean running;
 	
