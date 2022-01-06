@@ -10,11 +10,11 @@ import javax.swing.Timer;
 
 public class Action implements ActionListener{
 	
-	public Connection pageC;
+	public Connectionwindow pageC;
 	public MainMenu1 pageM;
 	public ChatWindow1 pageW;
 	
-	public Action(Connection c){
+	public Action(Connectionwindow c){
 		super();
 		this.pageC = c;
 	}

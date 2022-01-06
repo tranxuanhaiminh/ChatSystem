@@ -10,7 +10,7 @@ import networkconnection.UDPSender;
 
 public class ContactsManager extends Thread{
 	
-	private Connection cc;
+	private Connectionwindow cc;
 	private UDPReceiver ContactReceiver;
 	private UDPSender ContactSender;
 	private boolean sendMe= false;
@@ -18,7 +18,7 @@ public class ContactsManager extends Thread{
 	private boolean running;
 	
 	
-	public ContactsManager(Connection c) {
+	public ContactsManager(Connectionwindow c) {
 		this.cc = c;
 		this.running = false;
 		this.state = false;
