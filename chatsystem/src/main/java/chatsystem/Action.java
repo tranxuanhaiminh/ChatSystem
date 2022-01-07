@@ -7,6 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
+import networkconnection.UDPSender;
+
 
 public class Action implements ActionListener{
 	
@@ -109,12 +111,12 @@ public class Action implements ActionListener{
 
 			final JFrame modifyFrame = pageM.getModifyFrame();
 			
-			ContactList contactList = pageM.getContactList();
 			
 			final JFrame okFrame = new JFrame("...");
 			final String pseudo = pageM.getEnterpseudo().getText();
 			Contact p = new Contact(pseudo);
-			
+			ContactList contactList = pageM.getContactList();
+
 			if (contactList.comparePseudo(p)==false) {
 					okFrame.add(new JLabel("This username is already used ! Please enter a new one !"));
 					
@@ -141,7 +143,9 @@ public class Action implements ActionListener{
 		    			
 		    			//envoyer son pseudo aux autres 
 		    			ContactsManager cm = pageM.getCm();
-		    			cm.setSendMe();
+		    			UDPSender cs= cm.getContactSender();
+    					cs= new UDPSender(pageM.getMe().getPseudo(), "255.255.255.255");
+						cs.send();
 		            }
 		        });
 		        t.setRepeats(false); // Only execute once
