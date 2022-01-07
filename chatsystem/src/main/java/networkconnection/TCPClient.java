@@ -25,18 +25,20 @@ public class TCPClient extends Thread {
 		String msg;
 		BufferedReader input;
 		
-		try {			
+		try {		
+			System.out.println("Client Thread started");	
 			/**
 			 * Receive the connection time from the server
 			 */
 			input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			msg = input.readLine();
-			System.out.println("Connection Successful on " + msg);
+//			msg = input.readLine();
+//			System.out.println("Connection Successful on " + msg);
 			
 			/**
 			 * Create a variable to send message to the server
 			 */
 			out = new PrintWriter(clientSocket.getOutputStream());
+			System.out.println("Client ready to send message");
 			
 			/**
 			 * Send message to the server everytime the client enter a message
