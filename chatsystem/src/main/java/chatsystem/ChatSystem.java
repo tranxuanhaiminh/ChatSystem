@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.util.ArrayList;
-import java.sql.*;
 
-import databaselite.Databasecon;
-import networkconnection.IpAddress;
+import database.Databasecon;
+import network.IpAddress;
+
+import java.sql.*;
 
 public class ChatSystem {
 

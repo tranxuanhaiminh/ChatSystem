@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
-import networkconnection.UDPSender;
+import network.UDPSender;
 
 
 public class Action implements ActionListener{

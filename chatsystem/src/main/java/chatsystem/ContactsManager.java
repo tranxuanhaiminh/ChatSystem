@@ -5,8 +5,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import networkconnection.UDPReceiver;
-import networkconnection.UDPSender;
+import network.UDPReceiver;
+import network.UDPSender;
 
 public class ContactsManager extends Thread{
 	

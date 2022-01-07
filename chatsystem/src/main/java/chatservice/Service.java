@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import networkconnection.BroadcastSender;
+import network.BroadcastSender;
 
 /**
  *
@@ -20,7 +20,7 @@ public class Service {
     
     public void requestPseudos() {
     	try {
-			bcast.broadcastToAllUsers("Request pseudos", InetAddress.getByName("255.255.255.255"));
+			bcast.broadcastToAllUsers("Request pseudos", InetAddress.getByName("255.255.255.255"), true);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
