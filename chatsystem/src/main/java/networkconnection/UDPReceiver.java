@@ -5,6 +5,8 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import networkconnection.UDPReceiver;
+
 public class UDPReceiver{
 	
 	private boolean running;
@@ -15,7 +17,7 @@ public class UDPReceiver{
 	
 	public UDPReceiver(){
 		
-		this.port = 52799;
+		this.port = 58799;
 		this.running=true;
 		try {
 			this.receiversocket = new DatagramSocket(port);
@@ -39,6 +41,7 @@ public class UDPReceiver{
 		String[] ret = null;
 		
 		System.out.println("Pret à recevoir \n");
+		
 		buffer = new byte[256];
 		in = new DatagramPacket(buffer, buffer.length);
 		
@@ -47,7 +50,7 @@ public class UDPReceiver{
 			receiversocket.receive(in);
 			String msg = new String(in.getData(),0,in.getLength());
 			String addr = in.getAddress().getHostName();
-			
+		
 			//On récupère toutes nos addresses pour filtrer les messages
 			ArrayList<InetAddress> m= new ArrayList<InetAddress>();
 	        Enumeration<NetworkInterface> e = null;
@@ -72,6 +75,7 @@ public class UDPReceiver{
 			}
 			
 			
+			
 			boolean cond = false;
 			try {
 				cond = !(m.contains(InetAddress.getByName(addr)));
@@ -79,15 +83,18 @@ public class UDPReceiver{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			if (cond) // on ne peut pas recevoir un msg u'on a envoyé nous même
+			
+			if (cond) { // on ne peut pas recevoir un msg u'on a envoyé nous même
 				ret = new String[] {msg,addr};
+			}
 			
 		} catch (SocketTimeoutException e) {
-			System.out.println("Timer expiré fin du receive (connection\n");
+			System.out.println("Timer expiré fin du receive (connection).\n");
 		} catch (IOException e) {
 			System.out.println("Erreur lors de la reception du mess\n");
 			e.printStackTrace();
 		}
+		
 		
 		return ret;
 		
@@ -104,6 +111,16 @@ public class UDPReceiver{
 	
 	public DatagramSocket getReceiversocket() {
 		return receiversocket;
+	}
+	
+
+	public static void main(String[] args) {
+		
+		UDPReceiver r = new UDPReceiver();
+		while (true) {
+			r.receive();
+		}
+
 	}
 	
 }

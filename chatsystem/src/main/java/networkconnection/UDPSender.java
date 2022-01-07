@@ -7,15 +7,17 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import networkconnection.UDPReceiver;
+
 public class UDPSender{
 	
 	private DatagramSocket sendersocket;
 	private int port;
 	private String message;
-	public InetAddress dest;
+	public String dest;
 	
 	
-	public UDPSender(String message, InetAddress addr) {
+	public UDPSender(String message, String addr) {
 		this.port= 58799;
 		
 		try {
@@ -36,8 +38,13 @@ public class UDPSender{
 	
 	
 	public void send(){
-		
-		DatagramPacket out = new DatagramPacket(message.getBytes(),message.length(), dest, port);
+		DatagramPacket out=null;
+		try {
+			out = new DatagramPacket(message.getBytes(),message.length(), InetAddress.getByName(dest), port);
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		try {
 			sendersocket.send(out);
@@ -52,17 +59,8 @@ public class UDPSender{
 	
 	public static void main(String[] args) {
 		
-		//UDPReceiver r = new UDPReceiver();
-		//r.start();
-		
-		try {
-			UDPSender u = new UDPSender("Test", InetAddress.getByName("10.1.255.255"));
+			UDPSender u = new UDPSender("Test","255.255.255.255");
 			u.send();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		
 	}
 }

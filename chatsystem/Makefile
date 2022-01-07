@@ -10,3 +10,9 @@ connect : build
 clean:
 	@echo "\n==== CLEANING ====\n"
 	-rm target/chatsystem-0.0.1-SNAPSHOT.jar
+	
+test:
+	@echo "\n==== LOADING test ====\n"
+	mvn package
+	java -cp target/chatsystem-0.0.1-SNAPSHOT.jar networkconnection.UDPReceiver
+
