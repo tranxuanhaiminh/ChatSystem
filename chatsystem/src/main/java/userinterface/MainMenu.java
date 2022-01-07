@@ -18,9 +18,6 @@ import javax.swing.table.DefaultTableModel;
  * @author Minh
  */
 public class MainMenu extends javax.swing.JFrame {
-    
-        private Icon green = new ImageIcon("green.png");
-        private Icon gray = new ImageIcon("gray.png");
 
 	private ContactList contactList;
 	private Contact me;
@@ -41,8 +38,8 @@ public class MainMenu extends javax.swing.JFrame {
 //		this.contactList = l;
 		
         initComponents();
-        addUser("user1");
-        addUser("user2");
+        addUser("user1", "Images/green.png");
+        addUser("user2", "Images/gray.png");
     }
 
     /**
@@ -66,16 +63,15 @@ public class MainMenu extends javax.swing.JFrame {
         jButton1.setText("Modify");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
-            },
+            new Object [][] {},
             new String [] {
                 "Status", "Username"
             }
         ) {
+            public Class getColumnClass(int column) {
+    			return getValueAt(0, column).getClass();
+    		}
+            
             boolean[] canEdit = new boolean [] {
                 false, false
             };
@@ -88,9 +84,9 @@ public class MainMenu extends javax.swing.JFrame {
         jTable1.setShowGrid(true);
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(150);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(150);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(150);
+            jTable1.getColumnModel().getColumn(0).setMinWidth(45);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(45);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(45);
             jTable1.getColumnModel().getColumn(1).setResizable(false);
             jTable1.getColumnModel().getColumn(1).setPreferredWidth(1000);
         }
@@ -160,9 +156,9 @@ public class MainMenu extends javax.swing.JFrame {
         });
     }
     
-    public void addUser(String username) {
+    public void addUser(String username, String img) {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.addRow(new Object[]{new ImageIcon("green.png"), username});
+        model.addRow(new Object[]{new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(10,10,java.awt.Image.SCALE_SMOOTH)), username});
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
