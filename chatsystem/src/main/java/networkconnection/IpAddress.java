@@ -12,7 +12,7 @@ import java.util.List;
 
 public class IpAddress {
 
-	public static InetAddress getAddress() throws IOException {
+	public InetAddress getAddress() throws IOException {
 		
 		InetAddress iaddress = null;
 		
@@ -48,10 +48,8 @@ public class IpAddress {
 	public static void main(String[] args) {
 		IpAddress ipAddress = new IpAddress();
 		try {
-			ArrayList<InterfaceAddress> addresslist = ipAddress.getAddress();
-			for (InterfaceAddress i : addresslist) {
+			InetAddress i = ipAddress.getAddress();
 				System.out.println(i.toString());
-			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
