@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-public class Connectionwindow {
+public class Connection {
 	
 	private ContactList contactList;
 	private Contact me;
@@ -20,7 +20,7 @@ public class Connectionwindow {
 	private MainMenu1 main;
 	
 	
-	public Connectionwindow() {
+	public Connection() {
 		
 		contactList = new ContactList();
 		
@@ -71,7 +71,7 @@ public class Connectionwindow {
 	private static void createAndShowGUI() {
         //Make sure we have nice window decorations.
         JFrame.setDefaultLookAndFeelDecorated(true);
-        Connectionwindow connection = new Connectionwindow();
+        Connection connection = new Connection();
     }
 	
 	public static void main(String[] args) {

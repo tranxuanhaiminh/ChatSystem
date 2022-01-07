@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import chatsystem.Connectionwindow;
+import chatsystem.Connection;
 import chatsystem.Contact;
 import chatsystem.ContactList;
 import chatsystem.MainMenu1;
@@ -20,7 +20,7 @@ public class BroadcastReceiver extends Thread {
 	private int port = 5723;
     private byte[] buf = new byte[256];
     private MainMenu1 mm=null;
-    private Connectionwindow mc=null;
+    private Connection mc=null;
     
 	
 	public BroadcastReceiver(MainMenu1 me) {
@@ -29,7 +29,7 @@ public class BroadcastReceiver extends Thread {
 		this.mm = me;
 	}
 	
-	public BroadcastReceiver(Connectionwindow me) {
+	public BroadcastReceiver(Connection me) {
 		super();
 		start();
 		this.mc = me;

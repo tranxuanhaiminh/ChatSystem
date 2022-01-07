@@ -25,7 +25,7 @@ public class ChatSystem {
 		System.out.println(ipadd.toString());
 		
 		// Connect to the database from the databasefile name
-		Connection conn = dbcon.connect(dbfile);
+		java.sql.Connection conn = dbcon.connect(dbfile);
 		
 		
 		if (dbcon.checktable(conn, "chatHistory")) {
