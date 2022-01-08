@@ -3,7 +3,7 @@ package chatsystem;
 public class Contact {
 	
 	private String pseudo;
-	private String ipaddress;
+	private String ipaddress; // à convertir en InetAddress
 	
 	
 	public Contact() {
