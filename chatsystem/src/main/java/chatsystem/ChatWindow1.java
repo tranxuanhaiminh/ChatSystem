@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -49,7 +50,7 @@ public class ChatWindow1 {
 		frame.getContentPane().add(BorderLayout.CENTER, chatHistory);
 		frame.setVisible(true);
 		
-		System.out.print(chatInput.getSize());
+		//System.out.print(chatInput.getSize());
 		
 	}
 
@@ -73,6 +74,11 @@ public class ChatWindow1 {
 		Contact p = new Contact("titi");
 		new ChatWindow1(p);
 
+	}
+	
+	public void addMesg(Message m) { //à faire
+		JLabel jl= new JLabel(m.toString());
+		frame.getContentPane().add(jl);
 	}
 
 }

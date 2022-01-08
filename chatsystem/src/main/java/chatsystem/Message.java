@@ -15,14 +15,7 @@ public class Message implements Serializable{
 		this.msg = msg;
 	}
 	
-	public void printMsg(ChatWindow1 c) {
-		if (c == null) {
-			System.out.println(msg + " Date : "+ date.toString());
-		}
-		
-	}
-	
 	public String toString() {
-		return msg +"\nDate : "+date+"";
+		return "\n"+msg +"\nDate : "+date+"";
 	}
 }

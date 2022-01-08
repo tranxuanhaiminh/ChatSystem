@@ -10,7 +10,7 @@ public class DemoChatJoin {
 		String host = "127.0.0.1";
 		int port = 5098;
 		Socket clientSocket = new Socket(host, port);
-		new TCPClient(clientSocket);
-		new TCPServer(clientSocket);
+		new TCPClient1(clientSocket);
+		new TCPServer1(clientSocket);
 	}
 }

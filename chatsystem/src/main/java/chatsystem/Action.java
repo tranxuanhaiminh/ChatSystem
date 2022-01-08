@@ -155,12 +155,21 @@ public class Action implements ActionListener{
 			}
 		
 		else if (pageW != null && event.getSource().equals(pageW.getSendChat())) {
-			//to do envoi du message
 			
 			JTextField chatInput = pageW.getChatInput();
-			Message msg = new Message(pageW.getDest(), chatInput.getText());
-			msg.printMsg(null);
-			//to do envoi tcp au dest + affichage
+			
+			if (chatInput == null) {
+				System.out.println("le msg est null\n");
+			} else {
+				//afficher le message sur la page
+				Message msg = new Message(pageW.getDest(), chatInput.getText());
+				System.out.println(msg);
+				pageW.addMesg(msg);
+			}
+			
+			//envoyer le messages par les tcp
+			//utiliser le message manager
+			
 			
 		}
     }

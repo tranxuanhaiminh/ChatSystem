@@ -1,4 +1,4 @@
-// package chatservice;
+package chatservice;
 
 import java.net.*;
 import java.util.*;
