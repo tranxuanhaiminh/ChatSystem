@@ -24,11 +24,9 @@ public class MainMenu1{
 	// recevoir les contacts et les mettre dans la liste des contacts
 	private ContactsManager cm=null;
 	
-	
 	final private JFrame frame;
 	final private JPanel userPanel;
 	final private JPanel listPanel;
-	final private JButton changepseudo;
 	final private JLabel pseudoLabel;
 	
 	//	private JScrollPane scrollPane;
@@ -38,6 +36,7 @@ public class MainMenu1{
 	final private JFrame modifyFrame;
 	final private JButton verifyPseudo;
 	final private JTextField enterpseudo;
+	final private JButton changepseudo;
 	
 
 	public MainMenu1(Contact m, ContactList l, ContactsManager cm) {
@@ -65,10 +64,14 @@ public class MainMenu1{
 			 
 			 public void windowClosing(WindowEvent e) {
 				 
+				 // Sending a disconnected msg
 				 System.out.println("\nDISCONNECTING ...\n");
 				 UDPSender c = cm.getContactSender();
 				 c = new UDPSender("DISCONNECTED","255.255.255.255");
 				 c.send();
+				 // Stopping the Contact manager
+				 cm.setRunning(false);
+				 
 			     System.exit(0);
 			  
 			 }
