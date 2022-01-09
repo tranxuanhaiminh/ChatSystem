@@ -5,12 +5,15 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.Timer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import networkconnection.UDPSender;
 
 
-public class Action implements ActionListener{
+public class Action implements ActionListener, ListSelectionListener{
 	
 	public Connection pageC;
 	public MainMenu1 pageM;
@@ -165,6 +168,7 @@ public class Action implements ActionListener{
 				Message msg = new Message(pageW.getDest(), chatInput.getText());
 				System.out.println(msg);
 				pageW.addMesg(msg);
+				//ajouter à la base de données
 			}
 			
 			//envoyer le messages par les tcp
@@ -173,6 +177,17 @@ public class Action implements ActionListener{
 			
 		}
     }
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+		ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+        String pseudo = (String)e.getSource();
+        
+        
+		
+		
+	}
 	
 
 }

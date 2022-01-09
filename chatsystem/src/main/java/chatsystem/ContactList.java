@@ -22,11 +22,10 @@ public class ContactList {
 
 	public boolean comparePseudo(Contact c) {
 		boolean isUnique = true;
-		int n = list.size();
-		for (int i=0; i<n; i++) {
-			if (list.get(i)==null)
+		for (Contact ct : this.list) {
+			if (ct==null) // pourquoi ??
 				System.out.println("null");
-			if (c.getPseudo().compareTo(list.get(i).getPseudo())==0) {
+			if (c.getPseudo().compareTo(ct.getPseudo())==0) {
 				isUnique = false;
 			}
 		}
