@@ -1,5 +1,6 @@
 package chatsystem;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
@@ -155,9 +156,7 @@ public class Action implements ActionListener, ListSelectionListener{
 		        t.start();
 			}
 			
-			}
-		
-		else if (pageW != null && event.getSource().equals(pageW.getSendChat())) {
+		} else if (pageW != null && event.getSource().equals(pageW.getSendChat())) {
 			
 			JTextField chatInput = pageW.getChatInput();
 			
@@ -175,6 +174,12 @@ public class Action implements ActionListener, ListSelectionListener{
 			//utiliser le message manager
 			
 			
+		} else if (pageM != null && event.getSource().equals(pageM.getYesB())) {
+			
+			pageM.getStartingChat().setVisible(false);
+			// to do : start the chat session
+			System.out.println("\nStarting a chat session....\n");
+			
 		}
     }
 
@@ -182,10 +187,15 @@ public class Action implements ActionListener, ListSelectionListener{
 	public void valueChanged(ListSelectionEvent e) {
 		// TODO Auto-generated method stub
 		ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-        String pseudo = (String)e.getSource();
+        String pseudo = (String)pageM.getPseudosList().getSelectedValue();
         
+        //pageM.setQuestion(new JLabel("Do you want to start a Chat Session with "+ pseudo+" ?"));
         
-		
+        pageM.getStartingChat().getContentPane().add(new JLabel("Do you want to start a Chat Session with "+ pseudo+" ?"), BorderLayout.NORTH);
+        
+        //Display the window.
+        pageM.getStartingChat().setLocationRelativeTo(null); // au centre
+        pageM.getStartingChat().setVisible(true);
 		
 	}
 	

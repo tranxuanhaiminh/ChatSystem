@@ -1,6 +1,8 @@
 package chatsystem;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -38,6 +40,8 @@ public class MainMenu1{
 	final private JButton verifyPseudo;
 	final private JTextField enterpseudo;
 	final private JFrame startingChat;
+	private JButton yesB;
+	private JLabel question;
 	
 	//Others size 
 	private Dimension othersFrameSize;
@@ -50,7 +54,7 @@ public class MainMenu1{
 		this.me = m; 
 		this.contactList = l;
 		
-		othersFrameSize = new Dimension(200, 100);
+		othersFrameSize = new Dimension(400, 100);
 
 		frame = new JFrame();
 		Dimension frameSize = new Dimension(1000,700);
@@ -136,23 +140,29 @@ public class MainMenu1{
         startingChat.setSize(othersFrameSize);
         
         //Create and set up the panel.
-        JPanel startPanel = new JPanel(new GridLayout(2, 1));
+        JPanel startPanel = new JPanel(new GridLayout(1, 2));
         
-        JLabel question = new JLabel("Do you want to start a Chat Session with this user ?");
-        startingChat.add(question, BorderLayout.CENTER);
+        yesB = new JButton("Yes");
+        yesB.addActionListener(new Action(this));
         
-        JButton yesB = new JButton("Yes");
-        yesB.addActionListener(this);
         JButton noB = new JButton("No");
-        noB.addActionListener(new ActionListener)
+        noB.addActionListener(new ActionListener() {
+        	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				startingChat.setVisible(false);
+			}
+        	
+        });
         
         startPanel.add(yesB);
-        
         startPanel.add(noB);
         
-        startingChat.add(startPanel);
+        startingChat.getContentPane().add(startPanel,  BorderLayout.SOUTH);
         
         //////////////////////////////////////////////////////////////////////////////
+        
+        
         frame.setVisible(true);
 
 	}
@@ -190,7 +200,25 @@ public class MainMenu1{
 		return cm;
 	}
 	
+	public JFrame getStartingChat() {
+		return startingChat;
+	}
 	
+	public JButton getYesB() {
+		return yesB;
+	}
+	
+	public JList getPseudosList() {
+		return pseudosList;
+	}
+	
+	public JLabel getQuestion() {
+		return question;
+	}
+	
+	public void setQuestion(JLabel q) {
+		question = q;
+	}
 	public static void main(String[] args) {
 		
 		ContactList cl = new ContactList();
