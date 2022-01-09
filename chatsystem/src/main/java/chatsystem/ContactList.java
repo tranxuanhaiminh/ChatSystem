@@ -2,7 +2,7 @@ package chatsystem;
 
 import java.util.ArrayList;
 
-public class ContactList {
+public class ContactList { //
 	
 	private ArrayList<Contact> list;
 	

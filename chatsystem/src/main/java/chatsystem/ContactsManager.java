@@ -94,7 +94,6 @@ public class ContactsManager extends Thread{
 		    	
 				this.ContactReceiver.setRunning(false);
 		    	System.out.println("Fin de la reception des contacts phase de connection\n");
-		    	
 		    	DatagramSocket rs = ContactReceiver.getReceiversocket();
 	    		
 	    		try {
@@ -103,7 +102,7 @@ public class ContactsManager extends Thread{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-		    	
+
 			} else if (state == true) {
 				
 		    	try {
@@ -156,6 +155,17 @@ public class ContactsManager extends Thread{
 							this.ContactSender.send();
 					    	System.out.println("\nENVOI de son contact à "+ addr+"\n");
 
+						} else if (msg.equals("DISCONNECTED")) {
+							
+							Contact c;
+							c = cl.exists(addr);
+							
+					        if (c!= null) {
+					        	System.out.println("Ce contact n'existe pas, Erreur\n");
+					        } else {
+					        	System.out.println("\n SUPPRESSION DU CONTACT pendant la session " + msg+" "+ addr +" \n");
+					        	this.cc.getMain().getContactList().removeContact(c);
+					        }
 						}
 					}
 				}

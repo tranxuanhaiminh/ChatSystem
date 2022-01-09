@@ -1,6 +1,8 @@
 package chatsystem;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -10,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+
+import networkconnection.UDPSender;
 
 
 public class MainMenu1{
@@ -55,7 +59,21 @@ public class MainMenu1{
 
 		frame = new JFrame();
 		frame.setSize(1000, 700);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			 
+			 public void windowClosing(WindowEvent e) {
+				 
+				 System.out.println("\nDISCONNECTING ...\n");
+				 UDPSender c = cm.getContactSender();
+				 c = new UDPSender("DISCONNECTED","255.255.255.255");
+				 c.send();
+			     System.exit(0);
+			  
+			 }
+			  
+			   });
 
 		//		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
 
