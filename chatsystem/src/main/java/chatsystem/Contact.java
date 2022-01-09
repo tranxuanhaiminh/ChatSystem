@@ -33,4 +33,8 @@ public class Contact {
 		return ipaddress;
 	}
 	
+	public String toString() {
+		return this.pseudo;
+	}
+	
 }

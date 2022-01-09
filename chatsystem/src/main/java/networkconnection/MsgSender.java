@@ -1,33 +1,37 @@
 package networkconnection;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Scanner;
 
-public class TCPClient1 extends Thread {
+import chatsystem.Contact;
+import chatsystem.Message;
+
+public class MsgSender extends Thread { //s'occupe des sessions démarrées par un interlocuteur
 	
 	private Socket clientSocket;
+	private Message msg;
 	
-	public TCPClient1(Socket clientSocket) {
+	public MsgSender(Socket clientSocket, Message msg) {
 		super();
 		this.clientSocket = clientSocket;
-		start();
+		this.msg = msg;
+		
+		//� starter
 	}
 	
 	public void run() {
 		
-		Scanner s = new Scanner(System.in);
-		PrintWriter out;
-		String msg;
 		BufferedReader input;
 		
 		try {		
 			System.out.println("Client Thread started");	
+			/**
+			 * Receive the connection time from the server
+			 */
+			input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//			
+			msg = input.readLine();
+//			System.out.println("Connection Successful on " + msg);
 			
 			/**
 			 * Create a variable to send message to the server
@@ -59,4 +63,7 @@ public class TCPClient1 extends Thread {
 			e.printStackTrace();
 		}
 	}
+}
+
+
 }

@@ -16,6 +16,6 @@ public class Message implements Serializable{
 	}
 	
 	public String toString() {
-		return "\n"+msg +"\nDate : "+date+"";
+		return "[From : me " + "]      "+ msg +"      [ Date : "+date +"]";
 	}
 }

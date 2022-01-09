@@ -227,14 +227,6 @@ public class MainMenu1{
 		cl.addContact(new Contact("tata","e"));
 		cl.addContact(new Contact("tete","e"));
 		cl.addContact(new Contact("tutu","e"));
-		cl.addContact(new Contact("titi","e"));
-		cl.addContact(new Contact("titi","e"));
-		cl.addContact(new Contact("titi","e"));
-		cl.addContact(new Contact("titi","e"));
-		cl.addContact(new Contact("titi","e"));
-		cl.addContact(new Contact("titi","e"));
-		cl.addContact(new Contact("titi","e"));
-
 
 		Contact me = new Contact("toto","127.0.0.1");
 		ContactsManager cm=null;

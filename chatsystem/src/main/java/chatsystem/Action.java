@@ -156,29 +156,36 @@ public class Action implements ActionListener, ListSelectionListener{
 		        t.start();
 			}
 			
-		} else if (pageW != null && event.getSource().equals(pageW.getSendChat())) {
+		} else if (pageW != null && (event.getSource().equals(pageW.getSendChat()) || event.getSource().equals(pageW.getChatInput()))) {
 			
 			JTextField chatInput = pageW.getChatInput();
 			
-			if (chatInput == null) {
-				System.out.println("le msg est null\n");
-			} else {
-				//afficher le message sur la page
+			if (chatInput != null) {
+				// creating the msg
 				Message msg = new Message(pageW.getDest(), chatInput.getText());
-				System.out.println(msg);
+
+				//afficher le message sur la page
 				pageW.addMesg(msg);
+				
 				//ajouter à la base de données
+				
+				//envoyer le messages par les tcp
+				
+				//utiliser le message manager
+				
 			}
-			
-			//envoyer le messages par les tcp
-			//utiliser le message manager
-			
 			
 		} else if (pageM != null && event.getSource().equals(pageM.getYesB())) {
 			
 			pageM.getStartingChat().setVisible(false);
 			// to do : start the chat session
 			System.out.println("\nStarting a chat session....\n");
+			
+			Contact dest = pageM.getContactList().existsP((String)pageM.getPseudosList().getSelectedValue());
+			
+			ChatWindow1 cw= new ChatWindow1(pageM, dest);
+			
+			//demander au message manager de lancer la conv
 			
 		}
     }

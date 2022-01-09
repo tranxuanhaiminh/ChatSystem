@@ -41,6 +41,15 @@ public class ContactList {
 		return res;
 	}
 	
+	public Contact existsP(String pseudo) {
+		Contact res= null;
+		for (Contact c : this.list) {
+			if (pseudo.compareTo(c.getPseudo())==0)
+				res = c;
+		}
+		return res;
+	}
+	
 	public ArrayList<Contact> getList() {
 		return list;
 	}

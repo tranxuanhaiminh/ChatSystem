@@ -1,13 +1,13 @@
 package chatsystem;
 
-import networkconnection.TCPClient;
-import networkconnection.TCPServer;
+import networkconnection.MsgSender;
+import networkconnection.MsgReceiver;
 
-public class MessagesManager {
+public class MessagesManager { // chaque conversation est géré par un Msgsender et un Msgreceiver
 	
 	public MainMenu1 mm;
-	public TCPClient chatClient;
-	public TCPServer chatServer;
+	public MsgSender chatClient;
+	public MsgReceiver chatServer;
 	
 	public MessagesManager(MainMenu1 m) {
 		this.mm= m;
