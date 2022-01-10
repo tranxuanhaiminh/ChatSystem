@@ -22,9 +22,13 @@ public class MainMenu1{
 	//Informations
 	private ContactList contactList;
 	private Contact me;
+	
 	// recevoir les contacts et les mettre dans la liste des contacts
 	private ContactsManager cm=null;
 	private JList<String> pseudosList = null;
+	
+	//gestions des messages
+	private MessagesManager messMan;
 	
 	final private JFrame frame;
 	final private JPanel userPanel;
@@ -41,7 +45,6 @@ public class MainMenu1{
 	final private JTextField enterpseudo;
 	final private JFrame startingChat;
 	private JButton yesB;
-	private JLabel question;
 	
 	//Others size 
 	private Dimension othersFrameSize;
@@ -53,6 +56,11 @@ public class MainMenu1{
 		
 		this.me = m; 
 		this.contactList = l;
+		
+		//Envoyer et recevoir des messages 
+		this.messMan = new MessagesManager(this);
+		this.messMan.start();
+	
 		
 		othersFrameSize = new Dimension(400, 100);
 
@@ -208,25 +216,20 @@ public class MainMenu1{
 		return yesB;
 	}
 	
-	public JList getPseudosList() {
+	public JList<String> getPseudosList() {
 		return pseudosList;
 	}
 	
-	public JLabel getQuestion() {
-		return question;
+	public MessagesManager getMessMan() {
+		return this.messMan;
 	}
 	
-	public void setQuestion(JLabel q) {
-		question = q;
-	}
+	
 	public static void main(String[] args) {
 		
 		ContactList cl = new ContactList();
 		
-		cl.addContact(new Contact("titi","e"));
-		cl.addContact(new Contact("tata","e"));
-		cl.addContact(new Contact("tete","e"));
-		cl.addContact(new Contact("tutu","e"));
+		cl.addContact(new Contact("titi","LaptopMariétou"));
 
 		Contact me = new Contact("toto","127.0.0.1");
 		ContactsManager cm=null;

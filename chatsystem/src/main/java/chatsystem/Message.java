@@ -1,4 +1,6 @@
 package chatsystem;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,6 +10,11 @@ public class Message implements Serializable{
 	private Date date;
 	private Contact dest;
 	
+	public Message() {
+		this.date = null;
+		this.dest = null;
+		this.msg = null;
+	}
 	
 	public Message(Contact dest, String msg) {
 		this.date = new Date();
@@ -16,6 +23,6 @@ public class Message implements Serializable{
 	}
 	
 	public String toString() {
-		return "[From : me " + "]      "+ msg +"      [ Date : "+date +"]";
+		return msg +"      [ Date : "+date +"]";
 	}
 }

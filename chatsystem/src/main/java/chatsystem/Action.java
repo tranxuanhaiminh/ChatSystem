@@ -163,15 +163,14 @@ public class Action implements ActionListener, ListSelectionListener{
 			if (chatInput != null) {
 				// creating the msg
 				Message msg = new Message(pageW.getDest(), chatInput.getText());
-
+				chatInput.setText(null);
 				//afficher le message sur la page
 				pageW.addMesg(msg);
 				
 				//ajouter à la base de données
 				
-				//envoyer le messages par les tcp
-				
-				//utiliser le message manager
+				//utiliser la conv
+				pageW.getConv().getS().setMsg(msg);
 				
 			}
 			
@@ -183,9 +182,10 @@ public class Action implements ActionListener, ListSelectionListener{
 			
 			Contact dest = pageM.getContactList().existsP((String)pageM.getPseudosList().getSelectedValue());
 			
-			ChatWindow1 cw= new ChatWindow1(pageM, dest);
-			
 			//demander au message manager de lancer la conv
+			Conversation c = new Conversation(dest);
+			ChatWindow1 cw= new ChatWindow1(pageM, dest, c);
+			pageM.getMessMan().startSession(dest, c);
 			
 		}
     }

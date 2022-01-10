@@ -22,6 +22,7 @@ public class ChatWindow1 {
 	private JButton sendChat;
 	private JPanel chatHistory;
 	private Contact dest;
+	private Conversation conv;
 	
 	//lien page principale
 	private MainMenu1 mm;
@@ -29,9 +30,10 @@ public class ChatWindow1 {
 	//listeners
 	private Action sendMess;
 	
-	public ChatWindow1(MainMenu1 m,Contact dest) {
+	public ChatWindow1(MainMenu1 m,Contact dest, Conversation conv) {
 		this.mm = m;
 		this.dest = dest;
+		this.conv = conv;
 		this.sendMess = new Action(this);
 		frame = new JFrame(this.dest.getPseudo());
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,7 +84,7 @@ public class ChatWindow1 {
 	
 	public static void main(String[] args) {
 		Contact p = new Contact("titi");
-		new ChatWindow1(null,p);
+		new ChatWindow1(null,p,null);
 
 	}
 	
@@ -95,6 +97,11 @@ public class ChatWindow1 {
 
 	public MainMenu1 getMm() {
 		return mm;
+	}
+
+
+	public Conversation getConv() {
+		return conv;
 	}
 
 }
