@@ -170,11 +170,16 @@ public class ContactsManager extends Thread{
 							Contact c;
 							c = cl.exists(addr);
 							
-					        if (c!= null) {
-					        	System.out.println("Ce contact n'existe pas, Erreur\n");
+					        if (c== null) {
+					        	System.out.println("Ce contact n'est pas dans la liste de vos contacts\n");
 					        } else {
 					        	System.out.println("\n SUPPRESSION DU CONTACT pendant la session " + msg+" "+ addr +" \n");
 					        	this.cc.getMain().getContactList().removeContact(c);
+					        	
+					        	//modif connected users
+					        	this.cc.getMain().getDefaultPseudosList().removeElement(c.getPseudo());
+					        	this.cc.getMain().setPseudosList();
+					        	
 					        }
 						}
 					}
