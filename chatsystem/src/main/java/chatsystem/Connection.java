@@ -24,9 +24,6 @@ public class Connection {
 		
 		contactList = new ContactList();
 		
-		Contact c = new Contact("toto","120.1.1.0");
-		contactList.addContact(c);
-		
 		me =new Contact();
 		
 		// iNitailisation du contacts manager

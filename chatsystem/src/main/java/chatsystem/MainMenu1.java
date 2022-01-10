@@ -3,15 +3,20 @@ package chatsystem;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 import networkconnection.UDPSender;
 
@@ -21,8 +26,14 @@ public class MainMenu1{
 	//Informations
 	private ContactList contactList;
 	private Contact me;
+	
 	// recevoir les contacts et les mettre dans la liste des contacts
 	private ContactsManager cm=null;
+	private JList<String> pseudosList = null;
+	private DefaultListModel<String> pl=null;
+	
+	//gestions des messages
+	private MessagesManager messMan;
 	
 	final private JFrame frame;
 	final private JPanel userPanel;
@@ -30,7 +41,7 @@ public class MainMenu1{
 	final private JLabel pseudoLabel;
 	
 	//	private JScrollPane scrollPane;
-	final private JTable usertable;
+	final private JTable usertable=null;
 	
 	//modifying pseudo frame
 	final private JFrame modifyFrame;
@@ -38,6 +49,12 @@ public class MainMenu1{
 	final private JTextField enterpseudo;
 	final private JButton changepseudo;
 	
+	//Chat starter
+	final private JFrame startingChat;
+	private JButton yesB;
+	
+	//Others size 
+	private Dimension othersFrameSize;
 
 	public MainMenu1(Contact m, ContactList l, ContactsManager cm) {
 		
@@ -46,18 +63,17 @@ public class MainMenu1{
 		
 		this.me = m; 
 		this.contactList = l;
-
-		String[] columnNames = {"Pseudo"};
-
-		String userlist[][] = {
-				{"titi"},
-				{"tata"},
-				{"tutu"}
-		};
-
+		
+		//Envoyer et recevoir des messages 
+		this.messMan = new MessagesManager(this);
+		this.messMan.start();
+	
+		
+		othersFrameSize = new Dimension(400, 100);
 
 		frame = new JFrame();
-		frame.setSize(1000, 700);
+		Dimension frameSize = new Dimension(1000,700);
+		frame.setSize(frameSize);
 		
 		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
@@ -77,7 +93,7 @@ public class MainMenu1{
 			 }
 			  
 			   });
-
+			   
 		//		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
 
 		userPanel = new JPanel();
@@ -91,28 +107,46 @@ public class MainMenu1{
 
 		userPanel.add(pseudoLabel);
 		userPanel.add(getChangepseudo());
-
-		usertable = new JTable(userlist, columnNames);
-		usertable.setTableHeader(null);
-
-		listPanel = new JPanel();
-		listPanel.add(new JScrollPane(usertable));
-
+		
 		frame.getContentPane().add(BorderLayout.NORTH, userPanel);
-		frame.getContentPane().add(BorderLayout.CENTER, listPanel);
-		frame.setVisible(true);
+		//frame.getContentPane().add(BorderLayout.CENTER, listPanel);
+		
 
-		System.out.print(listPanel.getSize());
-		System.out.print(usertable.getSize());
+		//System.out.print(usertable.getSize());
+		
+		////////////////////////////////////////////////////////////////////////////
+		// Displaying the list of contacts
+		
+		pl = new DefaultListModel<String>();
+		//adding the pseudos to the list
+		for (Contact c : contactList.getList()) {
+			pl.addElement(c.getPseudo());
+		}
+		pseudosList = new JList<String>(pl);
+		pseudosList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		pseudosList.setLayoutOrientation(JList.VERTICAL);
+		pseudosList.setVisibleRowCount(-1);
+		
+		//List listener 
+		ListSelectionModel listSelectionModel = pseudosList.getSelectionModel();
+	    listSelectionModel.addListSelectionListener(new Action(this));
+		
+		JScrollPane pseudosListScroller = new JScrollPane(pseudosList);
+		pseudosListScroller.setPreferredSize(new Dimension(frameSize.width/5, frameSize.height*85/100));
+		pseudosListScroller.setBorder(BorderFactory.createTitledBorder("Connected Users"));
+		
+		listPanel = new JPanel();
+		listPanel.add(new JScrollPane(pseudosListScroller));
+		
+		frame.getContentPane().add(BorderLayout.EAST, listPanel);
 		
 		/////////////////////////////////////////////////////////////////////////////
 		
 		//modify pseudo 
 		//Create and set up the window.
         this.modifyFrame = new JFrame("Modify your username");
-        //connectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        modifyFrame.setSize(new Dimension(200, 100));
+        modifyFrame.setSize(othersFrameSize);
         
         //Create and set up the panel.
         JPanel modifyPanel = new JPanel(new GridLayout(2, 1));
@@ -132,6 +166,37 @@ public class MainMenu1{
         modifyFrame.getContentPane().add(modifyPanel, BorderLayout.CENTER);
         
         /////////////////////////////////////////////////////////////////////////////
+        
+        // Starting a conversation
+        this.startingChat = new JFrame("Starting A Chat Session");
+        
+        startingChat.setSize(othersFrameSize);
+        
+        //Create and set up the panel.
+        JPanel startPanel = new JPanel(new GridLayout(1, 2));
+        
+        yesB = new JButton("Yes");
+        yesB.addActionListener(new Action(this));
+        
+        JButton noB = new JButton("No");
+        noB.addActionListener(new ActionListener() {
+        	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				startingChat.setVisible(false);
+			}
+        	
+        });
+        
+        startPanel.add(yesB);
+        startPanel.add(noB);
+        
+        startingChat.getContentPane().add(startPanel,  BorderLayout.SOUTH);
+        
+        //////////////////////////////////////////////////////////////////////////////
+        
+        
+        frame.setVisible(true);
 
 	}
 
@@ -139,8 +204,6 @@ public class MainMenu1{
 	public Contact getMe() {
 		return me;
 	}
-	
-	
 	
 	public ContactList getContactList() {
 		return contactList;
@@ -169,6 +232,46 @@ public class MainMenu1{
 	public ContactsManager getCm() {
 		return cm;
 	}
+	
+	public JFrame getStartingChat() {
+		return startingChat;
+	}
+	
+	public JButton getYesB() {
+		return yesB;
+	}
+	
+	public JList<String> getPseudosList() {
+		return pseudosList;
+	}
+	
+	public void setPseudosList() {
+		this.pseudosList = new JList<String>(this.pl);
+		frame.setVisible(true);
+	}
+	
+	public DefaultListModel<String> getDefaultPseudosList() {
+		return this.pl;
+	}
+	
+	public MessagesManager getMessMan() {
+		return this.messMan;
+	}
+	
+	
+	public static void main(String[] args) {
+		
+		ContactList cl = new ContactList();
+		
+		cl.addContact(new Contact("titi","LaptopMariétou"));
+
+		Contact me = new Contact("toto","127.0.0.1");
+		ContactsManager cm=null;
+		
+		MainMenu1 mm= new MainMenu1(me, cl, cm);
+		
+	}
+
 
 
 }

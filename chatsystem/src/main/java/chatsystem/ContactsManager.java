@@ -142,11 +142,21 @@ public class ContactsManager extends Thread{
 							
 					        if (c!= null) {
 					        	System.out.println("\n MODIF D'UN CONTACT pendant un session " + msg+" "+ addr +" \n");
+					        	
+					        	int index = this.cc.getMain().getDefaultPseudosList().indexOf(c.getPseudo());
+					        	
 					        	c.setPseudo(msg);
+					        	
+					        	//modifier la liste des contacts
+					        	this.cc.getMain().getDefaultPseudosList().add(index, c.getPseudo());
+					        	this.cc.getMain().setPseudosList();
+					        	
 					        } else {
 					        	c = new Contact(msg,addr);
 					        	System.out.println("\n AJOUT DU CONTACT pendant un session " + msg+" "+ addr +" \n");
 					        	cl.addContact(c);
+					        	this.cc.getMain().getDefaultPseudosList().addElement(c.getPseudo());
+					        	this.cc.getMain().setPseudosList();
 					        }
 							
 						} else if (msg.equals("ASK")){ //on traite les envois de son contact

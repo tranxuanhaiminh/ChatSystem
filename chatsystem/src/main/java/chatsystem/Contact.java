@@ -1,9 +1,11 @@
 package chatsystem;
 
-public class Contact {
+import java.io.Serializable;
+
+public class Contact implements Serializable{
 	
 	private String pseudo;
-	private String ipaddress;
+	private String ipaddress; // à convertir en InetAddress
 	
 	
 	public Contact() {
@@ -31,6 +33,10 @@ public class Contact {
 
 	public String getIpaddress() {
 		return ipaddress;
+	}
+	
+	public String toString() {
+		return this.pseudo;
 	}
 	
 }

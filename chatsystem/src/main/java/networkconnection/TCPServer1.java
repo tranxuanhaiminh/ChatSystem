@@ -8,12 +8,12 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
 
-public class TCPServer extends Thread {
+public class TCPServer1 extends Thread {
 	
 	final Socket clientSocket;
 	private String msg;
 	
-	public TCPServer(Socket clientSocket) {
+	public TCPServer1(Socket clientSocket) {
 		super();
 		this.clientSocket = clientSocket;
 		start();

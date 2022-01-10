@@ -9,15 +9,16 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class TCPClient extends Thread {
+public class TCPClient1 extends Thread {
 	
 	private Socket clientSocket;
 	
-	public TCPClient(Socket clientSocket) {
+	public TCPClient1(Socket clientSocket) {
 		super();
 		this.clientSocket = clientSocket;
 		start();
 	}
+	
 	public void run() {
 		
 		Scanner s = new Scanner(System.in);
@@ -27,12 +28,6 @@ public class TCPClient extends Thread {
 		
 		try {		
 			System.out.println("Client Thread started");	
-			/**
-			 * Receive the connection time from the server
-			 */
-			input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//			msg = input.readLine();
-//			System.out.println("Connection Successful on " + msg);
 			
 			/**
 			 * Create a variable to send message to the server

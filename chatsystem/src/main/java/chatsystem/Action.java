@@ -1,16 +1,20 @@
 package chatsystem;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.Timer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import networkconnection.UDPSender;
 
 
-public class Action implements ActionListener{
+public class Action implements ActionListener, ListSelectionListener{
 	
 	public Connection pageC;
 	public MainMenu1 pageM;
@@ -152,18 +156,55 @@ public class Action implements ActionListener{
 		        t.start();
 			}
 			
-			}
-		
-		else if (pageW != null && event.getSource().equals(pageW.getSendChat())) {
-			//to do envoi du message
+		} else if (pageW != null && (event.getSource().equals(pageW.getSendChat()) || event.getSource().equals(pageW.getChatInput()))) {
 			
 			JTextField chatInput = pageW.getChatInput();
-			Message msg = new Message(pageW.getDest(), chatInput.getText());
-			msg.printMsg(null);
-			//to do envoi tcp au dest + affichage
+			
+			if (chatInput != null) {
+				// creating the msg
+				Message msg = new Message(pageW.getDest(), chatInput.getText());
+				chatInput.setText(null);
+				//afficher le message sur la page
+				pageW.addMesg(msg);
+				
+				//ajouter à la base de données
+				
+				//utiliser la conv
+				pageW.getConv().getS().setMsg(msg);
+				
+			}
+			
+		} else if (pageM != null && event.getSource().equals(pageM.getYesB())) {
+			
+			pageM.getStartingChat().setVisible(false);
+			// to do : start the chat session
+			System.out.println("\nStarting a chat session....\n");
+			
+			Contact dest = pageM.getContactList().existsP((String)pageM.getPseudosList().getSelectedValue());
+			
+			//demander au message manager de lancer la conv
+			Conversation c = new Conversation(dest);
+			ChatWindow1 cw= new ChatWindow1(pageM, dest, c);
+			pageM.getMessMan().startSession(dest, c);
 			
 		}
     }
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+		ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+        String pseudo = (String)pageM.getPseudosList().getSelectedValue();
+        
+        //pageM.setQuestion(new JLabel("Do you want to start a Chat Session with "+ pseudo+" ?"));
+        
+        pageM.getStartingChat().getContentPane().add(new JLabel("Do you want to start a Chat Session with "+ pseudo+" ?"), BorderLayout.NORTH);
+        
+        //Display the window.
+        pageM.getStartingChat().setLocationRelativeTo(null); // au centre
+        pageM.getStartingChat().setVisible(true);
+		
+	}
 	
 
 }

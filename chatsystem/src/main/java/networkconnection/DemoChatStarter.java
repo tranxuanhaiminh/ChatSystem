@@ -14,8 +14,8 @@ public class DemoChatStarter {
 			while (true) {
 				Socket clientSocket;
 				clientSocket = serverSocket.accept();
-				new TCPServer(clientSocket);
-				new TCPClient(clientSocket);
+				new TCPServer1(clientSocket);
+				new TCPClient1(clientSocket);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
