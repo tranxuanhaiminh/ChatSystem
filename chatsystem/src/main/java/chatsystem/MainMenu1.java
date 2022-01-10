@@ -26,6 +26,7 @@ public class MainMenu1{
 	// recevoir les contacts et les mettre dans la liste des contacts
 	private ContactsManager cm=null;
 	private JList<String> pseudosList = null;
+	private DefaultListModel<String> pl=null;
 	
 	//gestions des messages
 	private MessagesManager messMan;
@@ -92,7 +93,7 @@ public class MainMenu1{
 		////////////////////////////////////////////////////////////////////////////
 		// Displaying the list of contacts
 		
-		DefaultListModel<String> pl = new DefaultListModel<String>();
+		pl = new DefaultListModel<String>();
 		//adding the pseudos to the list
 		for (Contact c : contactList.getList()) {
 			pl.addElement(c.getPseudo());
@@ -218,6 +219,15 @@ public class MainMenu1{
 	
 	public JList<String> getPseudosList() {
 		return pseudosList;
+	}
+	
+	public void setPseudosList() {
+		this.pseudosList = new JList<String>(this.pl);
+		frame.setVisible(true);
+	}
+	
+	public DefaultListModel<String> getDefaultPseudosList() {
+		return this.pl;
 	}
 	
 	public MessagesManager getMessMan() {
