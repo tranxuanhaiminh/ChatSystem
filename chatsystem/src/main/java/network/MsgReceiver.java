@@ -1,4 +1,4 @@
-package networkconnection;
+package network;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -9,18 +9,19 @@ import java.net.Socket;
 
 import chatsystem.ChatWindow1;
 import chatsystem.Message;
+import userinterface.ChatWindow;
 
 public class MsgReceiver extends Thread{ // Server tcp //client tcp
 	
 	private Socket socketreceive;
 	private boolean running;
 	private ObjectInputStream in=null;
-	private ChatWindow1 chatw;
+	private ChatWindow chatw;
 	
-	public MsgReceiver(Socket sock, ChatWindow1 c) {
+	public MsgReceiver(Socket sock, ChatWindow chatw2) {
 		super();
 		this.socketreceive = sock;
-		this.chatw = c;
+		this.chatw = chatw2;
 		this.setRunning(true);
 		try {
 			in = new ObjectInputStream(socketreceive.getInputStream());
@@ -41,7 +42,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 				try {
 					mess = (Message) in.readObject();
 					System.out.println("MESSAGE RECU = "+ mess+"\n");
-					this.chatw.addMesg(mess);
+					this.chatw.addChatLine(mess.getMsg());
 					
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block

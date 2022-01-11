@@ -4,6 +4,16 @@
  */
 package userinterface;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+
+import chatsystem.Action;
+import chatsystem.Contact;
+import chatsystem.ContactList;
+import chatsystem.ContactsManager;
+import chatsystem.MainMenu1;
+
 /**
  *
  * @author Minh
@@ -14,7 +24,21 @@ public class Connect extends javax.swing.JFrame {
      * Creates new form Connect
      */
     public Connect() {
+    	this.setTitle("Connecting to the ChatSystem...");
+		contactList = new ContactList();
+		me =new Contact();
+		
+		// iNitailisation du contacts manager
+		cm = new ContactsManager(this);
+		cm.start();
+		
+		this.verify = new Action(this);
+		
         initComponents();
+        
+        verifyPseudo.addActionListener(verify);
+        enterpseudo.addActionListener(verify);
+        
     }
 
     /**
@@ -26,23 +50,18 @@ public class Connect extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        enterpseudo = new javax.swing.JTextField();
+        labelUsername = new javax.swing.JLabel();
+        verifyPseudo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jTextField1.setText("jTextField1");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
+        enterpseudo.setText("");
 
-        jLabel1.setText("Username");
+        labelUsername.setText("Username");
 
-        jButton1.setText("Connect");
+        verifyPseudo.setText("Connect");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -50,13 +69,13 @@ public class Connect extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(labelUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(enterpseudo, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(128, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(verifyPseudo)
                 .addContainerGap(128, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -64,10 +83,10 @@ public class Connect extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(enterpseudo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16)
-                .addComponent(jButton1)
+                .addComponent(verifyPseudo)
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -114,8 +133,56 @@ public class Connect extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel labelUsername;
+    private javax.swing.JTextField enterpseudo;
+    private javax.swing.JButton verifyPseudo;
+
+	private Action verify;
+	
+	private ContactList contactList;
+	private Contact me;
+	
+	// recevoir les contacts et les mettre dans la liste des contacts
+	private ContactsManager cm;
+	
+	//page principale
+	private MainMenu1 main;
     // End of variables declaration//GEN-END:variables
+	
+	public Contact getMe() {
+		return me;
+	}
+	
+
+	public ContactList getContactList() {
+		return contactList;
+	}
+	
+	public JTextField geText() {
+		return enterpseudo;
+	}
+
+	public JFrame getConnectionFrame() {
+		return this;
+	}
+
+	public JButton getVerifyPseudo() {
+		return verifyPseudo;
+	}
+
+	public ContactsManager getCm() {
+		return cm;
+	}
+	
+	public void setCm(ContactsManager m) {
+		cm = m;
+	}
+
+	public MainMenu1 getMain() {
+		return main;
+	}
+
+	public void setMain(MainMenu1 main) {
+		this.main = main;
+	}
 }

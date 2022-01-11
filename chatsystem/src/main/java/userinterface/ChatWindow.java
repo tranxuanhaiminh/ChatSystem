@@ -4,6 +4,17 @@
  */
 package userinterface;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JButton;
+import javax.swing.JTextField;
+
+import chatsystem.Action;
+import chatsystem.Contact;
+import chatsystem.Conversation;
+import chatsystem.MainMenu1;
+
 /**
  *
  * @author Minh
@@ -12,13 +23,30 @@ public class ChatWindow extends javax.swing.JFrame {
 
     private final static String newline = "\n";
     private String msg_in = "";
+
+	private Contact dest;
+	private Conversation conv;
+	
+	//lien page principale
+	private MainMenu mm;
+	
+	//listeners
+	private Action sendMess;
     
     /**
      * Creates new form NewJFrame
      */
-    public ChatWindow(String title) {
-        this.setTitle(title);
+    public ChatWindow(MainMenu m, Contact dest, Conversation conv) {
+        this.setTitle(dest.getPseudo());
+        this.dest = dest;
+        this.mm = m;
+		this.conv = conv;
+		this.sendMess = new Action(this);
         initComponents();
+        chatInput.addActionListener(sendMess);
+        sendChat.addActionListener(this.sendMess);
+
+       
     }
 
     /**
@@ -30,19 +58,26 @@ public class ChatWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        msg_input = new javax.swing.JTextField();
-        msg_send = new javax.swing.JButton();
+        chatInput = new javax.swing.JTextField();
+        sendChat = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         msg_display = new javax.swing.JTextArea();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        msg_send.setText("Send");
-        msg_send.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msg_sendActionPerformed(evt);
-            }
-        });
+        
+        
+        //setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        javax.swing.JFrame frame = this; 
+        this.addWindowListener(new WindowAdapter() {
+			 
+			 public void windowClosing(WindowEvent e) {
+				 if (conv != null)
+					 conv.stopConv();
+			     frame.setVisible(false);
+			     frame.dispose();
+			 }
+			  
+			   });
+        
+        sendChat.setText("Send");
 
         jScrollPane1.setHorizontalScrollBar(null);
 
@@ -62,9 +97,9 @@ public class ChatWindow extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(msg_input, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                        .addComponent(chatInput, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(msg_send, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(sendChat, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -74,8 +109,8 @@ public class ChatWindow extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(msg_send, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(msg_input, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sendChat, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chatInput, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -84,8 +119,8 @@ public class ChatWindow extends javax.swing.JFrame {
 
     private void msg_sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msg_sendActionPerformed
         // TODO add your handling code here:
-        msg_in = msg_input.getText();
-        msg_input.setText("");
+        msg_in = chatInput.getText();
+        chatInput.setText("");
         
     }//GEN-LAST:event_msg_sendActionPerformed
 
@@ -124,7 +159,7 @@ public class ChatWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ChatWindow("JframeTitle").setVisible(true);
+                new ChatWindow(null,new Contact("titi"," "), null).setVisible(true);
             }
         });
     }
@@ -132,7 +167,30 @@ public class ChatWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea msg_display;
-    private javax.swing.JTextField msg_input;
-    private javax.swing.JButton msg_send;
+    private javax.swing.JTextField chatInput;
+    private javax.swing.JButton sendChat;
     // End of variables declaration//GEN-END:variables
+    
+    public Action getSendMess() {
+		return this.sendMess;
+	}
+	
+	public JTextField getChatInput() {
+		return chatInput;
+	}
+	
+	public Contact getDest() {
+		return dest;
+	}
+	public JButton getSendChat() {
+		return sendChat;
+	}
+	public MainMenu getMm() {
+		return mm;
+	}
+
+
+	public Conversation getConv() {
+		return conv;
+	}
 }

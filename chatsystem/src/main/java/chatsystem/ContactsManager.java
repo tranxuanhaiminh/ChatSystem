@@ -5,16 +5,17 @@ import java.net.SocketException;
 
 import network.UDPReceiver;
 import network.UDPSender;
+import userinterface.Connect;
 
 public class ContactsManager extends Thread{
 	
-	private Connection cc;
+	private Connect cc;
 	private UDPReceiver ContactReceiver;
 	private boolean state; // false = connecting phase true = Main 
 	private boolean running;
 	
 	
-	public ContactsManager(Connection c) {
+	public ContactsManager(Connect c) {
 		this.cc = c;
 		this.running = false;
 		this.state = false;

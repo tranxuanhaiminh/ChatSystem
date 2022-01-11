@@ -25,4 +25,16 @@ public class Message implements Serializable{
 	public String toString() {
 		return msg +"      [ Date : "+date +"]";
 	}
+
+	public Contact getDest() {
+		return dest;
+	}
+	
+	public Date getDate() {
+		return date;
+	}
+	
+	public String getMsg() {
+		return msg;
+	}
 }

@@ -7,10 +7,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import userinterface.MainMenu;
+
 
 public class MessagesManager extends Thread{ // chaque conversation est géré par un Msgsender et un Msgreceiver
 	
-	private MainMenu1 mm;
+	private MainMenu mm;
 	private boolean running;
 	private int port = 55555;
 	private ServerSocket ss;
@@ -22,9 +24,9 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 	//private Object sending = new Object();
 	
 	
-	public MessagesManager(MainMenu1 m) {
+	public MessagesManager(MainMenu mainMenu) {
 		super();
-		this.mm = m;
+		this.mm = mainMenu;
 		this.running = true;
 		this.ConvList = new ArrayList<Conversation>();
 		
@@ -148,7 +150,7 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 	}
 
 
-	public MainMenu1 getMm() {
+	public MainMenu getMm() {
 		return mm;
 	}
 	

@@ -12,25 +12,28 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import network.UDPSender;
+import userinterface.ChatWindow;
+import userinterface.Connect;
+import userinterface.MainMenu;
 
 
 public class Action implements ActionListener, ListSelectionListener{
 	
-	public Connection pageC;
-	public MainMenu1 pageM;
-	public ChatWindow1 pageW;
+	public Connect pageC;
+	public MainMenu pageM;
+	public ChatWindow pageW;
 	
-	public Action(Connection c){
+	public Action(Connect c){
 		super();
 		this.pageC = c;
 	}
 	
-	public Action(MainMenu1 m)  {
+	public Action(MainMenu m)  {
 		super();
 		this.pageM = m;
 	}
 	
-	public Action(ChatWindow1 c) {
+	public Action(ChatWindow c) {
 		super();
 		this.pageW = c;
 	}
@@ -166,7 +169,7 @@ public class Action implements ActionListener, ListSelectionListener{
 				Message msg = new Message(pageW.getDest(), chatInput.getText());
 				chatInput.setText(null);
 				//afficher le message sur la page
-				pageW.addMesg(msg);
+				pageW.addChatLine(msg.getMsg());
 				
 				//ajouter à la base de données
 				
@@ -175,7 +178,7 @@ public class Action implements ActionListener, ListSelectionListener{
 				
 			}
 			
-		} else if (pageM != null && event.getSource().equals(pageM.getYesB())) {
+		/*} else if (pageM != null && event.getSource().equals(pageM.getYesB())) {
 			
 			pageM.getStartingChat().setVisible(false);
 			// to do : start the chat session
@@ -185,7 +188,7 @@ public class Action implements ActionListener, ListSelectionListener{
 			
 			//demander au message manager de lancer la conv
 			Conversation c = new Conversation(pageM,dest);
-			pageM.getMessMan().getConvList().add(c);
+			pageM.getMessMan().getConvList().add(c);*/
 			
 		}
     }
@@ -194,15 +197,15 @@ public class Action implements ActionListener, ListSelectionListener{
 	public void valueChanged(ListSelectionEvent e) {
 		// TODO Auto-generated method stub
 		ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-        String pseudo = (String)pageM.getPseudosList().getSelectedValue();
+        int index_pseudo = pageM.getPseudosList().getSelectedRow();
+        String pseudo = (String) pageM.getPseudosList().getValueAt(index_pseudo, 1);
         
-        //pageM.setQuestion(new JLabel("Do you want to start a Chat Session with "+ pseudo+" ?"));
-        
+        /*
         pageM.getStartingChat().getContentPane().add(new JLabel("Do you want to start a Chat Session with "+ pseudo+" ?"), BorderLayout.NORTH);
         
         //Display the window.
         pageM.getStartingChat().setLocationRelativeTo(null); // au centre
-        pageM.getStartingChat().setVisible(true);
+        pageM.getStartingChat().setVisible(true);*/
 		
 	}
 	

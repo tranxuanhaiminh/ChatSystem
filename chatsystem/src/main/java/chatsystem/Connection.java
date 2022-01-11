@@ -8,6 +8,7 @@ public class Connection {
 	
 	private ContactList contactList;
 	private Contact me;
+	
 	JTextField enterpseudo;
 	private JFrame connectionFrame;
 	private Action verify;

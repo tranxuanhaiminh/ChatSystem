@@ -29,6 +29,7 @@ public class MainMenu1{
 	
 	// recevoir les contacts et les mettre dans la liste des contacts
 	private ContactsManager cm=null;
+	
 	private JList<String> pseudosList = null;
 	private DefaultListModel<String> pl=null;
 	

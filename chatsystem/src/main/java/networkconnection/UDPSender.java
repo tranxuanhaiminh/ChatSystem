@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import networkconnection.UDPReceiver;
 
 public class UDPSender{
 	
