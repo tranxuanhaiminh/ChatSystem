@@ -20,6 +20,7 @@ import chatsystem.MainMenu1;
  */
 public class Connect extends javax.swing.JFrame {
 
+<<<<<<< HEAD
     /**
      * Creates new form Connect
      */
