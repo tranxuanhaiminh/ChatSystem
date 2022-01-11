@@ -56,6 +56,8 @@ public class MainMenu extends javax.swing.JFrame {
 		this.me = m;
 		this.contactList = l;
 
+		initComponents();
+		
 /////////////////////////////////////////////////////////////////////////////
 
 		//modify pseudo 
@@ -73,7 +75,7 @@ public class MainMenu extends javax.swing.JFrame {
 		enterpseudo.setSize(new Dimension(10, 100));
 
 		this.verifyPseudo = new JButton("Modify");
-//		getVerifyPseudo().addActionListener(new Action(this));
+		getVerifyPseudo().addActionListener(new Action(this));
 
 		modifyPanel.add(enterpseudo);
 		modifyPanel.add(getVerifyPseudo());
@@ -83,15 +85,18 @@ public class MainMenu extends javax.swing.JFrame {
 
 /////////////////////////////////////////////////////////////////////////////
 
-		initComponents();
+		jButton1.addActionListener(new Action(this));
+		
 		addUser("user1", "Images/green.png");
 		addUser("user2", "Images/gray.png");
+		this.setVisible(true);
 	}
 	
 	public MainMenu() {
 		initComponents();
 		addUser("user1", "Images/green.png");
-		addUser("user2", "Images/gray.png");		
+		addUser("user2", "Images/gray.png");
+		this.setVisible(true);		
 	}
 
 	/**
@@ -196,7 +201,7 @@ public class MainMenu extends javax.swing.JFrame {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new MainMenu().setVisible(true);
+				new MainMenu();
 			}
 		});
 	}

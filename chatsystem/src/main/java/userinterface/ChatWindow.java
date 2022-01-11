@@ -40,7 +40,7 @@ public class ChatWindow extends javax.swing.JFrame {
 	public ChatWindow(Contact dest) {
 		initComponents();
 		this.dest = dest;
-//		this.sendMess = new Action(this);
+		this.sendMess = new Action(this);
 		this.setTitle(dest.getPseudo());
 	}
 

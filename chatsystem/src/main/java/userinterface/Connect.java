@@ -31,7 +31,7 @@ public class Connect extends javax.swing.JFrame {
 	private ContactsManager cm;
 
 	// page principale
-	private MainMenu1 main;
+	private MainMenu main;
 
 	/**
 	 * Creates new form Connect
@@ -47,10 +47,10 @@ public class Connect extends javax.swing.JFrame {
 		me = new Contact();
 
 		// iNitailisation du contacts manager
-//		cm = new ContactsManager(this);
-//		cm.start();
+		cm = new ContactsManager(this);
+		cm.start();
 
-//		this.verify = new Action(this);
+		this.verify = new Action(this);
 		
 		jButton1.addActionListener(verify);
 	}
@@ -189,12 +189,12 @@ public class Connect extends javax.swing.JFrame {
 		cm = m;
 	}
 
-	public MainMenu1 getMain() {
+	public MainMenu getMain() {
 		return main;
 	}
 
 
-	public void setMain(MainMenu1 main) {
+	public void setMain(MainMenu main) {
 		this.main = main;
 	}
 }
