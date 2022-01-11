@@ -8,25 +8,28 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 
 import network.UDPSender;
+import userinterface.ChatWindow;
+import userinterface.Connect;
+import userinterface.MainMenu;
 
 
 public class Action implements ActionListener{
 	
-	public Connection pageC;
-	public MainMenu1 pageM;
-	public ChatWindow1 pageW;
+	public Connect pageC;
+	public MainMenu pageM;
+	public ChatWindow pageW;
 	
-	public Action(Connection c){
+	public Action(Connect c){
 		super();
 		this.pageC = c;
 	}
 	
-	public Action(MainMenu1 m)  {
+	public Action(MainMenu m)  {
 		super();
 		this.pageM = m;
 	}
 	
-	public Action(ChatWindow1 c) {
+	public Action(ChatWindow c) {
 		super();
 		this.pageW = c;
 	}
@@ -89,7 +92,7 @@ public class Action implements ActionListener{
 		            	connectionFrame.dispose();
 		            	pageC.getCm().setState(); // mode Main
 		            	pageC.getCm().setRunning(true);
-		            	pageC.setMain(new MainMenu1(me, contactList,pageC.getCm()));
+		            	pageC.setMain(new MainMenu(me, contactList,pageC.getCm()));
 		            }
 		        });
 		        t.setRepeats(false); // Only execute once
