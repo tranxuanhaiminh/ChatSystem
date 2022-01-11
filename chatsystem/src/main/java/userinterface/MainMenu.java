@@ -9,9 +9,11 @@ import javax.swing.JFrame;
 import javax.swing.ListSelectionModel;
 
 import chatsystem.Action;
+import chatsystem.Connection;
 import chatsystem.Contact;
 import chatsystem.ContactList;
 import chatsystem.ContactsManager;
+import chatsystem.MainMenu1;
 import chatsystem.MessagesManager;
 
 import java.awt.event.WindowAdapter;
@@ -29,6 +31,8 @@ public class MainMenu extends javax.swing.JFrame {
 
 	private ContactList contactList;
 	private Contact me;
+	private final String disconnected = "Images/gray.png";
+	private final String connected = "Images/green.png";
 	
 	private ContactsManager cm=null;
 
@@ -47,11 +51,12 @@ public class MainMenu extends javax.swing.JFrame {
 		this.messMan = new MessagesManager(this);
 		this.messMan.start();
         initComponents();
-        addUser("user1", "Images/green.png");
-        addUser("user2", "Images/gray.png");
+        modifyFrame = new Modify();
+        addUser("user1", connected);
+        addUser("user2", disconnected);
         
         changepseudo.addActionListener(new Action(this));
-        verifyPseudo.addActionListener(new Action(this));
+        modifyFrame.getVerifyPseudo().addActionListener(new Action(this));
     }
 
     /**
@@ -155,51 +160,71 @@ public class MainMenu extends javax.swing.JFrame {
                 .addContainerGap())
         );
         
-        //////////////////////////////////////////////////////////////////////////////////////////////////////
         
-       /* modifyFrame = new javax.swing.JFrame("Modify your username"); 
-        enterpseudo = new javax.swing.JTextField();
-        verifyPseudo = new javax.swing.JButton();
-        getVerifyPseudo().addActionListener(new Action(this));
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
-
-        enterpseudo.setText("");
-        verifyPseudo.setText("Modify");
-
-        javax.swing.GroupLayout layout2 = new javax.swing.GroupLayout(modifyFrame.getContentPane());
-        getContentPane().setLayout(layout2);
-        layout2.setHorizontalGroup(
-        		layout2.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout2.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(enterpseudo, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout2.createSequentialGroup()
-                .addContainerGap(128, Short.MAX_VALUE)
-                .addComponent(verifyPseudo)
-                .addContainerGap(128, Short.MAX_VALUE))
-        );
-        layout2.setVerticalGroup(
-        		layout2.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(layout2.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(enterpseudo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16)
-                .addComponent(verifyPseudo)
-                .addContainerGap(16, Short.MAX_VALUE))
-        );*/
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
+    
+    public void addUser(String username, String img) {
+        DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
+        model.addRow(new Object[]{new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(10,10,java.awt.Image.SCALE_SMOOTH)), username});
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton changepseudo;
+    private javax.swing.JLabel pseudoLabel;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable pseudosList;
+    // End of variables declaration//GEN-END:variables
+    
+    private Modify modifyFrame;
+
+    
+    public Contact getMe() {
+		return me;
+	}
+	
+	public ContactList getContactList() {
+		return contactList;
+	}
+
+	public javax.swing.JButton getChangepseudo() {
+		return changepseudo;
+	}
+
+	public Modify getModifyFrame() {
+		return modifyFrame;
+	}
+	
+	public javax.swing.JLabel getPseudoLabel() {
+		return pseudoLabel;
+	}
+	
+	public ContactsManager getCm() {
+		return cm;
+	}
+	
+	public MessagesManager getMessMan() {
+		return this.messMan;
+	}
+
+	public javax.swing.JTable getPseudosList() {
+		return pseudosList;
+	}
+	
+	public String getConnected() {
+		return connected;
+	}
+
+	public String getDisconnected() {
+		return disconnected;
+	}
+	
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -226,77 +251,17 @@ public class MainMenu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainMenu(new Contact("toto",""),null,null).setVisible(true);
+            	
+            	ContactList cl = new ContactList();
+        		
+        		cl.addContact(new Contact("titi","LaptopMariétou"));
+
+        		Contact me = new Contact("toto","127.0.0.1");
+        		ContactsManager cm=null;
+        		
+        		MainMenu mm= new MainMenu(me, cl, cm);
+                mm.setVisible(true);
             }
         });
     }
-    
-    public void addUser(String username, String img) {
-        DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
-        model.addRow(new Object[]{new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(10,10,java.awt.Image.SCALE_SMOOTH)), username});
-    }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton changepseudo;
-    private javax.swing.JLabel pseudoLabel;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable pseudosList;
-    // End of variables declaration//GEN-END:variables
-    
-    private javax.swing.JFrame modifyFrame;    
-    private javax.swing.JButton verifyPseudo;
-    private javax.swing.JTextField enterpseudo;
-
-
-    
-    public Contact getMe() {
-		return me;
-	}
-	
-	
-	public ContactList getContactList() {
-		return contactList;
-	}
-
-	public javax.swing.JButton getChangepseudo() {
-		return changepseudo;
-	}
-
-	public javax.swing.JFrame getModifyFrame() {
-		return modifyFrame;
-	}
-
-	public javax.swing.JButton getVerifyPseudo() {
-		return verifyPseudo;
-	}
-
-	public javax.swing.JTextField getEnterpseudo() {
-		return enterpseudo;
-	}
-	
-	public javax.swing.JLabel getPseudoLabel() {
-		return pseudoLabel;
-	}
-	
-	public ContactsManager getCm() {
-		return cm;
-	}
-	
-	/*public JFrame getStartingChat() {
-		return startingChat;
-	}
-	
-	public JButton getYesB() {
-		return yesB;
-	}*/
-	
-	public MessagesManager getMessMan() {
-		return this.messMan;
-	}
-
-	public javax.swing.JTable getPseudosList() {
-		return pseudosList;
-	}
-	
-
 }

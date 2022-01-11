@@ -18,9 +18,9 @@ public class Contact implements Serializable{
 		this.ipaddress = ip;
 	}
 	
-	public Contact(String p) {
-		this.pseudo = p;
-		this.ipaddress = null;
+	public Contact(String ip) {
+		this.ipaddress = ip;
+		this.pseudo = null;
 	}
 
 	public String getPseudo() {

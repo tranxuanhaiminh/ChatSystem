@@ -13,7 +13,6 @@ import javax.swing.JTextField;
 import chatsystem.Action;
 import chatsystem.Contact;
 import chatsystem.Conversation;
-import chatsystem.MainMenu1;
 
 /**
  *
@@ -128,6 +127,37 @@ public class ChatWindow extends javax.swing.JFrame {
         msg_display.append(chatline + newline);
     }
     
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea msg_display;
+    private javax.swing.JTextField chatInput;
+    private javax.swing.JButton sendChat;
+    // End of variables declaration//GEN-END:variables
+    
+    public Action getSendMess() {
+		return this.sendMess;
+	}
+	
+	public JTextField getChatInput() {
+		return chatInput;
+	}
+	
+	public Contact getDest() {
+		return dest;
+	}
+	public JButton getSendChat() {
+		return sendChat;
+	}
+	public MainMenu getMm() {
+		return mm;
+	}
+
+	public Conversation getConv() {
+		return conv;
+	}
+	
     /**
      * @param args the command line arguments
      */
@@ -162,35 +192,6 @@ public class ChatWindow extends javax.swing.JFrame {
                 new ChatWindow(null,new Contact("titi"," "), null).setVisible(true);
             }
         });
+        
     }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea msg_display;
-    private javax.swing.JTextField chatInput;
-    private javax.swing.JButton sendChat;
-    // End of variables declaration//GEN-END:variables
-    
-    public Action getSendMess() {
-		return this.sendMess;
-	}
-	
-	public JTextField getChatInput() {
-		return chatInput;
-	}
-	
-	public Contact getDest() {
-		return dest;
-	}
-	public JButton getSendChat() {
-		return sendChat;
-	}
-	public MainMenu getMm() {
-		return mm;
-	}
-
-
-	public Conversation getConv() {
-		return conv;
-	}
 }

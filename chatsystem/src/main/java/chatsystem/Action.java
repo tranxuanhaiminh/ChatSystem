@@ -3,6 +3,8 @@ package chatsystem;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -112,15 +114,13 @@ public class Action implements ActionListener, ListSelectionListener{
 	        modifyFrame.setLocationRelativeTo(null); // au centre
 	        modifyFrame.setVisible(true);
 	        
-			
-		} else if (pageM != null && event.getSource().equals(pageM.getVerifyPseudo())) {
-			
-
+		} else if (pageM != null && event.getSource().equals(pageM.getModifyFrame().getVerifyPseudo())) {
 			final JFrame modifyFrame = pageM.getModifyFrame();
-			
+
+			if (modifyFrame.getE)
 			
 			final JFrame okFrame = new JFrame("...");
-			final String pseudo = pageM.getEnterpseudo().getText();
+			final String pseudo = pageM.getModifyFrame().getEnterpseudo().getText();
 			Contact p = new Contact(pseudo);
 			ContactList contactList = pageM.getContactList();
 
@@ -139,12 +139,13 @@ public class Action implements ActionListener, ListSelectionListener{
 				okFrame.setSize(250, 100);
 		        okFrame.setLocationRelativeTo(null);
 		        okFrame.setVisible(true);
-		        
+		        pageM.getModifyFrame().getEnterpseudo().setText("");
+
 		        Timer t = new Timer(500, new ActionListener() {
 		            public void actionPerformed(ActionEvent e) {
 		            	okFrame.setVisible(false);
 		            	okFrame.dispose();
-		            	modifyFrame.setVisible(false);
+		            	pageM.getModifyFrame().setVisible(false);
 		    			pageM.getMe().setPseudo(pseudo);
 		    			pageM.getPseudoLabel().setText(pageM.getMe().getPseudo());
 		    			
@@ -162,23 +163,30 @@ public class Action implements ActionListener, ListSelectionListener{
 			
 		} else if (pageW != null && (event.getSource().equals(pageW.getSendChat()) || event.getSource().equals(pageW.getChatInput()))) {
 			
-			JTextField chatInput = pageW.getChatInput();
-			
-			if (chatInput != null) {
-				// creating the msg
-				Message msg = new Message(pageW.getDest(), chatInput.getText());
-				chatInput.setText(null);
-				//afficher le message sur la page
-				pageW.addChatLine(msg.getMsg());
+			if (pageW.getConv() == null){
+				final JFrame okFrame = new JFrame("...");
+				okFrame.add(new JLabel("This user is not connected !"));
+				okFrame.setVisible(true);
 				
-				//ajouter à la base de données
+			} else {
+				JTextField chatInput = pageW.getChatInput();
 				
-				//utiliser le contact manager
-				pageW.getMm().getMessMan().signalMess(pageW.getConv(), msg);
-				
+				if (chatInput != null) {
+					// creating the msg
+					Message msg = new Message(pageW.getDest(), chatInput.getText());
+					chatInput.setText(null);
+					
+					//afficher le message sur la page
+					pageW.addChatLine(msg.getMsg());
+					
+					//ajouter à la base de données
+					
+					//utiliser le contact manager
+					pageW.getMm().getMessMan().signalMess(pageW.getConv(), msg);
+				}
 			}
 			
-		/*} else if (pageM != null && event.getSource().equals(pageM.getYesB())) {
+		} /*else if (pageM != null && event.getSource().equals(pageM.getYesB())) {
 			
 			pageM.getStartingChat().setVisible(false);
 			// to do : start the chat session
@@ -188,25 +196,33 @@ public class Action implements ActionListener, ListSelectionListener{
 			
 			//demander au message manager de lancer la conv
 			Conversation c = new Conversation(pageM,dest);
-			pageM.getMessMan().getConvList().add(c);*/
+			pageM.getMessMan().getConvList().add(c);
 			
-		}
+		}*/
     }
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		// TODO Auto-generated method stub
+		
 		ListSelectionModel lsm = (ListSelectionModel)e.getSource();
         int index_pseudo = pageM.getPseudosList().getSelectedRow();
         String pseudo = (String) pageM.getPseudosList().getValueAt(index_pseudo, 1);
         
-        /*
-        pageM.getStartingChat().getContentPane().add(new JLabel("Do you want to start a Chat Session with "+ pseudo+" ?"), BorderLayout.NORTH);
-        
-        //Display the window.
-        pageM.getStartingChat().setLocationRelativeTo(null); // au centre
-        pageM.getStartingChat().setVisible(true);*/
-		
+        if (pageM.getPseudosList().getValueAt(index_pseudo, 0).equals(new ImageIcon(pageM.getConnected())) ) {
+	        Contact dest = pageM.getContactList().existsP(pseudo);
+	        
+			if (dest!=null) {
+				
+				Conversation c = new Conversation(pageM,dest);
+				pageM.getMessMan().getConvList().add(c);
+				
+			} else {
+				System.out.println("Erreurrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n");
+			}
+			
+        } else {
+        	 ChatWindow cw = new ChatWindow(pageM, new Contact("Unknown"), null);
+        }
 	}
 	
 
