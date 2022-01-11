@@ -5,22 +5,25 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 
 public class MessagesManager extends Thread{ // chaque conversation est géré par un Msgsender et un Msgreceiver
 	
 	private MainMenu1 mm;
 	private boolean running;
-	private boolean session=false;
-	private Contact interloc=null;
-	private Conversation c=null;
 	private int port = 55555;
 	private ServerSocket ss;
+	
+	private ArrayList<InetAddress> talkingHosts;
+	
 	
 	public MessagesManager(MainMenu1 m) {
 		super();
 		this.mm = m;
 		this.running = true;
+		this.talkingHosts = new ArrayList<InetAddress>();
+		
 		try {
 			 ss = new ServerSocket(port);
 		} catch (IOException e) {
@@ -32,61 +35,97 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 	
 	public void run() {
 		
-		Socket doorbell=null;
-		int i=0;// pour test
-		while (running && i<2) {
-			i++;
-				
-			try {
-				doorbell = ss.accept();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					
+					Socket doorbell=null;
+					int i=0;// pour test
+					while (running && i<2) {
+						i++;
+							
+						try {
+							doorbell = ss.accept();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						try {
+							System.out.println(doorbell.getInetAddress()+" "+doorbell.getLocalAddress()+" "+InetAddress.getLocalHost());
+						} catch (UnknownHostException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						InetAddress host = doorbell.getLocalAddress();
+						boolean in = false;
+						for (InetAddress knownhost : talkingHosts) {
+							if (host.equals(knownhost)) {
+								in = true;
+							} 
+						}
+						
+						if (in) {
+							//create convo (initié par nous)
+							new Thread(new Runnable() {
+
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									try {
+										if (doorbell.getInetAddress().equals(InetAddress.getByName(this.interloc.getIpaddress()))) {
+											this.chat.startConv(doorbell);
+										} else {
+											System.out.println("Pas cette convo\n");
+										}
+										
+									} catch (UnknownHostException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									System.out.println("On a lancé une conv\n");
+								}
+								
+								
+								
+							});
+							
+						} else {
+							talkingHosts.add(host);
+							
+							//create convo initié par nous
+							new Thread(new Runnable() {
+
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+								}
+								
+							});
+						}
+					}
+					System.out.println("Le receiver du messages manager a été arrété !\n");
+					
+				}
+			});
 			
-			try {
-				System.out.println(doorbell.getInetAddress()+" "+doorbell.getLocalAddress()+" "+InetAddress.getLocalHost());
-			} catch (UnknownHostException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			//creates new thread to do the work
-			new Thread(new Task(this,doorbell,session,this.interloc,this.c)).start();
+			//Thread d'envoi
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					while (running) {
+					}
+				}
+			});
 			
-			doorbell = null;
-		
-		}
-		
-		System.out.println("Le message manager a été arrété !\n");
 	}
 	
-	
-	public void setSession(boolean b) {
-		this.session = b;
-	}
-	
-	public void startSession(Contact m, Conversation c) {
-		setSession(true);
-		this.interloc = m;
-		this.c= c;
-		
-	}
-	
-	public Contact getInterloc() {
-		return this.interloc;
-	}
-	
-	public void resetInterloc() {
-		this.interloc = null;
-	}
-	public void resetC() {
-		this.c = null;
-	}
 
 	public MainMenu1 getMm() {
 		return mm;
 	}
-	
 	
 	
 	public static void main(String[] args) {
@@ -109,7 +148,7 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 class Task implements Runnable{
 	
 	private Socket doorbell;
-	private boolean session;
+	private boolean startConv;
 	private Contact interloc;
 	private MessagesManager messm;
 	private Conversation chat;
@@ -118,7 +157,7 @@ class Task implements Runnable{
 		super();
 		this.messm = messm;
 		this.doorbell = s;
-		this.session = sess;
+		this.startConv = sess;
 		this.interloc = i;
 		this.chat = c;
 	}
@@ -126,7 +165,7 @@ class Task implements Runnable{
 	
 	public void run() {
 	
-		if (session) { // chat starter
+		if (startConv) { // chat starter
 			try {
 				//Conversation c = new Conversation(this.interloc);
 				if (doorbell.getInetAddress().equals(InetAddress.getByName(this.interloc.getIpaddress()))) {
@@ -139,9 +178,6 @@ class Task implements Runnable{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			messm.setSession(false);
-			messm.resetC();
-			messm.resetInterloc();
 			System.out.println("On a lancé une conv\n");
 	
 		} else {
@@ -161,4 +197,8 @@ class Task implements Runnable{
 			
 		}
 	}
+	
+	
+	
+
 }

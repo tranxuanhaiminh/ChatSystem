@@ -31,7 +31,6 @@ public class Conversation {
 	
 	public void startConv(Socket saccepted) {
 		r = new MsgReceiver(saccepted);
-		s.start();
 		r.start();
 		System.out.println("CONVERSATION LANCEE avec " + this.interlocutor + "\n");
 	}

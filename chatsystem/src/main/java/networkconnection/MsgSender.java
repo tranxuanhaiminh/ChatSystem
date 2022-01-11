@@ -9,7 +9,7 @@ import java.net.Socket;
 import chatsystem.Contact;
 import chatsystem.Message;
 
-public class MsgSender extends Thread{ // on ne doit pas sortir du send sinon ça close la connexion; //ON FERME LE receiver d'abord D4ABORD
+public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sinon ça close la connexion; //ON FERME LE receiver d'abord D4ABORD
 	
 	private Socket socketsend;
 	private Message msg=null;
@@ -20,42 +20,37 @@ public class MsgSender extends Thread{ // on ne doit pas sortir du send sinon ça
 
 	
 	public MsgSender(Socket socket) {
-		super();
+		//super();
 		this.socketsend = socket;
 		this.setGo(true);
-		out=null;
+		try {
+			out = new ObjectOutputStream(socketsend.getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
-	public void run() {
+	public void send(Message msg) {
 		
-		System.out.println("Le msg sender est lancé pour l'hote : " + socketsend.getInetAddress()+ " \n");
-		
-		while (go) {
-
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			if (msg != null) {
+		try {
+			if (!socketsend.isOutputShutdown()) {
 				System.out.println("J'envoie un msg\n");
-				try {
-					if (!socketsend.isOutputShutdown()) {
-						out = new ObjectOutputStream(socketsend.getOutputStream());
-						out.writeObject(msg);
-						sent = true;
-					}
-					
-				} catch (IOException e){
-					e.printStackTrace();
-				}
+				out.writeObject(msg);
+				out.flush();
+				sent = true;
 			}
-			msg = null;
+			else {
+				System.out.println("The socket output is shutdown\n");
+			}
 			
+		} catch (IOException e){
+			e.printStackTrace();
 		}
-		
+	}
+	
+	public void closeCo() {
 		try {
 			socketsend.close();
 			out.close();
@@ -64,7 +59,6 @@ public class MsgSender extends Thread{ // on ne doit pas sortir du send sinon ça
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public void setMsg(Message mess) {
@@ -99,23 +93,27 @@ public class MsgSender extends Thread{ // on ne doit pas sortir du send sinon ça
 		String host = InetAddress.getLocalHost().getHostName();
 		int port = 55555;
 		Socket clientSocket = new Socket(host, port);
-		Message msg = new Message(new Contact("toto"), "test 1");
 		MsgSender m= new MsgSender(clientSocket);
-		m.start();
 		
-		m.setMsg(msg);
-		
-		msg = new Message(new Contact("toto"), "test 2");
-		
-		m.setMsg(msg);
-		
+		Message msg = new Message(new Contact("toto"), "test 1");
+		m.send(msg);		
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		m.setGo(false);
+		msg = new Message(new Contact("toto"), "test 2");
+		m.send(msg);
+		
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		m.closeCo();
 		
 	}
 

@@ -1,9 +1,7 @@
 package chatsystem;
 
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 
 import networkconnection.UDPReceiver;
 import networkconnection.UDPSender;
@@ -13,7 +11,6 @@ public class ContactsManager extends Thread{
 	private Connection cc;
 	private UDPReceiver ContactReceiver;
 	private UDPSender ContactSender;
-	private boolean sendMe= false;
 	private boolean state; // false = connecting phase true = Main 
 	private boolean running;
 	
@@ -116,7 +113,6 @@ public class ContactsManager extends Thread{
 		    	
 				//on envoie son contact aux autres 
 		    	
-				this.setSendMe();
 				System.out.println("\nENVOI de son contact aux autres\n");
 				this.ContactSender = new UDPSender(this.cc.getMain().getMe().getPseudo(), broadcast);
 				this.ContactSender.send();
@@ -192,14 +188,11 @@ public class ContactsManager extends Thread{
 	public UDPReceiver getContactReceiver() {
 		return this.ContactReceiver;
 	}
+
 	public UDPSender getContactSender() {
 		return this.ContactSender;
 	}
 	
-	public void setSendMe() {
-		sendMe = true;
-	}
-
 	public boolean isRunning() {
 		return running;
 	}

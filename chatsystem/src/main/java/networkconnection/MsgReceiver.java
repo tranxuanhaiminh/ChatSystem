@@ -19,7 +19,12 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 		super();
 		this.socketreceive = sock;
 		this.setGo(true);
-		
+		try {
+			in = new ObjectInputStream(socketreceive.getInputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void run() {
@@ -33,11 +38,9 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 				//System.out.println("J'attends un msg \n");
 				
 				try {
-					
-					in = new ObjectInputStream(socketreceive.getInputStream());
 					mess = (Message) in.readObject();
 					System.out.println("MESSAGE RECU = "+ mess+"\n");
-
+					
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -80,7 +83,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 		MsgReceiver m= new MsgReceiver(socketDoorbell);
 		m.start();
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
