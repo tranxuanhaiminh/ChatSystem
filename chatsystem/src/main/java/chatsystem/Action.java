@@ -147,9 +147,10 @@ public class Action implements ActionListener, ListSelectionListener{
 		    			
 		    			//envoyer son pseudo aux autres 
 		    			ContactsManager cm = pageM.getCm();
-		    			UDPSender cs= cm.getContactSender();
+		    			/*UDPSender cs= cm.getContactSender();
     					cs= new UDPSender(pageM.getMe().getPseudo(), "255.255.255.255");
-						cs.send();
+						cs.send();*/
+		    			cm.signalDatagram(pageM.getMe().getPseudo(), "255.255.255.255");
 		            }
 		        });
 		        t.setRepeats(false); // Only execute once
