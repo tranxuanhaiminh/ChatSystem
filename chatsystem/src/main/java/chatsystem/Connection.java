@@ -34,7 +34,7 @@ public class Connection {
 		
         //Create and set up the window.
         connectionFrame = new JFrame("Connection to the Chat System");
-        //connectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        connectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         
         connectionFrame.setSize(new Dimension(200, 100));

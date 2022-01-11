@@ -10,7 +10,6 @@ public class ContactsManager extends Thread{
 	
 	private Connection cc;
 	private UDPReceiver ContactReceiver;
-	private UDPSender ContactSender;
 	private boolean state; // false = connecting phase true = Main 
 	private boolean running;
 	
@@ -44,9 +43,10 @@ public class ContactsManager extends Thread{
 				
 				System.out.println("Envoi de la demande de contact (connection)\n");
 				
-				this.ContactSender = new UDPSender("ASK");
-				this.ContactSender.send();
-				
+				//this.ContactSender = new UDPSender("ASK");
+				//this.ContactSender.send();
+				(new UDPSender("ASK")).send();
+				 
 				System.out.println("Lancement rÃ©ception des contacts pendant la connection\n");
 				
 				long s = System.currentTimeMillis();
@@ -62,6 +62,7 @@ public class ContactsManager extends Thread{
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+		    		
 					String[] response = ContactReceiver.receive(); // cette fonction est bloquante
 					
 					if (response!=null) {
@@ -83,7 +84,7 @@ public class ContactsManager extends Thread{
 						}
 		    	        	
 		    		} else {
-		    			System.out.println("on a recu null\n");
+		    			System.out.println("On a recu null.\n");
 		    		}
 		        	
 		    	}
@@ -113,31 +114,15 @@ public class ContactsManager extends Thread{
 				//on envoie son contact aux autres 
 		    	
 				System.out.println("\nENVOI de son contact aux autres\n");
-				this.ContactSender = new UDPSender(this.cc.getMain().getMe().getPseudo());
-				this.ContactSender.send();
+				//this.ContactSender = new UDPSender(this.cc.getMain().getMe().getPseudo());
+				//this.ContactSender.send();
+				(new UDPSender(this.cc.getMain().getMe().getPseudo())).send();
 				
 				//lancement du receiver
 				System.out.println("Lancement receiver lors de la session\n");
 				this.ContactReceiver.setRunning(true);
-				
-				while (this.isRunning()) {
-					
-					//////////////////////gestion envoi de contact /////////////////////////////////////
-					
-					new Thread(new Runnable() {
 
-						@Override
-						public void run() {
-							while (running) {
-								if (ContactSender != null) {
-									sendDatagram();
-								}
-							}
-							System.out.println("Le Contact sender est fermé\n");
-						} 
-					}).start();
-					
-					//////////////////////////////////////////////////////////////
+				while (this.isRunning()) {
 					
 					/////////////////////////////gestion reception de contact /////////////////////////////
 					String[] response = ContactReceiver.receive();
@@ -174,9 +159,10 @@ public class ContactsManager extends Thread{
 							
 						} else if (msg.equals("ASK")){ //on traite les envois de son contact
 							
-							this.ContactSender = new UDPSender(this.cc.getMain().getMe().getPseudo(), addr);
-							this.ContactSender.send();
-					    	System.out.println("\nENVOI de son contact Ã  "+ addr+"\n");
+							//this.ContactSender = new UDPSender(this.cc.getMain().getMe().getPseudo(), addr);
+							//this.ContactSender.send();
+							(new UDPSender(this.cc.getMain().getMe().getPseudo(), addr)).send();
+					    	System.out.println("\nENVOI de son contact à  "+ addr+"\n");
 
 						} else if (msg.equals("DISCONNECTED")) {
 							
@@ -206,10 +192,6 @@ public class ContactsManager extends Thread{
 		return this.ContactReceiver;
 	}
 
-	public UDPSender getContactSender() {
-		return this.ContactSender;
-	}
-	
 	public boolean isRunning() {
 		return running;
 	}
@@ -222,17 +204,10 @@ public class ContactsManager extends Thread{
 		state = true;
 	}
 	
-	public synchronized void sendDatagram() {
-				System.out.println("Packet READY\n");
-				this.ContactSender.send();
-				UDPSender s = this.getContactSender();
-				s=null;
-		
+	//////////////////gestion de l'envoi de msg udp
+	public void signalDatagram(String m, String ad) {
+			System.out.println("Sending : "+ m +" to " + ad+" .\n");
+			(new UDPSender(m, ad)).send();
 	}
 	
-	public synchronized void signalDatagram(String m, String ad) {
-			UDPSender s = this.getContactSender();
-			s = new UDPSender(m,ad);
-			System.out.println("MESSAGE EN COURS D ENVOI\n");
-	}
 }

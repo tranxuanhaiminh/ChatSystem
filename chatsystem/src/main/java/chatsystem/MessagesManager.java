@@ -176,7 +176,6 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 	
 	public synchronized void signalMess(Conversation c, Message m) {
 		//synchronized (sending) {
-			
 			this.c = c;
 			this.m = m;
 			System.out.println("MESSAGE EN COURS D ENVOI\n");

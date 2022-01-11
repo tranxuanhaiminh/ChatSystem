@@ -37,7 +37,6 @@ public class UDPSender{
 	
 	public UDPSender(String message, String addr) {
 		this.port= 58799;
-		
 		try {
 			this.sendersocket = new DatagramSocket();
 		} catch (SocketException e) {
@@ -57,6 +56,7 @@ public class UDPSender{
 	
 	public void send(){
 		DatagramPacket out=null;
+		System.out.println("On envoie un datagram.\n");
 		try {
 			out = new DatagramPacket(message.getBytes(),message.length(), InetAddress.getByName(dest), port);
 		} catch (UnknownHostException e1) {
@@ -67,7 +67,7 @@ public class UDPSender{
 		try {
 			sendersocket.send(out);
 		} catch (IOException e) {
-			System.out.println("Erreur lors de l'envoi du msg \n");
+			e.printStackTrace();
 		}
 		
 		sendersocket.close();
@@ -77,7 +77,7 @@ public class UDPSender{
 	
 	public static void main(String[] args) {
 		
-			UDPSender u = new UDPSender("Test","255.255.255.255");
+			UDPSender u = new UDPSender("ASK","255.255.255.255");
 			u.send();
 		
 	}
