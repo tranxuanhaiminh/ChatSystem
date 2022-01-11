@@ -169,8 +169,8 @@ public class Action implements ActionListener, ListSelectionListener{
 				
 				//ajouter à la base de données
 				
-				//utiliser la conv
-				pageW.getConv().getS().setMsg(msg);
+				//utiliser le contact manager
+				pageW.getMm().getMessMan().signalMess(pageW.getConv(), msg);
 				
 			}
 			
@@ -183,9 +183,8 @@ public class Action implements ActionListener, ListSelectionListener{
 			Contact dest = pageM.getContactList().existsP((String)pageM.getPseudosList().getSelectedValue());
 			
 			//demander au message manager de lancer la conv
-			Conversation c = new Conversation(dest);
-			ChatWindow1 cw= new ChatWindow1(pageM, dest, c);
-			pageM.getMessMan().startSession(dest, c);
+			Conversation c = new Conversation(pageM,dest);
+			pageM.getMessMan().getConvList().add(c);
 			
 		}
     }

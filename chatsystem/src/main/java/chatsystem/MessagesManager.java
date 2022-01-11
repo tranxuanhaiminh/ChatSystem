@@ -15,14 +15,18 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 	private int port = 55555;
 	private ServerSocket ss;
 	
-	private ArrayList<InetAddress> talkingHosts;
+	private ArrayList<Conversation> ConvList;
+	
+	private Conversation c=null;
+	private Message m=null;
+	//private Object sending = new Object();
 	
 	
 	public MessagesManager(MainMenu1 m) {
 		super();
 		this.mm = m;
 		this.running = true;
-		this.talkingHosts = new ArrayList<InetAddress>();
+		this.ConvList = new ArrayList<Conversation>();
 		
 		try {
 			 ss = new ServerSocket(port);
@@ -60,73 +64,124 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 						
 						InetAddress host = doorbell.getLocalAddress();
 						boolean in = false;
-						for (InetAddress knownhost : talkingHosts) {
-							if (host.equals(knownhost)) {
-								in = true;
+						Conversation ec = null;
+						for (Conversation withknownhost : ConvList) {
+							try {
+								if (host.equals(InetAddress.getByName(withknownhost.getInterlocutor().getIpaddress()))) {
+									System.out.println("on a trouve la conv\n");
+									in = true;
+									ec = withknownhost;
+								}
+							} catch (UnknownHostException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							} 
 						}
+						System.out.println("sortie ");
 						
+						final Conversation encours = ec;
+						final Socket sock = doorbell;
 						if (in) {
 							//create convo (initié par nous)
 							new Thread(new Runnable() {
-
+								
 								@Override
 								public void run() {
-									// TODO Auto-generated method stub
-									try {
-										if (doorbell.getInetAddress().equals(InetAddress.getByName(this.interloc.getIpaddress()))) {
-											this.chat.startConv(doorbell);
-										} else {
-											System.out.println("Pas cette convo\n");
-										}
-										
-									} catch (UnknownHostException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
+									//sock est l'aceptation de notre socket d'envoi
+									encours.startConv(sock);
 									System.out.println("On a lancé une conv\n");
 								}
-								
-								
-								
-							});
+									
+							}).start();
 							
 						} else {
-							talkingHosts.add(host);
 							
-							//create convo initié par nous
+							//create convo initié par l'autre
 							new Thread(new Runnable() {
-
+								
 								@Override
 								public void run() {
 									// TODO Auto-generated method stub
+									Contact contact = getMm().getContactList().exists(host.getHostName());
+									
+									if (contact ==null)
+										contact = getMm().getContactList().exists(host.toString());
+									
+									if (contact ==null) {
+											System.out.println("Pas dans la liste de contacts\n");
+									} else {
+										Conversation cn = new Conversation(mm,contact);
+										ConvList.add(cn);
+										cn.startConv(sock);
+										System.out.println("On a accepté une conv\n");
+									
+									}
 								}
 								
-							});
+							}).start();
 						}
 					}
 					System.out.println("Le receiver du messages manager a été arrété !\n");
 					
 				}
-			});
+			}).start();
 			
 			//Thread d'envoi
 			new Thread(new Runnable() {
 
 				@Override
 				public void run() {
+					// TODO Auto-generated method stub
 					while (running) {
+						if (c!=null && m!=null)
+						 sendMessTo(c,m);
 					}
+					
+					for (Conversation c : ConvList)  // en arrêtant le mess man on trop toutes les conv
+						c.stopConv();
+					
+					System.out.println("L'envoyeur du messages manager a été arrété !\n");
 				}
-			});
+				
+			}).start();
 			
 	}
-	
+
 
 	public MainMenu1 getMm() {
 		return mm;
 	}
 	
+	public ArrayList<Conversation> getConvList(){
+		return this.ConvList;
+	}
+	
+	public void setRunning(boolean b) {
+		this.running = b;
+	}
+	
+	public synchronized void sendMessTo(Conversation c, Message m) {
+		//synchronized (sending) {
+			if (ConvList.contains(c)) {
+				System.out.println("MESS PRET\n");
+				c.getS().send(m);
+				this.c = null;
+				this.m = null;
+			} else {
+				System.out.println("la conversation n'est pas répertorié\n");
+			}
+		//}
+		
+	}
+	
+	public synchronized void signalMess(Conversation c, Message m) {
+		//synchronized (sending) {
+			
+			this.c = c;
+			this.m = m;
+			System.out.println("MESSAGE EN COURS D ENVOI\n");
+		//}
+	}
 	
 	public static void main(String[] args) {
 			
@@ -140,64 +195,6 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 			MainMenu1 mm= new MainMenu1(me, cl, cm);
 			
 	}
-	
-	
-
-}
-
-class Task implements Runnable{
-	
-	private Socket doorbell;
-	private boolean startConv;
-	private Contact interloc;
-	private MessagesManager messm;
-	private Conversation chat;
-	
-	public Task(MessagesManager messm, Socket s, boolean sess, Contact i, Conversation c) {
-		super();
-		this.messm = messm;
-		this.doorbell = s;
-		this.startConv = sess;
-		this.interloc = i;
-		this.chat = c;
-	}
-	
-	
-	public void run() {
-	
-		if (startConv) { // chat starter
-			try {
-				//Conversation c = new Conversation(this.interloc);
-				if (doorbell.getInetAddress().equals(InetAddress.getByName(this.interloc.getIpaddress()))) {
-					this.chat.startConv(doorbell);
-				} else {
-					System.out.println("Pas cette convo\n");
-				}
-				
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println("On a lancé une conv\n");
-	
-		} else {
-		
-			Contact contact = messm.getMm().getContactList().exists(doorbell.getInetAddress().getHostName());
-			
-			if (contact ==null)
-				contact = messm.getMm().getContactList().exists(doorbell.getInetAddress().toString());
-			
-			if (contact ==null) {
-					System.out.println("Pas dans la liste de contacts\n");
-			} else {
-				Conversation cn = new Conversation(contact);
-				cn.startConv(doorbell);
-				System.out.println("On a accepté une conv\n");
-			}
-			
-		}
-	}
-	
 	
 	
 

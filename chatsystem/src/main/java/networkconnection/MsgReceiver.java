@@ -7,18 +7,21 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import chatsystem.ChatWindow1;
 import chatsystem.Message;
 
 public class MsgReceiver extends Thread{ // Server tcp //client tcp
 	
 	private Socket socketreceive;
-	private boolean go;
+	private boolean running;
 	private ObjectInputStream in=null;
+	private ChatWindow1 chatw;
 	
-	public MsgReceiver(Socket sock) {
+	public MsgReceiver(Socket sock, ChatWindow1 c) {
 		super();
 		this.socketreceive = sock;
-		this.setGo(true);
+		this.chatw = c;
+		this.setRunning(true);
 		try {
 			in = new ObjectInputStream(socketreceive.getInputStream());
 		} catch (IOException e) {
@@ -33,13 +36,12 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 
 		Message mess=null;
 		
-		while (go) {
+		while (running) {
 			
-				//System.out.println("J'attends un msg \n");
-				
 				try {
 					mess = (Message) in.readObject();
 					System.out.println("MESSAGE RECU = "+ mess+"\n");
+					this.chatw.addMesg(mess);
 					
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -65,12 +67,12 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 		}
 	}
 
-	public boolean isGo() {
-		return go;
+	public boolean isRunning() {
+		return running;
 	}
 
-	public void setGo(boolean go) {
-		this.go = go;
+	public void setRunning(boolean go) {
+		this.running = go;
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -80,7 +82,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 		System.out.println("WAITING FOR CONNEXION on port : "+ port+ "\n");
 		Socket socketDoorbell = serversock.accept();
 		System.out.println("CONNEXION ACCEPTED with : " + socketDoorbell.getInetAddress() +" on port : "+ port+ " Local addr is : "+ socketDoorbell.getLocalAddress()+"\n");
-		MsgReceiver m= new MsgReceiver(socketDoorbell);
+		MsgReceiver m= new MsgReceiver(socketDoorbell,null);
 		m.start();
 		try {
 			Thread.sleep(1000);
@@ -88,7 +90,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		m.setGo(false);
+		m.setRunning(false);
 	
 	}
 

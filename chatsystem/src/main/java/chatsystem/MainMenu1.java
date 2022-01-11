@@ -82,11 +82,15 @@ public class MainMenu1{
 				 
 				 // Sending a disconnected msg
 				 System.out.println("\nDISCONNECTING ...\n");
-				 UDPSender c = cm.getContactSender();
-				 c = new UDPSender("DISCONNECTED","255.255.255.255");
-				 c.send();
+				 if (cm!=null) {
+					 cm.signalDatagram("DISCONNECTED","255.255.255.255");
+				 }
 				 // Stopping the Contact manager
-				 cm.setRunning(false);
+				 if (cm!=null)
+					 cm.setRunning(false);
+				 //Stopping the message manager
+				 if (messMan!=null)
+					 messMan.setRunning(false);
 				 
 			     System.exit(0);
 			  

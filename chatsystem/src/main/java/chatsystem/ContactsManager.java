@@ -25,7 +25,7 @@ public class ContactsManager extends Thread{
 	public void run() {
 		
 		while (true) {
-			//System.out.println("."); //on dirait qu'il faut nécessairement au moins une instruction
+			//on dirait qu'il faut nécessairement au moins une instruction
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e2) {
@@ -33,18 +33,18 @@ public class ContactsManager extends Thread{
 				e2.printStackTrace();
 			}			
 			int i=0;
+			
 			while (this.isRunning()) {
 				i++;
 				//System.out.println("is running \n");
-			// Contact manager de la phase de connection
-			String broadcast= "255.255.255.255";
+				
+			///////////////////////////////////////////////////// Contact manager de la phase de connection
 			
-			// Contact manager de la phase de connection
 			if (state == false && i==1) {
 				
 				System.out.println("Envoi de la demande de contact (connection)\n");
 				
-				this.ContactSender = new UDPSender("ASK", broadcast);
+				this.ContactSender = new UDPSender("ASK");
 				this.ContactSender.send();
 				
 				System.out.println("Lancement réception des contacts pendant la connection\n");
@@ -80,7 +80,6 @@ public class ContactsManager extends Thread{
 							
 						} else {
 							System.out.println("\n NON TRAITE \n");
-							
 						}
 		    	        	
 		    		} else {
@@ -109,12 +108,12 @@ public class ContactsManager extends Thread{
 					err.printStackTrace();
 				}
 		    	
-				//Contact manager après la phase de connection
+				////////////////////////////////////Contact manager après la phase de connection
 		    	
 				//on envoie son contact aux autres 
 		    	
 				System.out.println("\nENVOI de son contact aux autres\n");
-				this.ContactSender = new UDPSender(this.cc.getMain().getMe().getPseudo(), broadcast);
+				this.ContactSender = new UDPSender(this.cc.getMain().getMe().getPseudo());
 				this.ContactSender.send();
 				
 				//lancement du receiver
@@ -122,7 +121,25 @@ public class ContactsManager extends Thread{
 				this.ContactReceiver.setRunning(true);
 				
 				while (this.isRunning()) {
+					
+					//////////////////////gestion envoi de contact /////////////////////////////////////
+					
+					new Thread(new Runnable() {
 
+						@Override
+						public void run() {
+							while (running) {
+								if (ContactSender != null) {
+									sendDatagram();
+								}
+							}
+							System.out.println("Le Contact sender est ferm�\n");
+						} 
+					}).start();
+					
+					//////////////////////////////////////////////////////////////
+					
+					/////////////////////////////gestion reception de contact /////////////////////////////
 					String[] response = ContactReceiver.receive();
 					if (response!=null) {
 						String msg = response[0];
@@ -203,5 +220,19 @@ public class ContactsManager extends Thread{
 
 	public void setState() {
 		state = true;
+	}
+	
+	public synchronized void sendDatagram() {
+				System.out.println("Packet READY\n");
+				this.ContactSender.send();
+				UDPSender s = this.getContactSender();
+				s=null;
+		
+	}
+	
+	public synchronized void signalDatagram(String m, String ad) {
+			UDPSender s = this.getContactSender();
+			s = new UDPSender(m,ad);
+			System.out.println("MESSAGE EN COURS D ENVOI\n");
 	}
 }

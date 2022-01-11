@@ -16,6 +16,24 @@ public class UDPSender{
 	private String message;
 	public String dest;
 	
+	public UDPSender(String message) {
+		this.port= 58799;
+		
+		try {
+			this.sendersocket = new DatagramSocket();
+		} catch (SocketException e) {
+			System.out.println("Erreur lors de la creation du socket d'envoi\n");
+		}
+
+		try {
+			sendersocket.setBroadcast(true);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.message = message;
+		this.dest = "255.255.255.255";
+	}
 	
 	public UDPSender(String message, String addr) {
 		this.port= 58799;

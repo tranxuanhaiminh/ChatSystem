@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -13,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import networkconnection.UDPSender;
 
 public class ChatWindow1 {
 	
@@ -36,7 +40,17 @@ public class ChatWindow1 {
 		this.conv = conv;
 		this.sendMess = new Action(this);
 		frame = new JFrame(this.dest.getPseudo());
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter() {
+			 
+			 public void windowClosing(WindowEvent e) {
+				 if (conv != null)
+					 conv.stopConv();
+			     frame.setVisible(false);
+			     frame.dispose();
+			 }
+			  
+			   });
+		
 		frame.setSize(550, 400);
 		
 		chatPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

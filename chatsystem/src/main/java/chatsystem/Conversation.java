@@ -13,10 +13,12 @@ public class Conversation {
 	private MsgSender s;
 	private Contact interlocutor;
 	private int port = 55555;
+	private MainMenu1 mm;
+	private ChatWindow1 chatw=null;
 	
-	public Conversation(Contact i) {
+	public Conversation(MainMenu1 mm,Contact i) {
 		this.interlocutor = i;
-		
+		this.mm = mm;
 		try {
 			s = new MsgSender(new Socket(i.getIpaddress(), port));
 		} catch (UnknownHostException e) {
@@ -30,9 +32,19 @@ public class Conversation {
 	}
 	
 	public void startConv(Socket saccepted) {
-		r = new MsgReceiver(saccepted);
+		this.chatw = new ChatWindow1(mm,this.interlocutor,this);
+		r = new MsgReceiver(saccepted, this.chatw);
 		r.start();
 		System.out.println("CONVERSATION LANCEE avec " + this.interlocutor + "\n");
+		
+	}
+	
+	public void stopConv() {
+		r.setRunning(false);
+		s.closeCo();
+		//supprimer du mess man
+		mm.getMessMan().getConvList().remove(this);
+		System.out.println("Stopping the conversation with "+ this.interlocutor + "! \n");
 	}
 
 	public MsgReceiver getR() {
