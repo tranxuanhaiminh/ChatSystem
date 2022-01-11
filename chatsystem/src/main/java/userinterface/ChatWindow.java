@@ -75,7 +75,7 @@ public class ChatWindow extends javax.swing.JFrame {
 			  
 		});
         
-        bar = jScrollPane1.getVerticalScrollBar();
+        JScrollBar bar = jScrollPane1.getVerticalScrollBar();
         bar.setValue(bar.getMaximum());
         
         this.setVisible(true);
@@ -221,10 +221,9 @@ public class ChatWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ChatWindow(null,new Contact("titi"," "), null);
+                new ChatWindow(null,new Contact("titi"," "), null).setVisible(true);
             }
         });
         
     }
-
 }
