@@ -11,7 +11,7 @@ import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import networkconnection.UDPSender;
+import network.UDPSender;
 
 
 public class Action implements ActionListener, ListSelectionListener{

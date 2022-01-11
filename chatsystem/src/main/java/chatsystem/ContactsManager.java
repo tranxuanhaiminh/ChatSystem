@@ -3,8 +3,8 @@ package chatsystem;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-import networkconnection.UDPReceiver;
-import networkconnection.UDPSender;
+import network.UDPReceiver;
+import network.UDPSender;
 
 public class ContactsManager extends Thread{
 	

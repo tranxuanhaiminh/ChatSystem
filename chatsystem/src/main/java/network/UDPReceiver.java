@@ -1,11 +1,11 @@
-package networkconnection;
+package network;
 
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-import networkconnection.UDPReceiver;
+import network.UDPReceiver;
 
 public class UDPReceiver{
 	

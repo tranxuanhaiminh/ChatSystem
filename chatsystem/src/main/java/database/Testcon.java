@@ -1,4 +1,4 @@
-package databaselite;
+package database;
 
 import java.sql.*;
 
@@ -33,6 +33,9 @@ public class Testcon {
 
       // Delete data query
       String sql4 = "DELETE FROM warehouses WHERE id = ?";
+      
+      // Delete table
+      String sql5 = "DROP TABLE warehouses";
 
       try {
          //Class.forName("org.sqlite.JDBC");
@@ -41,48 +44,51 @@ public class Testcon {
          c = DriverManager.getConnection(url + dbfile);
          
          // Create statement
-         Statement stmt = c.createStatement();
+//         Statement stmt = c.createStatement();
          PreparedStatement pstmt = c.prepareStatement(sql1);
-         PreparedStatement pstmt1 = c.prepareStatement(sql3);
-         PreparedStatement pstmt2 = c.prepareStatement(sql4);
+//         PreparedStatement pstmt1 = c.prepareStatement(sql3);
+//         PreparedStatement pstmt2 = c.prepareStatement(sql4);
+//         Statement stmt2 = c.createStatement();
          
          // Execute query on created statement to create table
-         stmt.execute(sql);
+//         stmt.execute(sql);
          
          // Set parameters to avoid SQL injection
-         pstmt.setString(1, "Raw Materials");
-         pstmt.setDouble(2, 3000);
+//         pstmt.setString(1, "Raw Materials");
+//         pstmt.setDouble(2, 3000);
 
          // Add data (no need to pass sql, already did since statement creation)
          pstmt.executeUpdate();
          
          // Create variable to store result
-         ResultSet rs = stmt.executeQuery(sql2);
+//         ResultSet rs = stmt.executeQuery(sql2);
          
          // Get value from result set
-         while (rs.next()) {
-             System.out.println(rs.getInt("id") +  "\t" + 
-                                rs.getString("name") + "\t" +
-                                rs.getDouble("capacity"));
-         }
+//         while (rs.next()) {
+//             System.out.println(rs.getInt("id") +  "\t" + 
+//                                rs.getString("name") + "\t" +
+//                                rs.getDouble("capacity"));
+//         }
          
          // Update table
-         pstmt1.setString(1, "Finished Products");
-         pstmt1.setDouble(2, 5500);
-         pstmt1.executeUpdate();
+//         pstmt1.setString(1, "Finished Products");
+//         pstmt1.setDouble(2, 5500);
+//         pstmt1.setDouble(3, 3);
+//         pstmt1.executeUpdate();
          
          // Delete data from table
-         pstmt.setInt(1, 3);
-         pstmt.executeUpdate();
+//         pstmt2.setInt(1, 3);
+//         pstmt2.executeUpdate();
          
-         
+         // Delete table
+//         stmt2.execute(sql5);
          
          // Transaction
-         c.setAutoCommit(false);
-         c.commit();
+//         c.setAutoCommit(false);
+//         c.commit();
          
          // If smt goes wrong(rowAffected != 1 / c != null / Exception e)
-         c.rollback();
+//         c.rollback();
 
       } catch ( Exception e ) {
          System.err.println( e.getClass().getName() + ": " + e.getMessage() );
