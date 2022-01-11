@@ -6,6 +6,7 @@ import java.net.SocketException;
 import network.UDPReceiver;
 import network.UDPSender;
 import userinterface.Connect;
+import userinterface.MainMenu;
 
 public class ContactsManager extends Thread{
 	
@@ -102,7 +103,6 @@ public class ContactsManager extends Thread{
 				}
 
 			} else if (state == true) {
-				
 		    	try {
 					Thread.sleep(1000); // on attends que les autres données soient misent à jour
 				} catch (InterruptedException err) {
@@ -111,13 +111,15 @@ public class ContactsManager extends Thread{
 				}
 		    	
 				////////////////////////////////////Contact manager après la phase de connection
-		    	
+
+				MainMenu main = this.cc.getMain();
+				
 				//on envoie son contact aux autres 
 		    	
 				System.out.println("\nENVOI de son contact aux autres\n");
 				//this.ContactSender = new UDPSender(this.cc.getMain().getMe().getPseudo());
 				//this.ContactSender.send();
-				(new UDPSender(this.cc.getMain().getMe().getPseudo())).send();
+				(new UDPSender(main.getMe().getPseudo())).send();
 				
 				//lancement du receiver
 				System.out.println("Lancement receiver lors de la session\n");
@@ -131,7 +133,7 @@ public class ContactsManager extends Thread{
 						String msg = response[0];
 						String addr = response[1];
 		
-						ContactList cl = this.cc.getMain().getContactList();
+						ContactList cl = main.getContactList();
 						
 						//traitement de la reception de conctacts
 						if (!(msg.equals("ASK"))) { //on traite les contacts reçus (soit modif soit nouveau
@@ -142,31 +144,28 @@ public class ContactsManager extends Thread{
 					        if (c!= null) {
 					        	System.out.println("\n MODIF D'UN CONTACT pendant un session " + msg+" "+ addr +" \n");
 					        	
-					        	int index = this.cc.getMain().getDefaultPseudosList().indexOf(c.getPseudo());
+					        	//modifier la liste des contacts
+					        	System.out.println("Modification de la liste des contacts"+main.modUser(msg, main.getConnected(), c.getPseudo())+"\n");
 					        	
+					        	//modifier le contact
 					        	c.setPseudo(msg);
 					        	
-					        	//modifier la liste des contacts
-					        	this.cc.getMain().getDefaultPseudosList().add(index, c.getPseudo());
-					        	this.cc.getMain().setPseudosList();
 					        	
 					        } else {
 					        	c = new Contact(msg,addr);
 					        	System.out.println("\n AJOUT DU CONTACT pendant un session " + msg+" "+ addr +" \n");
 					        	cl.addContact(c);
-					        	this.cc.getMain().getDefaultPseudosList().addElement(c.getPseudo());
-					        	this.cc.getMain().setPseudosList();
+					        	main.addUser(c.getPseudo(), main.getConnected());
 					        }
 							
 						} else if (msg.equals("ASK")){ //on traite les envois de son contact
 							
 							//this.ContactSender = new UDPSender(this.cc.getMain().getMe().getPseudo(), addr);
 							//this.ContactSender.send();
-							(new UDPSender(this.cc.getMain().getMe().getPseudo(), addr)).send();
+							(new UDPSender(main.getMe().getPseudo(), addr)).send();
 					    	System.out.println("\nENVOI de son contact � "+ addr+"\n");
 
 						} else if (msg.equals("DISCONNECTED")) {
-							
 							Contact c;
 							c = cl.exists(addr);
 							
@@ -174,11 +173,11 @@ public class ContactsManager extends Thread{
 					        	System.out.println("Ce contact n'est pas dans la liste de vos contacts\n");
 					        } else {
 					        	System.out.println("\n SUPPRESSION DU CONTACT pendant la session " + msg+" "+ addr +" \n");
-					        	this.cc.getMain().getContactList().removeContact(c);
+					        	main.getContactList().removeContact(c);
 					        	
 					        	//modif connected users
-					        	this.cc.getMain().getDefaultPseudosList().removeElement(c.getPseudo());
-					        	this.cc.getMain().setPseudosList();
+					        	System.out.println("Modification de la liste des contacts" + main.modUser(c.getIpaddress(), main.getDisconnected(), c.getPseudo())+ "\n");
+					        	
 					        	
 					        }
 						}

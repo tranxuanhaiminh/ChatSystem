@@ -52,7 +52,10 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 							
 						try {
 							doorbell = ss.accept();
-						} catch (IOException e) {
+						} catch (java.net.BindException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}

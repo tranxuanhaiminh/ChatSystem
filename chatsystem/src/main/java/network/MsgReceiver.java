@@ -42,7 +42,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 				try {
 					mess = (Message) in.readObject();
 					System.out.println("MESSAGE RECU = "+ mess+"\n");
-					this.chatw.addChatLine(mess.getMsg());
+					this.chatw.addChatLine(mess,false);
 					
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -79,19 +79,20 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 	public static void main(String[] args) throws IOException {
 		
 		int port= 55555;
-		ServerSocket serversock = new ServerSocket(port);
-		System.out.println("WAITING FOR CONNEXION on port : "+ port+ "\n");
-		Socket socketDoorbell = serversock.accept();
-		System.out.println("CONNEXION ACCEPTED with : " + socketDoorbell.getInetAddress() +" on port : "+ port+ " Local addr is : "+ socketDoorbell.getLocalAddress()+"\n");
-		MsgReceiver m= new MsgReceiver(socketDoorbell,null);
-		m.start();
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		try (ServerSocket serversock = new ServerSocket(port)) {
+			System.out.println("WAITING FOR CONNEXION on port : "+ port+ "\n");
+			Socket socketDoorbell = serversock.accept();
+			System.out.println("CONNEXION ACCEPTED with : " + socketDoorbell.getInetAddress() +" on port : "+ port+ " Local addr is : "+ socketDoorbell.getLocalAddress()+"\n");
+			MsgReceiver m= new MsgReceiver(socketDoorbell,null);
+			m.start();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			m.setRunning(false);
 		}
-		m.setRunning(false);
 	
 	}
 

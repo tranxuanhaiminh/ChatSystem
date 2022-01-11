@@ -8,6 +8,26 @@ public class Databasecon {
 
 	// Database location (in main folder)
 	private String url = "jdbc:sqlite:";
+	private String dbfile;
+	private Connection c;
+	
+	public Databasecon(String dbfile) {
+		this.dbfile=dbfile;
+		
+		try {
+			this.c = DriverManager.getConnection(url + this.dbfile);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (createTable(c)) {
+			System.out.println("The datbase is created !\n");
+		}else {
+			System.out.println("You already have a database !\n");
+		}
+	}
+	
+
 
 	/*
 	 * Connect to the database from the databasefile name
@@ -178,5 +198,9 @@ public class Databasecon {
 			return null;
 		}
 
+	}
+	
+	public Connection getC() {
+		return c;
 	}
 }

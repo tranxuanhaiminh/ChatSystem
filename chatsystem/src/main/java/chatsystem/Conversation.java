@@ -73,5 +73,9 @@ public class Conversation {
 		this.interlocutor = interlocutor;
 	}
 	
+	public ChatWindow getChatw() {
+		return chatw;
+	}
+	
 
 }

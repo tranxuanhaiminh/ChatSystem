@@ -1,17 +1,22 @@
 package chatsystem;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Message implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	private String msg;
 	private Date date;
 	private Contact dest;
 	
 	public Message() {
-		this.date = null;
+		this.date = new Date();
 		this.dest = null;
 		this.msg = null;
 	}
@@ -23,7 +28,7 @@ public class Message implements Serializable{
 	}
 	
 	public String toString() {
-		return msg +"      [ Date : "+date +"]";
+		return msg +"\n-------------------------------------------------------------"+this.convertDateToFormat();
 	}
 
 	public Contact getDest() {
@@ -37,4 +42,17 @@ public class Message implements Serializable{
 	public String getMsg() {
 		return msg;
 	}
+	
+	public String convertDateToFormat(){
+	    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    return sdf.format(date);
+	}
+	
+    public static void main(String args[]) {
+    	
+    	System.out.println((new Message()).convertDateToFormat());
+    }
+
+    	
+	
 }
