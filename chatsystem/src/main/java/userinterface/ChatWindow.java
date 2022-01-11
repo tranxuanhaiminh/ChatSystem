@@ -103,6 +103,9 @@ public class ChatWindow extends javax.swing.JFrame {
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
 
+	/**
+	 * Methods
+	 */
 	private void msg_sendActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_msg_sendActionPerformed
 		// TODO add your handling code here:
 		msg_in = msg_input.getText();
