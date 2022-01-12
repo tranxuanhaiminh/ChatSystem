@@ -66,6 +66,13 @@ public class MainMenu extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         
+		/////////////////// Notify Frames
+		        
+		this.pseudoNull = new NotifyFrame("Please enter a value");
+		this.modifSuccess= new NotifyFrame("Succes !");
+		this.pseudoUsed = new NotifyFrame("This username is already used ! Try again !");
+		this.userNotConnected = new NotifyFrame("This user is not connected ! You can't send messages !");
+
         
         //this.conDB = new Databasecon("datbase.db");
         
@@ -120,12 +127,6 @@ public class MainMenu extends javax.swing.JFrame {
 			  
 			   });
         
-        /////////////////// Notify Frames
-        
-       this.pseudoNull = new NotifyFrame("Please enter a value");
-       this.modifSuccess= new NotifyFrame("Succes !");
-       this.pseudoUsed = new NotifyFrame("This username is already used ! Try again !");
-       this.userNotConnected = new NotifyFrame("This user is not connected ! You can't send messages !");
         
         ///////////////adding the users
         

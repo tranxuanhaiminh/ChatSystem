@@ -49,6 +49,13 @@ public class Connect extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         
+      ///////////////NotifyFrames 
+	  this.pseudoUsed = new NotifyFrame("This username is already used ! Try again");
+	  this.welcome = new NotifyFrame("Welcome to the Chat System !");
+	  this.pseudoNull = new NotifyFrame("Please enter a value");
+	  this.alreadyRunning = new NotifyFrame("The program is already running !\nPlease close this session !");
+
+        
 		contactList = new ContactList();
 		me =new Contact();
 		
@@ -69,12 +76,7 @@ public class Connect extends javax.swing.JFrame {
         enterpseudo.setText("");
         enterpseudo.addActionListener(this.verify);
         
-        ///////////////NotifyFrames 
-        this.pseudoUsed = new NotifyFrame("This username is already used ! Try again");
-        this.welcome = new NotifyFrame("Welcome to the Chat System !");
-        this.pseudoNull = new NotifyFrame("Please enter a value");
-        this.alreadyRunning = new NotifyFrame("The program is already running !\nPlease close this session !");
-
+        
         this.setVisible(true);
 
     }

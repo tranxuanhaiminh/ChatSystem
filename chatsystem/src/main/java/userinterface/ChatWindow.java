@@ -39,10 +39,7 @@ public class ChatWindow extends javax.swing.JFrame {
 	
 	//lien page principale
 	private MainMenu main;
-	
-	//NotifyFrame
-	private NotifyFrame userNotConnected;
-	
+
 	//listeners
 	private Action sendMess;
 	
@@ -241,9 +238,4 @@ public class ChatWindow extends javax.swing.JFrame {
         
     }
 
-	public NotifyFrame getUserNotConnected() {
-		return userNotConnected;
-	}
-
-	
 }
