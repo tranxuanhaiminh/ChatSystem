@@ -7,12 +7,6 @@ package userinterface;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.ListSelectionModel;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.table.DefaultTableModel;
 
 import chatsystem.Action;
 import chatsystem.Contact;
@@ -23,10 +17,9 @@ import database.Databasecon;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 
+import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -34,10 +27,6 @@ import java.awt.GridLayout;
  */
 public class MainMenu extends javax.swing.JFrame {
 
-	/**
-	 * Fields
-	 */
-	// Informations
 	private ContactList contactList;
 	private Contact me;
 	
@@ -241,6 +230,8 @@ public class MainMenu extends javax.swing.JFrame {
     }
     
     
+    
+    
     public Contact getMe() {
 		return me;
 	}
@@ -280,7 +271,7 @@ public class MainMenu extends javax.swing.JFrame {
 	public String getDisconnected() {
 		return disconnected;
 	}
-	
+
 	public Databasecon getConDB() {
 		return conDB;
 	}
@@ -328,5 +319,4 @@ public class MainMenu extends javax.swing.JFrame {
         });
     }
 
-	
 }
