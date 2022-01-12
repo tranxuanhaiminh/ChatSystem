@@ -42,6 +42,8 @@ public class ChatWindow extends javax.swing.JFrame {
 	
 	//listeners
 	private Action sendMess;
+	
+	private String[][] chatHistory;
     
     /**
      * Creates new form NewJFrame
@@ -166,7 +168,16 @@ public class ChatWindow extends javax.swing.JFrame {
     	bar.setValue(bar.getMaximum());
     	
     	//add the msg to database
+    	
     }
+    
+    public void addToDataBase(String chat) {
+    	
+    }
+    
+    public String[][] getChatHistory() {
+		return null;
+	}
     
     public Action getSendMess() {
 		return this.sendMess;
@@ -226,4 +237,6 @@ public class ChatWindow extends javax.swing.JFrame {
         });
         
     }
+
+	
 }
