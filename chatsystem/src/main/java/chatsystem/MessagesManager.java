@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import userinterface.MainMenu;
 
 
-public class MessagesManager extends Thread{ // chaque conversation est géré par un Msgsender et un Msgreceiver
+public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½ par un Msgsender et un Msgreceiver
 	
 	private MainMenu mm;
 	private boolean running;
@@ -67,7 +67,7 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 							e1.printStackTrace();
 						}
 						
-						InetAddress host = doorbell.getLocalAddress();
+						InetAddress host = doorbell.getInetAddress();
 						boolean in = false;
 						Conversation ec = null;
 						for (Conversation withknownhost : ConvList) {
@@ -87,21 +87,21 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 						final Conversation encours = ec;
 						final Socket sock = doorbell;
 						if (in) {
-							//create convo (initié par nous)
+							//create convo (initiï¿½ par nous)
 							new Thread(new Runnable() {
 								
 								@Override
 								public void run() {
 									//sock est l'aceptation de notre socket d'envoi
 									encours.startConv(sock);
-									System.out.println("On a lancé une conv\n");
+									System.out.println("On a lancï¿½ une conv\n");
 								}
 									
 							}).start();
 							
 						} else {
 							
-							//create convo initié par l'autre
+							//create convo initiï¿½ par l'autre
 							new Thread(new Runnable() {
 								
 								@Override
@@ -118,7 +118,7 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 										Conversation cn = new Conversation(mm,contact);
 										ConvList.add(cn);
 										cn.startConv(sock);
-										System.out.println("On a accepté une conv\n");
+										System.out.println("On a acceptï¿½ une conv\n");
 									
 									}
 								}
@@ -126,7 +126,7 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 							}).start();
 						}
 					}
-					System.out.println("Le receiver du messages manager a été arrété !\n");
+					System.out.println("Le receiver du messages manager a ï¿½tï¿½ arrï¿½tï¿½ !\n");
 					
 				}
 			}).start();
@@ -142,10 +142,10 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 						 sendMessTo(c,m);
 					}
 					
-					for (Conversation c : ConvList)  // en arrêtant le mess man on trop toutes les conv
+					for (Conversation c : ConvList)  // en arrï¿½tant le mess man on trop toutes les conv
 						c.stopConv();
 					
-					System.out.println("L'envoyeur du messages manager a été arrété !\n");
+					System.out.println("L'envoyeur du messages manager a ï¿½tï¿½ arrï¿½tï¿½ !\n");
 				}
 				
 			}).start();
@@ -161,6 +161,14 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 		return this.ConvList;
 	}
 	
+	public synchronized void removeConv(Contact c) {
+		for (Conversation cv : this.ConvList) {
+			if (cv.getInterlocutor().equals(c)) {
+				cv.stopConv();
+			}
+		}
+	}
+	
 	public void setRunning(boolean b) {
 		this.running = b;
 	}
@@ -173,7 +181,9 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 				this.c = null;
 				this.m = null;
 			} else {
-				System.out.println("la conversation n'est pas répertorié\n");
+				System.out.println("la conversation n'est pas rï¿½pertoriï¿½\n");
+				this.c = null;
+				this.m = null;
 			}
 		//}
 		
@@ -191,9 +201,13 @@ public class MessagesManager extends Thread{ // chaque conversation est géré par
 			
 			ContactList cl = new ContactList();
 			
-			cl.addContact(new Contact("titi","LaptopMariétou"));
-	
-			Contact me = new Contact("toto","\127.0.0.1");
+			try {
+				cl.addContact(new Contact("titi",InetAddress.getLocalHost().getHostName()));
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Contact me = new Contact("toto","127.0.0.1");
 			ContactsManager cm=null;
 			
 			MainMenu1 mm= new MainMenu1(me, cl, cm);

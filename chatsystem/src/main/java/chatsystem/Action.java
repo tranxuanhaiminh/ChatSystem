@@ -123,7 +123,7 @@ public class Action implements ActionListener, ListSelectionListener{
 			} else {
 				final JFrame okFrame = new JFrame("...");
 				final String pseudo = pageM.getModifyFrame().getEnterpseudo().getText();
-				Contact p = new Contact(pseudo);
+				Contact p = new Contact(pseudo,null);
 				ContactList contactList = pageM.getContactList();
 
 				if (contactList.comparePseudo(p)==false) {
@@ -184,7 +184,7 @@ public class Action implements ActionListener, ListSelectionListener{
 					//afficher le message sur la page
 					pageW.addChatLine(msg,true);
 					
-					//ajouter à la base de données
+					//ajouter ï¿½ la base de donnï¿½es
 					
 					//utiliser le contact manager
 					pageW.getMm().getMessMan().signalMess(pageW.getConv(), msg);
@@ -219,18 +219,18 @@ public class Action implements ActionListener, ListSelectionListener{
 						}
 					}
 					if (in==null) {
-						System.out.println("Contact trouvé, on lance la conversation\n");
+						System.out.println("Contact trouvï¿½, on lance la conversation\n");
 						Conversation c = new Conversation(pageM,dest);
 						pageM.getMessMan().getConvList().add(c);
 					} else {
-						System.out.println("Vous avez déjà cette conversation !\n");
+						System.out.println("Vous avez dï¿½jï¿½ cette conversation !\n");
 						in.getChatw().requestFocus();
 					}
 					
 				
 		        } else {
-		        	 System.out.println("Contact non connecté, on affiche la conversation\n");
-		        	 new ChatWindow(pageM, new Contact(pseudo), null);
+		        	 System.out.println("Contact non connectï¿½, on affiche la conversation\n");
+		        	 new ChatWindow(pageM, new Contact(null,pseudo), null);
 		        }
 			}
 		}

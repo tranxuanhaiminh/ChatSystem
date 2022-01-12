@@ -42,10 +42,12 @@ public class Conversation {
 	}
 	
 	public void stopConv() {
-		r.setRunning(false);
-		s.closeCo();
 		//supprimer du mess man
 		mm.getMessMan().getConvList().remove(this);
+				
+		r.setRunning(false);
+		s.closeCo();
+		
 		System.out.println("Stopping the conversation with "+ this.interlocutor + "! \n");
 	}
 

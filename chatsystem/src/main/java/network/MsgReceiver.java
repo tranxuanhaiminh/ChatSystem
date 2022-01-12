@@ -33,7 +33,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 	
 	public void run() {
 		
-		System.out.println("Le msg receiver est lancé pour l'hote : " + socketreceive.getInetAddress()+ " \n");
+		System.out.println("Le msg receiver est lancï¿½ pour l'hote : " + socketreceive.getInetAddress()+ " \n");
 
 		Message mess=null;
 		
@@ -61,7 +61,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 		try {
 			socketreceive.close();
 			in.close();
-			System.out.println("Socket de reception de msg fermé\n");
+			System.out.println("Socket de reception de msg fermï¿½\n");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

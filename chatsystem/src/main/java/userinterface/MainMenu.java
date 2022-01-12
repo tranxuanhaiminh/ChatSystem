@@ -47,8 +47,8 @@ public class MainMenu extends javax.swing.JFrame {
 	//gestions des messages
 	private MessagesManager messMan;
 	
-	//Base de données
-	private Databasecon conDB;
+	//Base de donnï¿½es
+	//private Databasecon conDB;
 	
 	
     /**
@@ -61,7 +61,7 @@ public class MainMenu extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         
         
-        this.conDB = new Databasecon("datbase.db");
+        //this.conDB = new Databasecon("datbase.db");
         
 		this.me = m; 
 		this.contactList = l;
@@ -275,9 +275,9 @@ public class MainMenu extends javax.swing.JFrame {
 		return disconnected;
 	}
 
-	public Databasecon getConDB() {
+	/*public Databasecon getConDB() {
 		return conDB;
-	}
+	}*/
 	
     /**
      * @param args the command line arguments
@@ -312,7 +312,7 @@ public class MainMenu extends javax.swing.JFrame {
             	
             	ContactList cl = new ContactList();
         		
-        		cl.addContact(new Contact("titi","LaptopMariétou"));
+        		cl.addContact(new Contact("titi","LaptopMariï¿½tou"));
 
         		Contact me = new Contact("toto","127.0.0.1");
         		ContactsManager cm=null;

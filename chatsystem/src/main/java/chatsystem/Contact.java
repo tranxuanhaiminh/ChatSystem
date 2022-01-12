@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Contact implements Serializable{
 	
 	private String pseudo;
-	private String ipaddress; // à convertir en InetAddress
+	private String ipaddress; // ï¿½ convertir en InetAddress
 	
 	
 	public Contact() {
@@ -16,11 +16,6 @@ public class Contact implements Serializable{
 	public Contact(String p, String ip) {
 		this.pseudo = p;
 		this.ipaddress = ip;
-	}
-	
-	public Contact(String ip) {
-		this.ipaddress = ip;
-		this.pseudo = null;
 	}
 
 	public String getPseudo() {
