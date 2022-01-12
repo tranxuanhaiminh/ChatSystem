@@ -4,6 +4,8 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import ressources.Databasequerries;
+
 public class Databasecon {
 
 	// Database location (in main folder)
@@ -63,9 +65,7 @@ public class Databasecon {
 	 * Create table in database
 	 */
 	public boolean createTable(Connection c) {
-		String sql = "CREATE TABLE IF NOT EXISTS chatHistory (\n" + "	id integer NOT NULL PRIMARY KEY,\n"
-				+ "	sender varchar NULL DEFAULT NULL,\n" + "	receiver varchar NULL DEFAULT NULL,\n"
-				+ "	createdDate datetime NOT NULL,\n" + "	sentChat varchar NOT NULL\n" + ");";
+		String sql = Databasequerries.createTable;
 
 		try {
 			Statement stmt = c.createStatement();
@@ -82,7 +82,7 @@ public class Databasecon {
 	 * Get the sender name from the chat id
 	 */
 	public String getSender(Connection c, int id) {
-		String sql = "SELECT sender FROM chatHistory WHERE id = ?";
+		String sql = Databasequerries.getSender;
 		PreparedStatement pstmt;
 		try {
 			pstmt = c.prepareStatement(sql);
@@ -101,7 +101,7 @@ public class Databasecon {
 	 * Get the receiver name from the chat id
 	 */
 	public String getReceiver(Connection c, int id) {
-		String sql = "SELECT receiver FROM chatHistory WHERE id = ?";
+		String sql = Databasequerries.getReceiver;
 		PreparedStatement pstmt;
 		try {
 			pstmt = c.prepareStatement(sql);
@@ -120,7 +120,7 @@ public class Databasecon {
 	 * Get the chat from the chat id
 	 */
 	public String getChatLine(Connection c, int id) {
-		String sql = "SELECT sentChat FROM chatHistory WHERE id = ?";
+		String sql = Databasequerries.getChatLine;
 		PreparedStatement pstmt;
 		try {
 			pstmt = c.prepareStatement(sql);
@@ -139,7 +139,7 @@ public class Databasecon {
 	 * Get the chat sent time from the chat id
 	 */
 	public String getSentTime(Connection c, int id) {
-		String sql = "SELECT createdDate FROM chatHistory WHERE id = ?";
+		String sql = Databasequerries.getSentTime;
 		PreparedStatement pstmt;
 		try {
 			pstmt = c.prepareStatement(sql);
@@ -160,9 +160,9 @@ public class Databasecon {
 	public int insertChat(Connection c, String person, String chatline, String time, boolean sent) {
 		String sql = null;
 		if (sent) {
-			sql = "INSERT INTO chatHistory(receiver, sentChat, createdDate) VALUES(?, ?, ?)";
+			sql = Databasequerries.insertChat1;
 		} else {
-			sql = "INSERT INTO chatHistory(sender, sentChat, createdDate) VALUES(?, ?, ?)";
+			sql = Databasequerries.insertChat2;
 		}
 		try {
 			PreparedStatement pstmt = c.prepareStatement(sql);
@@ -181,10 +181,7 @@ public class Databasecon {
 	 * Get [limit] number of chat line in history with the most recent datetime starting from the [offset]th chat line
 	 */
 	public ResultSet getChatHistory(Connection c, String person, int limit, int offset) {
-		String sql = "SELECT sender, receiver, sentChat "
-				+ "FROM chatHistory "
-				+ "WHERE sender = ? OR receiver = ? "
-				+ "ORDER BY datetime(createdDate) DESC Limit ? OFFSET ?";
+		String sql = Databasequerries.getChatHistory;
 		try {
 			PreparedStatement pstmt = c.prepareStatement(sql);
 			pstmt.setString(1, person);
