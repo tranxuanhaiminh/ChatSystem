@@ -5,7 +5,7 @@ build: clean
 connect : build
 	@echo "\n==== LOADING CONNECTION ====\n"
 	mvn package
-	java -cp target/chatsystem-0.0.1-SNAPSHOT.jar chatsystem.Connection
+	java -cp target/chatsystem-0.0.1-SNAPSHOT.jar userinterface.Connect
 
 clean:
 	@echo "\n==== CLEANING ====\n"
@@ -14,5 +14,5 @@ clean:
 test:
 	@echo "\n==== LOADING test ====\n"
 	mvn package
-	java -cp target/chatsystem-0.0.1-SNAPSHOT.jar networkconnection.UDPReceiver
+	java -cp target/chatsystem-0.0.1-SNAPSHOT.jar network.UDPReceiver
 
