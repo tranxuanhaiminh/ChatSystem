@@ -4,8 +4,6 @@
  */
 package userinterface;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.ListSelectionModel;
 
 import chatsystem.Action;
@@ -27,6 +25,11 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MainMenu extends javax.swing.JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private ContactList contactList;
 	private Contact me;
 	
@@ -271,6 +274,10 @@ public class MainMenu extends javax.swing.JFrame {
 	public String getDisconnected() {
 		return disconnected;
 	}
+
+	public Databasecon getConDB() {
+		return conDB;
+	}
 	
     /**
      * @param args the command line arguments
@@ -315,7 +322,4 @@ public class MainMenu extends javax.swing.JFrame {
         });
     }
 
-	public Databasecon getConDB() {
-		return conDB;
-	}
 }
