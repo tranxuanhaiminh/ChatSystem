@@ -40,6 +40,12 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JButton changepseudo;
     private javax.swing.JLabel pseudoLabel;
     private javax.swing.JTable pseudosList;
+    
+    // Notification frames 
+    private NotifyFrame userNotConnected;
+    private NotifyFrame pseudoUsed;
+    private NotifyFrame pseudoNull;
+    private NotifyFrame modifSuccess;
 	
     //gestion des contacts
 	private ContactsManager cm;
@@ -113,6 +119,13 @@ public class MainMenu extends javax.swing.JFrame {
 			 }
 			  
 			   });
+        
+        /////////////////// Notify Frames
+        
+       this.pseudoNull = new NotifyFrame("Please enter a value");
+       this.modifSuccess= new NotifyFrame("Succes !");
+       this.pseudoUsed = new NotifyFrame("This username is already used ! Try again !");
+       this.userNotConnected = new NotifyFrame("This user is not connected ! You can't send messages !");
         
         ///////////////adding the users
         
@@ -321,5 +334,21 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
     }
+
+	public NotifyFrame getUserNotConnected() {
+		return userNotConnected;
+	}
+
+	public NotifyFrame getPseudoUsed() {
+		return pseudoUsed;
+	}
+
+	public NotifyFrame getPseudoNull() {
+		return pseudoNull;
+	}
+
+	public NotifyFrame getModifSuccess() {
+		return modifSuccess;
+	}
 
 }

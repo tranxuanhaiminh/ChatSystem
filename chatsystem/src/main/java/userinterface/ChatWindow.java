@@ -38,7 +38,10 @@ public class ChatWindow extends javax.swing.JFrame {
 	private Conversation conv;
 	
 	//lien page principale
-	private MainMenu mm;
+	private MainMenu main;
+	
+	//NotifyFrame
+	private NotifyFrame userNotConnected;
 	
 	//listeners
 	private Action sendMess;
@@ -54,7 +57,7 @@ public class ChatWindow extends javax.swing.JFrame {
         initComponents();
 
         this.dest = dest;
-        this.mm = m;
+        this.main = m;
 		this.conv = conv;
 		
 		this.sendMess = new Action(this);
@@ -193,8 +196,8 @@ public class ChatWindow extends javax.swing.JFrame {
 	public JButton getSendChat() {
 		return sendChat;
 	}
-	public MainMenu getMm() {
-		return mm;
+	public MainMenu getMain() {
+		return main;
 	}
 
 	public Conversation getConv() {
@@ -237,6 +240,10 @@ public class ChatWindow extends javax.swing.JFrame {
         });
         
     }
+
+	public NotifyFrame getUserNotConnected() {
+		return userNotConnected;
+	}
 
 	
 }

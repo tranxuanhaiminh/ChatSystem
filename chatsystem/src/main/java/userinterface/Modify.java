@@ -15,6 +15,8 @@ public class Modify extends javax.swing.JFrame {
     public Modify() {
     	this.setTitle("Modifying your username...");
         initComponents();
+        this.setLocationRelativeTo(null);
+
     }
 
     /**

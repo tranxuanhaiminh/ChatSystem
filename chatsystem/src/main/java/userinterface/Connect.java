@@ -26,6 +26,12 @@ public class Connect extends javax.swing.JFrame {
     private javax.swing.JLabel labelUsername;
     private javax.swing.JTextField enterpseudo;
     private javax.swing.JButton verifyPseudo;
+    
+    //Notification Frames
+    private NotifyFrame pseudoUsed;
+    private NotifyFrame welcome;
+    private NotifyFrame pseudoNull;
+    private NotifyFrame alreadyRunning;
 
 	private Action verify;
 	
@@ -62,6 +68,12 @@ public class Connect extends javax.swing.JFrame {
         enterpseudo = jTextField1;
         enterpseudo.setText("");
         enterpseudo.addActionListener(this.verify);
+        
+        ///////////////NotifyFrames 
+        this.pseudoUsed = new NotifyFrame("This username is already used ! Try again");
+        this.welcome = new NotifyFrame("Welcome to the Chat System !");
+        this.pseudoNull = new NotifyFrame("Please enter a value");
+        this.alreadyRunning = new NotifyFrame("The program is already running !\nPlease close this session !");
 
         this.setVisible(true);
 
@@ -144,7 +156,7 @@ public class Connect extends javax.swing.JFrame {
 		return contactList;
 	}
 	
-	public JTextField geText() {
+	public JTextField getEnterPseudo() {
 		return enterpseudo;
 	}
 
@@ -208,4 +220,20 @@ public class Connect extends javax.swing.JFrame {
             }
         });
     }
+
+	public NotifyFrame getPseudoUsed() {
+		return pseudoUsed;
+	}
+
+	public NotifyFrame getWelcome() {
+		return welcome;
+	}
+
+	public NotifyFrame getPseudoNull() {
+		return pseudoNull;
+	}
+
+	public NotifyFrame getAlreadyRunning() {
+		return alreadyRunning;
+	}
 }

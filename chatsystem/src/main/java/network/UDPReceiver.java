@@ -21,7 +21,11 @@ public class UDPReceiver{
 		this.running=true;
 		try {
 			this.receiversocket = new DatagramSocket(port);
-		} catch (SocketException e) {
+		} catch (BindException e) {
+			System.out.println("already running \n");
+			// faire quelque chose
+			
+		}catch (SocketException e) {
 			e.printStackTrace();
 			System.out.println("Erreur lors de la creation du socket de reception \n");
 		}
