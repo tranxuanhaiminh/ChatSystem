@@ -12,6 +12,7 @@ import chatsystem.ContactList;
 import chatsystem.ContactsManager;
 import chatsystem.MessagesManager;
 import database.Databasecon;
+import ressources.Interfacedisplay;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -56,7 +57,7 @@ public class MainMenu extends javax.swing.JFrame {
      */
     public MainMenu(Contact m, ContactList l, ContactsManager cm) {
 
-    	this.setTitle("ChatSystem");
+    	this.setTitle(Interfacedisplay.mainmenutitle);
         initComponents();
         this.setLocationRelativeTo(null);
         
@@ -80,7 +81,7 @@ public class MainMenu extends javax.swing.JFrame {
         modifyFrame.getVerifyPseudo().addActionListener(new Action(this));
         
         changepseudo = jButton1;
-        changepseudo.setText("Modify");
+        changepseudo.setText(Interfacedisplay.modifybutton);
         changepseudo.addActionListener(new Action(this));
         
         pseudosList = jTable1;
@@ -149,7 +150,7 @@ public class MainMenu extends javax.swing.JFrame {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
             new String [] {
-                "Status", "Username"
+            		Interfacedisplay.tablestatuscol, Interfacedisplay.tableusercol
             }
         ) {
             public Class getColumnClass(int column) {
