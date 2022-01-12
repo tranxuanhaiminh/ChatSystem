@@ -16,6 +16,7 @@ import javax.swing.text.BadLocationException;
 
 import chatsystem.Action;
 import chatsystem.Contact;
+import chatsystem.ContactList;
 import chatsystem.Conversation;
 import chatsystem.Message;
 import database.Databasecon;
@@ -40,6 +41,7 @@ public class ChatWindow extends javax.swing.JFrame {
 
     private Databasecon dbcon = new Databasecon();
 	private Contact dest;
+	private ContactList contactlist = new ContactList();
 	private Conversation conv;
 	
 	//lien page principale
@@ -191,10 +193,11 @@ public class ChatWindow extends javax.swing.JFrame {
 		try {
 			while (rs.next()) {
 				String chatline = rs.getString("sentChat");
-				String person = rs.getString("sender");
-				if (person == null) {
-					person = rs.getString("receiver");
+				String personip = rs.getString("sender");
+				if (personip == null) {
+					personip = rs.getString("receiver");
 				}
+				String person = contactlist.exists(personip).getPseudo();
 				try {
 					msg_display.getDocument().insertString(0, person + " : " + chatline + newline, null);
 			    	msg_display.setCaretPosition(0);
