@@ -75,7 +75,7 @@ public class ChatWindow extends javax.swing.JFrame {
 			  
 		});
         
-        JScrollBar bar = jScrollPane1.getVerticalScrollBar();
+        bar = jScrollPane1.getVerticalScrollBar();
         bar.setValue(bar.getMaximum());
         
         this.setVisible(true);
@@ -165,7 +165,7 @@ public class ChatWindow extends javax.swing.JFrame {
     	}
     	bar.setValue(bar.getMaximum());
     	
-    	//add the msg to dataabase
+    	//add the msg to database
     }
     
     public Action getSendMess() {

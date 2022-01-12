@@ -12,7 +12,6 @@ import chatsystem.Action;
 import chatsystem.Contact;
 import chatsystem.ContactList;
 import chatsystem.ContactsManager;
-import chatsystem.MainMenu1;
 
 /**
  *
