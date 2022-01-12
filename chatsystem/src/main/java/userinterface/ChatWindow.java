@@ -6,15 +6,19 @@ package userinterface;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JScrollBar;
 import javax.swing.JTextField;
+import javax.swing.text.BadLocationException;
 
 import chatsystem.Action;
 import chatsystem.Contact;
 import chatsystem.Conversation;
 import chatsystem.Message;
+import database.Databasecon;
 
 /**
  *
@@ -23,7 +27,7 @@ import chatsystem.Message;
 public class ChatWindow extends javax.swing.JFrame {
 
     /**
-	 * 
+	 * Fields
 	 */
 	private static final long serialVersionUID = 1L;
 	
@@ -34,6 +38,7 @@ public class ChatWindow extends javax.swing.JFrame {
     private javax.swing.JButton sendChat;
     private JScrollBar bar;
 
+    private Databasecon dbcon = new Databasecon();
 	private Contact dest;
 	private Conversation conv;
 	
@@ -42,8 +47,6 @@ public class ChatWindow extends javax.swing.JFrame {
 	
 	//listeners
 	private Action sendMess;
-	
-	private String[][] chatHistory;
     
     /**
      * Creates new form NewJFrame
@@ -81,6 +84,8 @@ public class ChatWindow extends javax.swing.JFrame {
         bar.setValue(bar.getMaximum());
         
         this.setVisible(true);
+        
+        test("abcxyz");
     }
 
     /**
@@ -157,7 +162,11 @@ public class ChatWindow extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
    
-
+    /**
+     * Add chatline to the chat window and insert to the database
+     * @param chatline
+     * @param isMe
+     */
     public void addChatLine(Message chatline, boolean isMe) {
     	if (isMe) {
     		msg_display.append("Me : "+chatline.toString() + newline);
@@ -168,16 +177,49 @@ public class ChatWindow extends javax.swing.JFrame {
     	bar.setValue(bar.getMaximum());
     	
     	//add the msg to database
+    	dbcon.insertChat(chatline.getDest().getIpaddress(), chatline.toString(), chatline.convertDateToFormat(), isMe);
     	
     }
     
-    public void addToDataBase(String chat) {
-    	
-    }
-    
-    public String[][] getChatHistory() {
-		return null;
+    /**
+     * Load chat history and add to the chatwindow
+     * @param limit
+     * @param offset
+     */
+    public void loadHistory(int limit, int offset) {
+		ResultSet rs = dbcon.getChatHistory(dest.getIpaddress(), limit, offset);
+		try {
+			while (rs.next()) {
+				String chatline = rs.getString("sentChat");
+				String person = rs.getString("sender");
+				if (person == null) {
+					person = rs.getString("receiver");
+				}
+				try {
+					msg_display.getDocument().insertString(0, person + " : " + chatline + newline, null);
+			    	msg_display.setCaretPosition(0);
+				} catch (BadLocationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+    
+    public void test(String line) {
+    	try {
+			msg_display.getDocument().insertString(0, line, null);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    }
+    
+    
     
     public Action getSendMess() {
 		return this.sendMess;
@@ -233,6 +275,7 @@ public class ChatWindow extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new ChatWindow(null,new Contact("titi"," "), null).setVisible(true);
+                
             }
         });
         
