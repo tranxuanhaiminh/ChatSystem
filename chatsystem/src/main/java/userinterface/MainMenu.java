@@ -271,10 +271,6 @@ public class MainMenu extends javax.swing.JFrame {
 	public String getDisconnected() {
 		return disconnected;
 	}
-
-	public Databasecon getConDB() {
-		return conDB;
-	}
 	
     /**
      * @param args the command line arguments
@@ -319,4 +315,7 @@ public class MainMenu extends javax.swing.JFrame {
         });
     }
 
+	public Databasecon getConDB() {
+		return conDB;
+	}
 }
