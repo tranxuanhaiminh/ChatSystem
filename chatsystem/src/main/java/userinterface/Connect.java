@@ -12,6 +12,7 @@ import chatsystem.Action;
 import chatsystem.Contact;
 import chatsystem.ContactList;
 import chatsystem.ContactsManager;
+import ressources.Interfacedisplay;
 
 /**
  *
@@ -39,7 +40,7 @@ public class Connect extends javax.swing.JFrame {
 	private MainMenu main;
 	
     public Connect() {
-    	this.setTitle("Connecting to the ChatSystem...");
+    	this.setTitle(Interfacedisplay.connecttitle);
         initComponents();
         this.setLocationRelativeTo(null);
         
@@ -52,6 +53,7 @@ public class Connect extends javax.swing.JFrame {
 		
 		this.verify = new Action(this);
 		
+		// WTF /////////////////////////////////////
         labelUsername = jLabel1;
         labelUsername.setText("Username");
 
@@ -62,7 +64,8 @@ public class Connect extends javax.swing.JFrame {
         enterpseudo = jTextField1;
         enterpseudo.setText("");
         enterpseudo.addActionListener(this.verify);
-
+        /////////////////////////////////////////////
+        
         this.setVisible(true);
 
     }
@@ -90,9 +93,9 @@ public class Connect extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Username");
+        jLabel1.setText(Interfacedisplay.usernamelabel);
 
-        jButton1.setText("Connect");
+        jButton1.setText(Interfacedisplay.connectbutton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

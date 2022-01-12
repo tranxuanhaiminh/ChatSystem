@@ -15,6 +15,7 @@ import chatsystem.Action;
 import chatsystem.Contact;
 import chatsystem.Conversation;
 import chatsystem.Message;
+import ressources.Interfacedisplay;
 
 /**
  *
@@ -99,7 +100,7 @@ public class ChatWindow extends javax.swing.JFrame {
 
         //setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        msg_send.setText("Send");
+        msg_send.setText(Interfacedisplay.sendbutton);
         msg_send.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 msg_sendActionPerformed(evt);
