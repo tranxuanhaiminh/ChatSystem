@@ -6,10 +6,13 @@ package userinterface;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JScrollBar;
 import javax.swing.JTextField;
+import javax.swing.text.BadLocationException;
 
 import chatsystem.Action;
 import chatsystem.Contact;
@@ -157,7 +160,64 @@ public class ChatWindow extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
    
+    /**
+     * Add chatline to the chat window and insert to the database
+     * @param chatline
+     * @param isMe
+     */
+    public void addChatLine(Message chatline, boolean isMe) {
+    	if (isMe) {
+    		msg_display.append("Me : "+chatline.toString() + newline);
+    		
+    	} else {
+    		msg_display.append(this.getDest().getPseudo()+" : "+chatline + newline);
+    	}
+    	bar.setValue(bar.getMaximum());
+    	
+    	//add the msg to database
+    	dbcon.insertChat(chatline.getDest().getIpaddress(), chatline.toString(), chatline.convertDateToFormat(), isMe);
+    	
+    }
+    
+    /**
+     * Load chat history and add to the chatwindow
+     * @param limit
+     * @param offset
+     */
+    public void loadHistory(int limit, int offset) {
+		ResultSet rs = dbcon.getChatHistory(dest.getIpaddress(), limit, offset);
+		try {
+			while (rs.next()) {
+				String chatline = rs.getString("sentChat");
+				String personip = rs.getString("sender");
+				if (personip == null) {
+					personip = rs.getString("receiver");
+				}
+				String person = contactlist.exists(personip).getPseudo();
+				try {
+					msg_display.getDocument().insertString(0, person + " : " + chatline + newline, null);
+			    	msg_display.setCaretPosition(0);
+				} catch (BadLocationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+    
+    public void test(String line) {
+    	try {
+			msg_display.getDocument().insertString(0, line, null);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+    }
+    /*
     public void addChatLine(Message chatline, boolean isMe) {
     	if (isMe) {
     		msg_display.append("Me : "+chatline.toString() + newline);
@@ -177,7 +237,7 @@ public class ChatWindow extends javax.swing.JFrame {
     
     public String[][] getChatHistory() {
 		return null;
-	}
+	}*/
     
     public Action getSendMess() {
 		return this.sendMess;
