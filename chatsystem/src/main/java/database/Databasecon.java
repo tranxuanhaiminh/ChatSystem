@@ -10,7 +10,6 @@ public class Databasecon {
 	private String url = "jdbc:sqlite:";
 	private String dbfile;
 	private Connection c;
-	
 
 	/*
 	 * Connect to the database from the databasefile name (dbfile)
@@ -24,7 +23,7 @@ public class Databasecon {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (createTable()) {
+		if (createTable(this.c)) {
 			System.out.println("The database is created !\n");
 		}else {
 			System.out.println("You already have a database !\n");
