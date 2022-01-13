@@ -9,7 +9,8 @@ public class Databasecon {
 	// Database location (in main folder)
 	private String url = "jdbc:sqlite:";
 	private String dbfile;
-	private Connection c;
+	private static Connection c;
+	
 
 	/*
 	 * Connect to the database from the databasefile name (dbfile)
@@ -23,12 +24,31 @@ public class Databasecon {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (createTable(this.c)) {
-			System.out.println("The database is created !\n");
+		if (createTable()) {
+			System.out.println("The datbase is created !\n");
 		}else {
 			System.out.println("You already have a database !\n");
 		}
 	}
+
+	public Databasecon() {
+		
+	}
+
+
+//	/*
+//	 * Connect to the database from the databasefile name
+//	 */
+//	public Connection connect(String dbfile) {
+//		Connection c = null;
+//		try {
+//			c = DriverManager.getConnection(url + dbfile);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return c;
+//	}
 
 	/*
 	 * Check if table existed in database
@@ -49,8 +69,9 @@ public class Databasecon {
 	/*
 	 * Create table in database
 	 */
-	public boolean createTable(Connection c) {
+	public boolean createTable() {
 		String sql = Databasequerries.createTable;
+
 		try {
 			Statement stmt = c.createStatement();
 			stmt.execute(sql);
@@ -65,7 +86,7 @@ public class Databasecon {
 	/*
 	 * Get the sender name from the chat id
 	 */
-	public String getSender(Connection c, int id) {
+	public String getSender(int id) {
 		String sql = Databasequerries.getSender;
 		PreparedStatement pstmt;
 		try {
@@ -84,7 +105,7 @@ public class Databasecon {
 	/*
 	 * Get the receiver name from the chat id
 	 */
-	public String getReceiver(Connection c, int id) {
+	public String getReceiver(int id) {
 		String sql = Databasequerries.getReceiver;
 		PreparedStatement pstmt;
 		try {
@@ -103,7 +124,7 @@ public class Databasecon {
 	/*
 	 * Get the chat from the chat id
 	 */
-	public String getChatLine(Connection c, int id) {
+	public String getChatLine(int id) {
 		String sql = Databasequerries.getChatLine;
 		PreparedStatement pstmt;
 		try {
@@ -122,7 +143,7 @@ public class Databasecon {
 	/*
 	 * Get the chat sent time from the chat id
 	 */
-	public String getSentTime(Connection c, int id) {
+	public String getSentTime(int id) {
 		String sql = Databasequerries.getSentTime;
 		PreparedStatement pstmt;
 		try {
@@ -164,7 +185,7 @@ public class Databasecon {
 	/*
 	 * Get [limit] number of chat line in history with the most recent datetime starting from the [offset]th chat line
 	 */
-	public ResultSet getChatHistory(Connection c, String person, int limit, int offset) {
+	public ResultSet getChatHistory(String person, int limit, int offset) {
 		String sql = Databasequerries.getChatHistory;
 		try {
 			PreparedStatement pstmt = c.prepareStatement(sql);

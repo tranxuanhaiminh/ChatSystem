@@ -18,8 +18,10 @@ import javax.swing.text.BadLocationException;
 
 import chatsystem.Action;
 import chatsystem.Contact;
+import chatsystem.ContactList;
 import chatsystem.Conversation;
 import chatsystem.Message;
+import database.Databasecon;
 import ressources.Interfacedisplay;
 
 /**
@@ -29,7 +31,7 @@ import ressources.Interfacedisplay;
 public class ChatWindow extends javax.swing.JFrame {
 
     /**
-	 * 
+	 * Fields
 	 */
 	private static final long serialVersionUID = 1L;
 	
@@ -43,7 +45,9 @@ public class ChatWindow extends javax.swing.JFrame {
     //////Notify Frames 
     NotifyFrame problem;
 
+    private Databasecon dbcon = new Databasecon();
 	private Contact dest;
+	private ContactList contactlist = new ContactList();
 	private Conversation conv;
 	
 	//lien page principale
@@ -52,7 +56,7 @@ public class ChatWindow extends javax.swing.JFrame {
 	//listeners
 	private Action sendMess;
 	
-	//nbre de msg de l'historique à afficher
+	//nbre de msg de l'historique Ã  afficher
 	private final int nbMsgToLoad = 20;
     
     /**
@@ -95,6 +99,7 @@ public class ChatWindow extends javax.swing.JFrame {
         this.loadHistory(nbMsgToLoad, 0);
         
         this.setVisible(true);
+       
     }
 
     /**
@@ -186,6 +191,7 @@ public class ChatWindow extends javax.swing.JFrame {
     	bar.setValue(bar.getMaximum());
     	
     	//add the msg to database
+    	dbcon.insertChat(chatline.getDest().getIpaddress(), chatline.toString(), chatline.convertDateToFormat(), isMe);
     	System.out.println("Adding the msg to the chat history\n");
     	getMain().getConDB().insertChat(chatline.getDest().getIpaddress().getAddress().toString(), chatline.toString(), chatline.convertDateToFormat(), isMe);
     	
@@ -200,7 +206,7 @@ public class ChatWindow extends javax.swing.JFrame {
     	
     	System.out.println("Loading the chat history\n");
     	
-		ResultSet rs = getMain().getConDB().getChatHistory(this.getMain().getConDB().getC(), dest.getIpaddress().getAddress().toString(), limit, offset);
+		ResultSet rs = getMain().getConDB().getChatHistory(dest.getIpaddress().getAddress().toString(), limit, offset);
 		
 		try {
 			while (rs.next()) {
@@ -237,6 +243,18 @@ public class ChatWindow extends javax.swing.JFrame {
 			e1.printStackTrace();
 			problem.setVisible(true);
 		}
+	}
+    
+    public void test(String line) {
+    	try {
+			msg_display.getDocument().insertString(0, line, null);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    
+    
 		
 		bar.setValue(bar.getMaximum());
 	}
@@ -298,7 +316,7 @@ public class ChatWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ChatWindow(null,new Contact("titi",(InetAddress) null), null).setVisible(true);
+                new ChatWindow(null,new Contact("titi",(InetAddress) null), null);
             }
         });
         

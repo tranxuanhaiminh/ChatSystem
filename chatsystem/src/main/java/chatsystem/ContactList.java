@@ -5,12 +5,7 @@ import java.util.ArrayList;
 
 public class ContactList { //
 	
-	private ArrayList<Contact> list;
-	
-	public ContactList() {
-		this.list = new ArrayList<Contact>();
-	}
-	
+	private static ArrayList<Contact> list = new ArrayList<Contact>();
 	
 	public void addContact(Contact c) {
 		list.add(c);
