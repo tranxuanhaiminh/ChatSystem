@@ -12,6 +12,7 @@ import chatsystem.ContactList;
 import chatsystem.ContactsManager;
 import chatsystem.MessagesManager;
 import database.Databasecon;
+import ressources.Interfacedisplay;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -40,6 +41,12 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JButton changepseudo;
     private javax.swing.JLabel pseudoLabel;
     private javax.swing.JTable pseudosList;
+    
+    // Notification frames 
+    private NotifyFrame userNotConnected;
+    private NotifyFrame pseudoUsed;
+    private NotifyFrame pseudoNull;
+    private NotifyFrame modifSuccess;
 	
     //gestion des contacts
 	private ContactsManager cm;
@@ -48,7 +55,7 @@ public class MainMenu extends javax.swing.JFrame {
 	private MessagesManager messMan;
 	
 	//Base de donnï¿½es
-	//private Databasecon conDB;
+	private Databasecon conDB;
 	
 	
     /**
@@ -56,12 +63,19 @@ public class MainMenu extends javax.swing.JFrame {
      */
     public MainMenu(Contact m, ContactList l, ContactsManager cm) {
 
-    	this.setTitle("ChatSystem");
+    	this.setTitle(Interfacedisplay.mainmenutitle);
         initComponents();
         this.setLocationRelativeTo(null);
         
+		/////////////////// Notify Frames
+		        
+		this.pseudoNull = new NotifyFrame("Please enter a value");
+		this.modifSuccess= new NotifyFrame("Succes !");
+		this.pseudoUsed = new NotifyFrame("This username is already used ! Try again !");
+		this.userNotConnected = new NotifyFrame("This user is not connected ! You can't send messages !");
+
         
-        //this.conDB = new Databasecon("datbase.db");
+        this.conDB = new Databasecon("datbase.db");
         
 		this.me = m; 
 		this.contactList = l;
@@ -80,7 +94,7 @@ public class MainMenu extends javax.swing.JFrame {
         modifyFrame.getVerifyPseudo().addActionListener(new Action(this));
         
         changepseudo = jButton1;
-        changepseudo.setText("Modify");
+        changepseudo.setText(Interfacedisplay.modifybutton);
         changepseudo.addActionListener(new Action(this));
         
         pseudosList = jTable1;
@@ -113,6 +127,7 @@ public class MainMenu extends javax.swing.JFrame {
 			 }
 			  
 			   });
+        
         
         ///////////////adding the users
         
@@ -149,7 +164,7 @@ public class MainMenu extends javax.swing.JFrame {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
             new String [] {
-                "Status", "Username"
+            		Interfacedisplay.tablestatuscol, Interfacedisplay.tableusercol
             }
         ) {
             public Class getColumnClass(int column) {
@@ -275,9 +290,9 @@ public class MainMenu extends javax.swing.JFrame {
 		return disconnected;
 	}
 
-	/*public Databasecon getConDB() {
+	public Databasecon getConDB() {
 		return conDB;
-	}*/
+	}
 	
     /**
      * @param args the command line arguments
@@ -312,7 +327,7 @@ public class MainMenu extends javax.swing.JFrame {
             	
             	ContactList cl = new ContactList();
         		
-        		cl.addContact(new Contact("titi","LaptopMariï¿½tou"));
+        		cl.addContact(new Contact("titi","LaptopMariétou"));
 
         		Contact me = new Contact("toto","127.0.0.1");
         		ContactsManager cm=null;
@@ -321,5 +336,21 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
     }
+
+	public NotifyFrame getUserNotConnected() {
+		return userNotConnected;
+	}
+
+	public NotifyFrame getPseudoUsed() {
+		return pseudoUsed;
+	}
+
+	public NotifyFrame getPseudoNull() {
+		return pseudoNull;
+	}
+
+	public NotifyFrame getModifSuccess() {
+		return modifSuccess;
+	}
 
 }

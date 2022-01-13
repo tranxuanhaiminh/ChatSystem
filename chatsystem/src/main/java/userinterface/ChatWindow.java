@@ -20,6 +20,7 @@ import chatsystem.ContactList;
 import chatsystem.Conversation;
 import chatsystem.Message;
 import database.Databasecon;
+import ressources.Interfacedisplay;
 
 /**
  *
@@ -45,10 +46,13 @@ public class ChatWindow extends javax.swing.JFrame {
 	private Conversation conv;
 	
 	//lien page principale
-	private MainMenu mm;
-	
+	private MainMenu main;
+
 	//listeners
 	private Action sendMess;
+	
+	//nbre de msg de l'historique à afficher
+	private final int nbMsgToLoad = 20;
     
     /**
      * Creates new form NewJFrame
@@ -59,7 +63,7 @@ public class ChatWindow extends javax.swing.JFrame {
         initComponents();
 
         this.dest = dest;
-        this.mm = m;
+        this.main = m;
 		this.conv = conv;
 		
 		this.sendMess = new Action(this);
@@ -83,7 +87,9 @@ public class ChatWindow extends javax.swing.JFrame {
 		});
         
         bar = jScrollPane1.getVerticalScrollBar();
-        bar.setValue(bar.getMaximum());
+        
+        //on charge l'historique
+        this.loadHistory(nbMsgToLoad, 0);
         
         this.setVisible(true);
         
@@ -106,7 +112,7 @@ public class ChatWindow extends javax.swing.JFrame {
 
         //setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        msg_send.setText("Send");
+        msg_send.setText(Interfacedisplay.sendbutton);
         msg_send.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 msg_sendActionPerformed(evt);
@@ -119,7 +125,7 @@ public class ChatWindow extends javax.swing.JFrame {
         msg_display.setColumns(20);
         msg_display.setLineWrap(true);
         msg_display.setRows(5);
-        msg_display.setText("this can't be changed\nsdfsdf\nsdf\nsd\nf\nsdf\nsdf\nsd\nfs\ndf\nsdf\nsdf\nsd\nfsd\nfs\ndf\nsdf\nsd\nfsdfsdrgsdfgsdfgsdfgsdfgsdfgdsfgsdfgjfsdfsdrgsdfgsdfgsdfgsdfgsdfgdsfgsdfgjfsdfsdrgsdfgsdfgsdfgsdfgsdfgdsfgsdfgjfsdfsdrgsdfgsdfgsdfgsdfgsdfgdsfgsdfgj");
+        msg_display.setText("");
         jScrollPane1.setViewportView(msg_display);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -180,6 +186,8 @@ public class ChatWindow extends javax.swing.JFrame {
     	
     	//add the msg to database
     	dbcon.insertChat(chatline.getDest().getIpaddress(), chatline.toString(), chatline.convertDateToFormat(), isMe);
+    	System.out.println("Adding the msg to the chat history\n");
+    	getMain().getConDB().insertChat(chatline.getDest().getIpaddress(), chatline.toString(), chatline.convertDateToFormat(), isMe);
     	
     }
     
@@ -189,22 +197,38 @@ public class ChatWindow extends javax.swing.JFrame {
      * @param offset
      */
     public void loadHistory(int limit, int offset) {
-		ResultSet rs = dbcon.getChatHistory(dest.getIpaddress(), limit, offset);
+    	
+    	System.out.println("Loading the chat history\n");
+    	
+		ResultSet rs = getMain().getConDB().getChatHistory(this.getMain().getConDB().getC(), dest.getIpaddress(), limit, offset);
+		
 		try {
 			while (rs.next()) {
 				String chatline = rs.getString("sentChat");
+				System.out.println("a msg loaded "+chatline);
 				String personip = rs.getString("sender");
+				String person = null;
 				if (personip == null) {
 					personip = rs.getString("receiver");
+					person = getMain().getContactList().exists(personip).getPseudo();
+					try {
+						msg_display.getDocument().insertString(0, person + " : " + chatline + newline, null);
+				    	msg_display.setCaretPosition(0);
+					} catch (BadLocationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					person = getMain().getContactList().exists(personip).getPseudo();
+					try {
+						msg_display.getDocument().insertString(0, "Me : " + chatline + newline, null);
+				    	msg_display.setCaretPosition(0);
+					} catch (BadLocationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-				String person = contactlist.exists(personip).getPseudo();
-				try {
-					msg_display.getDocument().insertString(0, person + " : " + chatline + newline, null);
-			    	msg_display.setCaretPosition(0);
-				} catch (BadLocationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -223,6 +247,9 @@ public class ChatWindow extends javax.swing.JFrame {
     }
     
     
+		
+		bar.setValue(bar.getMaximum());
+	}
     
     public Action getSendMess() {
 		return this.sendMess;
@@ -238,8 +265,8 @@ public class ChatWindow extends javax.swing.JFrame {
 	public JButton getSendChat() {
 		return sendChat;
 	}
-	public MainMenu getMm() {
-		return mm;
+	public MainMenu getMain() {
+		return main;
 	}
 
 	public Conversation getConv() {
@@ -284,5 +311,4 @@ public class ChatWindow extends javax.swing.JFrame {
         
     }
 
-	
 }

@@ -28,7 +28,7 @@ public class ChatWindow1 {
 	private Contact dest;
 	private Conversation conv;
 	
-	//lien page principale
+	/*lien page principale*/
 	private MainMenu1 mm;
 	
 	//listeners

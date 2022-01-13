@@ -1,21 +1,17 @@
 package chatsystem;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import javax.swing.Timer;
 import userinterface.ChatWindow;
 import userinterface.Connect;
 import userinterface.MainMenu;
-import userinterface.Modify;
 
 
 public class Action implements ActionListener, ListSelectionListener{
@@ -44,109 +40,127 @@ public class Action implements ActionListener, ListSelectionListener{
 		// pour la premiere connection
 		if(pageC != null && event.getSource().equals(pageC.getVerifyPseudo())) {
 			
-			final JFrame okFrame = new JFrame("Connecting....");
-			
 			final Contact me = pageC.getMe();
-        	me.setPseudo(pageC.geText().getText());			
-			final JFrame connectionFrame = pageC.getConnectionFrame();
-
-			//on crÃ©e et on lance le contact manager
-			pageC.getCm().setRunning(true);
 			
-			try {
-				//on attend de finir de recevoir les contacts
-				Thread.sleep(3300);
-			
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			pageC.getCm().setRunning(false);
-			final ContactList contactList = pageC.getContactList();
-			
-			for (Contact i : contactList.getList())
-				System.out.println(i.getPseudo());
-        	
-			if (contactList.comparePseudo(me)==false) {
-				//on arrÃªte le contact manager	
-				pageC.getCm().setRunning(false);
-
-				okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));
+			if (pageC.getEnterPseudo().getText()==null && !(pageC.getEnterPseudo().getText().equals(""))){
+				pageC.getPseudoNull().setVisible(true);
 				
-				//Display the window.
-				okFrame.setSize(500, 100);
-		        okFrame.setLocationRelativeTo(null);
-		        okFrame.setVisible(true);
-		        me.setPseudo(null);
-		        
-			        
 			} else {
+	        	me.setPseudo(pageC.getEnterPseudo().getText());			
+	
+				//on crÃ©e et on lance le contact manager
+				pageC.getCm().setRunning(true);
 				
-				okFrame.add(new JLabel("Welcome to the ChatSystem !"));
-				//Display the window.
-				okFrame.setSize(250, 100);
-		        okFrame.setLocationRelativeTo(null);
-		        okFrame.setVisible(true);
-		        
-		        Timer t = new Timer(500, new ActionListener() {
-		            public void actionPerformed(ActionEvent e) {
-		            	okFrame.setVisible(false);
-		            	okFrame.dispose();
-		            	connectionFrame.setVisible(false);
-		            	connectionFrame.dispose();
-		            	pageC.getCm().setState(); // mode Main
-		            	pageC.getCm().setRunning(true);
-		            	pageC.setMain(new MainMenu(me, contactList,pageC.getCm()));
-		            }
-		        });
-		        t.setRepeats(false); // Only execute once
-		        t.start();
+				try {
+					//on attend de finir de recevoir les contacts
+					Thread.sleep(3300);
+				
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				pageC.getCm().setRunning(false);
+				final ContactList contactList = pageC.getContactList();
+				
+				for (Contact i : contactList.getList())
+					System.out.println(i.getPseudo());
+	        	
+				if (contactList.comparePseudo(me)==false) {
+					//on arrÃªte le contact manager	
+					pageC.getCm().setRunning(false);
+	
+					/*final JFrame okFrame = new JFrame("Connecting....");
+					okFrame.add(new JLabel("Your pseudo is already used ! Please enter a new one !"));
+					
+					//Display the window.
+					okFrame.setSize(500, 100);
+			        okFrame.setLocationRelativeTo(null);
+			        okFrame.setVisible(true);*/
+			        
+					pageC.getPseudoUsed().display();
+			        
+			        me.setPseudo(null);
+			        
+				        
+				} else {
+	
+					/*final JFrame okFrame = new JFrame("Connecting....");
+					okFrame.add(new JLabel("Welcome to the ChatSystem !"));
+					//Display the window.
+					okFrame.setSize(250, 100);
+			        okFrame.setLocationRelativeTo(null);
+			        okFrame.setVisible(true);*/
+					
+					pageC.getWelcome().display();
+			        
+			        Timer t = new Timer(500, new ActionListener() {
+			            public void actionPerformed(ActionEvent e) {
+			            	/*okFrame.setVisible(false);
+			            	okFrame.dispose();*/
+			            	pageC.getWelcome().setVisible(false);
+			            	
+			            	pageC.setVisible(false);
+			            	pageC.getCm().setState(); // mode Main
+			            	pageC.getCm().setRunning(true);
+			            	pageC.setMain(new MainMenu(me, contactList,pageC.getCm()));
+			            	
+			            	pageC.dispose();
+			            }
+			        });
+			        t.setRepeats(false); // Only execute once
+			        t.start();
+				}
 			}
-			
 			
 		} else if(pageM != null && event.getSource().equals(pageM.getChangepseudo())) { //modif pseudo
 			
-			final JFrame modifyFrame = pageM.getModifyFrame();
-			
 	        //Display the window.
-	        modifyFrame.setLocationRelativeTo(null); // au centre
-	        modifyFrame.setVisible(true);
+			pageM.getModifyFrame().setVisible(true);
 	        
 		} else if (pageM != null && event.getSource().equals(pageM.getModifyFrame().getVerifyPseudo())) {
-			final Modify modifyFrame = pageM.getModifyFrame();
 
-			if (modifyFrame.getEnterpseudo().getText() == null) {
-				JFrame okFrame = new JFrame("...");
-				okFrame.add(new JLabel("Please enter a value"));
-				okFrame.setVisible(true);
+			if (pageM.getModifyFrame().getEnterpseudo().getText() == null || pageM.getModifyFrame().getEnterpseudo().getText().equals("")) {
+				
+				pageM.getPseudoNull().display();
+				
 			} else {
-				final JFrame okFrame = new JFrame("...");
+				
 				final String pseudo = pageM.getModifyFrame().getEnterpseudo().getText();
 				Contact p = new Contact(pseudo,null);
 				ContactList contactList = pageM.getContactList();
 
 				if (contactList.comparePseudo(p)==false) {
-						okFrame.add(new JLabel("This username is already used ! Please enter a new one !"));
-						
-						//Display the window.
-						okFrame.setSize(500, 100);
-				        okFrame.setLocationRelativeTo(null);
-				        okFrame.setVisible(true);
+
+					/*final JFrame okFrame = new JFrame("...");
+					okFrame.add(new JLabel("This username is already used ! Please enter a new one !"));
+					
+					//Display the window.
+					okFrame.setSize(500, 100);
+			        okFrame.setLocationRelativeTo(null);
+			        okFrame.setVisible(true);*/
+					pageM.getPseudoUsed().display();
+					
 				        
 				} else {
 		
-					okFrame.add(new JLabel("Success !"));
+					/*
+					 * final JFrame okFrame = new JFrame("...");
+					 * okFrame.add(new JLabel("Success !"));
 					//Display the window.
 					okFrame.setSize(250, 100);
 			        okFrame.setLocationRelativeTo(null);
-			        okFrame.setVisible(true);
+			        okFrame.setVisible(true);*/
+					
+					pageM.getModifSuccess().display();
 			        pageM.getModifyFrame().getEnterpseudo().setText(null);
 
 			        Timer t = new Timer(500, new ActionListener() {
 			            public void actionPerformed(ActionEvent e) {
-			            	okFrame.setVisible(false);
-			            	okFrame.dispose();
+			            	/*okFrame.setVisible(false);
+			            	okFrame.dispose();*/
+			            	
+			            	pageM.getModifSuccess().setVisible(false);
 			            	pageM.getModifyFrame().setVisible(false);
 			    			pageM.getMe().setPseudo(pseudo);
 			    			pageM.getPseudoLabel().setText(pageM.getMe().getPseudo());
@@ -167,16 +181,18 @@ public class Action implements ActionListener, ListSelectionListener{
 		} else if (pageW != null && (event.getSource().equals(pageW.getSendChat()) || event.getSource().equals(pageW.getChatInput()))) {
 			
 			if (pageW.getConv() == null){
-				final JFrame okFrame = new JFrame("...");
+				/*final JFrame okFrame = new JFrame("...");
 				okFrame.setSize(new Dimension(250,100));
 		        okFrame.setLocationRelativeTo(null);
 				okFrame.add(new JLabel("This user is not connected !"));
-				okFrame.setVisible(true);
+				okFrame.setVisible(true);*/
+				pageW.getMain().getUserNotConnected().display();
 				
 			} else {
 				JTextField chatInput = pageW.getChatInput();
 				
-				if (chatInput != null) {
+				if (chatInput.getText() != null && !(chatInput.getText().equals(""))) {
+			
 					// creating the msg
 					Message msg = new Message(pageW.getDest(), chatInput.getText());
 					chatInput.setText(null);
@@ -184,10 +200,10 @@ public class Action implements ActionListener, ListSelectionListener{
 					//afficher le message sur la page
 					pageW.addChatLine(msg,true);
 					
-					//ajouter ï¿½ la base de donnï¿½es
+					//ajouter à la base de données
 					
 					//utiliser le contact manager
-					pageW.getMm().getMessMan().signalMess(pageW.getConv(), msg);
+					pageW.getMain().getMessMan().signalMess(pageW.getConv(), msg);
 				}
 			}
 			
@@ -219,18 +235,19 @@ public class Action implements ActionListener, ListSelectionListener{
 						}
 					}
 					if (in==null) {
-						System.out.println("Contact trouvï¿½, on lance la conversation\n");
+						System.out.println("Contact trouvé, on lance la conversation\n");
 						Conversation c = new Conversation(pageM,dest);
 						pageM.getMessMan().getConvList().add(c);
 					} else {
-						System.out.println("Vous avez dï¿½jï¿½ cette conversation !\n");
+						System.out.println("Vous avez déjà cette conversation !\n");
 						in.getChatw().requestFocus();
 					}
 					
 				
 		        } else {
-		        	 System.out.println("Contact non connectï¿½, on affiche la conversation\n");
+		        	 System.out.println("Contact non connecté, on affiche la conversation\n");
 		        	 new ChatWindow(pageM, new Contact(null,pseudo), null);
+		        	 pageM.getUserNotConnected().display();
 		        }
 			}
 		}
