@@ -21,11 +21,10 @@ public class Databasecon {
 		try {
 			this.c = DriverManager.getConnection(url + this.dbfile);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (createTable()) {
-			System.out.println("The datbase is created !\n");
+			System.out.println("The database is created !\n");
 		}else {
 			System.out.println("You already have a database !\n");
 		}

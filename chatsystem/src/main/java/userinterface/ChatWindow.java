@@ -56,7 +56,7 @@ public class ChatWindow extends javax.swing.JFrame {
 	//listeners
 	private Action sendMess;
 	
-	//nbre de msg de l'historique ├а afficher
+	//nbre de msg de l'historique ра afficher
 	private final int nbMsgToLoad = 20;
     
     /**
@@ -191,9 +191,8 @@ public class ChatWindow extends javax.swing.JFrame {
     	bar.setValue(bar.getMaximum());
     	
     	//add the msg to database
-    	dbcon.insertChat(chatline.getDest().getIpaddress(), chatline.toString(), chatline.convertDateToFormat(), isMe);
+    	dbcon.insertChat(chatline.getDest().getIpaddress().getAddress().toString(), chatline.toString(), chatline.convertDateToFormat(), isMe);
     	System.out.println("Adding the msg to the chat history\n");
-    	getMain().getConDB().insertChat(chatline.getDest().getIpaddress().getAddress().toString(), chatline.toString(), chatline.convertDateToFormat(), isMe);
     	
     }
     
@@ -206,7 +205,7 @@ public class ChatWindow extends javax.swing.JFrame {
     	
     	System.out.println("Loading the chat history\n");
     	
-		ResultSet rs = getMain().getConDB().getChatHistory(dest.getIpaddress().getAddress().toString(), limit, offset);
+		ResultSet rs = dbcon.getChatHistory(dest.getIpaddress().getAddress().toString(), limit, offset);
 		
 		try {
 			while (rs.next()) {
@@ -216,13 +215,13 @@ public class ChatWindow extends javax.swing.JFrame {
 				String person = null;
 				if (personip == null) {
 					personip = rs.getString("receiver");
-					person = getMain().getContactList().findIp(InetAddress.getByName(personip)).getPseudo();
+					person = contactlist.findIp(InetAddress.getByName(personip)).getPseudo();
 					try {
 						msg_display.getDocument().insertString(0, person + " : " + chatline + newline, null);
 				    	msg_display.setCaretPosition(0);
 					} catch (BadLocationException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
+						problem.setVisible(true);
 					}
 				} else {
 					person = getMain().getContactList().findIp(InetAddress.getByName(personip)).getPseudo();
@@ -230,8 +229,9 @@ public class ChatWindow extends javax.swing.JFrame {
 						msg_display.getDocument().insertString(0, "Me : " + chatline + newline, null);
 				    	msg_display.setCaretPosition(0);
 					} catch (BadLocationException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
+						problem.setVisible(true);
+
 					}
 				}
 				
@@ -245,19 +245,6 @@ public class ChatWindow extends javax.swing.JFrame {
 		}
 	}
     
-    public void test(String line) {
-    	try {
-			msg_display.getDocument().insertString(0, line, null);
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-    
-    
-		
-		bar.setValue(bar.getMaximum());
-	}
     
     public Action getSendMess() {
 		return this.sendMess;

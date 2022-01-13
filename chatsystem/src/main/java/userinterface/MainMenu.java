@@ -78,7 +78,7 @@ public class MainMenu extends javax.swing.JFrame {
 		this.userNotConnected = new NotifyFrame("This user is not connected ! You can't send messages !");
 		this.problem = new NotifyFrame("Error : Please close the program (Main phase) !\n");
         
-        this.conDB = new Databasecon("datbase.db");
+        this.conDB = new Databasecon("database.db");
         
 		this.me = m; 
 		this.contactList = l;
