@@ -326,7 +326,7 @@ public class MainMenu extends javax.swing.JFrame {
             	
             	ContactList cl = new ContactList();
         		
-        		cl.addContact(new Contact("titi","LaptopMariï¿½tou"));
+        		cl.addContact(new Contact("titi","LaptopMariétou"));
 
         		Contact me = new Contact("toto","127.0.0.1");
         		ContactsManager cm=null;
