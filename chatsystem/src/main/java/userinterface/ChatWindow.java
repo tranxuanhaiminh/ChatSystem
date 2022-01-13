@@ -175,7 +175,7 @@ public class ChatWindow extends javax.swing.JFrame {
     	bar.setValue(bar.getMaximum());
     	
     	//add the msg to database
-    	dbcon.insertChat(chatline.getDest().getIpaddress(), chatline.toString(), chatline.convertDateToFormat(), isMe);
+    	getMain().getConDB().insertChat(chatline.getDest().getIpaddress(), chatline.toString(), chatline.convertDateToFormat(), isMe);
     	
     }
     
@@ -185,7 +185,7 @@ public class ChatWindow extends javax.swing.JFrame {
      * @param offset
      */
     public void loadHistory(int limit, int offset) {
-		ResultSet rs = dbcon.getChatHistory(dest.getIpaddress(), limit, offset);
+		ResultSet rs = getMain().getConDB().getChatHistory(dest.getIpaddress(), limit, offset);
 		try {
 			while (rs.next()) {
 				String chatline = rs.getString("sentChat");
@@ -193,7 +193,7 @@ public class ChatWindow extends javax.swing.JFrame {
 				if (personip == null) {
 					personip = rs.getString("receiver");
 				}
-				String person = contactlist.exists(personip).getPseudo();
+				String person = getMain().getContactList().exists(personip).getPseudo();
 				try {
 					msg_display.getDocument().insertString(0, person + " : " + chatline + newline, null);
 			    	msg_display.setCaretPosition(0);
@@ -217,6 +217,7 @@ public class ChatWindow extends javax.swing.JFrame {
 		}
 
     }
+    
     /*
     public void addChatLine(Message chatline, boolean isMe) {
     	if (isMe) {

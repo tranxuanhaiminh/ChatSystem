@@ -54,7 +54,7 @@ public class MainMenu extends javax.swing.JFrame {
 	private MessagesManager messMan;
 	
 	//Base de donn�es
-	//private Databasecon conDB;
+	private Databasecon conDB;
 	
 	
     /**
@@ -74,7 +74,7 @@ public class MainMenu extends javax.swing.JFrame {
 		this.userNotConnected = new NotifyFrame("This user is not connected ! You can't send messages !");
 
         
-        //this.conDB = new Databasecon("datbase.db");
+        this.conDB = new Databasecon("datbase.db");
         
 		this.me = m; 
 		this.contactList = l;
@@ -289,9 +289,9 @@ public class MainMenu extends javax.swing.JFrame {
 		return disconnected;
 	}
 
-	/*public Databasecon getConDB() {
+	public Databasecon getConDB() {
 		return conDB;
-	}*/
+	}
 	
     /**
      * @param args the command line arguments
