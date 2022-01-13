@@ -200,7 +200,7 @@ public class ChatWindow extends javax.swing.JFrame {
     	
     	System.out.println("Loading the chat history\n");
     	
-		ResultSet rs = getMain().getConDB().getChatHistory(this.getMain().getConDB().getC(), dest.getIpaddress(), limit, offset);
+		ResultSet rs = getMain().getConDB().getChatHistory(dest.getIpaddress(), limit, offset);
 		
 		try {
 			while (rs.next()) {
@@ -244,7 +244,6 @@ public class ChatWindow extends javax.swing.JFrame {
 			e.printStackTrace();
 		}
 
-    }
     
     
 		
