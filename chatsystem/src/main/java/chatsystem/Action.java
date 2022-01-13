@@ -2,6 +2,8 @@ package chatsystem;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -127,7 +129,7 @@ public class Action implements ActionListener, ListSelectionListener{
 			} else {
 				
 				final String pseudo = pageM.getModifyFrame().getEnterpseudo().getText();
-				Contact p = new Contact(pseudo,null);
+				Contact p = new Contact(pseudo,(String)null);
 				ContactList contactList = pageM.getContactList();
 
 				if (contactList.comparePseudo(p)==false) {
@@ -225,7 +227,7 @@ public class Action implements ActionListener, ListSelectionListener{
 				System.out.println("Starting a new chat session\n");
 				
 		        String pseudo = (String) pageM.getPseudosList().getValueAt(indexr, indexc);
-		        Contact dest = pageM.getContactList().existsP(pseudo);
+		        Contact dest = pageM.getContactList().findP(pseudo);
 		        
 				if (dest!=null) {
 					Conversation in=null;
@@ -246,7 +248,14 @@ public class Action implements ActionListener, ListSelectionListener{
 				
 		        } else {
 		        	 System.out.println("Contact non connecté, on affiche la conversation\n");
-		        	 new ChatWindow(pageM, new Contact(null,pseudo), null);
+		        	 try {
+		        		 
+		        		 new ChatWindow(pageM, new Contact(InetAddress.getByName(pseudo)), null);
+		        		 
+					} catch (UnknownHostException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 		        	 pageM.getUserNotConnected().display();
 		        }
 			}

@@ -6,6 +6,8 @@ package userinterface;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -172,10 +174,10 @@ public class ChatWindow extends javax.swing.JFrame {
     public void addChatLine(Message chatline, boolean isMe) {
     	if (isMe) {
     		msg_display.append("Me : "+chatline.toString() + newline);
-    		
     	} else {
-    		msg_display.append(this.getDest().getPseudo()+" : "+chatline + newline);
+    		msg_display.append(this.getDest().getPseudo()+" : "+chatline.toString() + newline);
     	}
+    	
     	bar.setValue(bar.getMaximum());
     	
     	//add the msg to database
@@ -203,7 +205,7 @@ public class ChatWindow extends javax.swing.JFrame {
 				String person = null;
 				if (personip == null) {
 					personip = rs.getString("receiver");
-					person = getMain().getContactList().exists(personip).getPseudo();
+					person = getMain().getContactList().findIp(InetAddress.getByName(personip)).getPseudo();
 					try {
 						msg_display.getDocument().insertString(0, person + " : " + chatline + newline, null);
 				    	msg_display.setCaretPosition(0);
@@ -212,7 +214,7 @@ public class ChatWindow extends javax.swing.JFrame {
 						e.printStackTrace();
 					}
 				} else {
-					person = getMain().getContactList().exists(personip).getPseudo();
+					person = getMain().getContactList().findIp(InetAddress.getByName(personip)).getPseudo();
 					try {
 						msg_display.getDocument().insertString(0, "Me : " + chatline + newline, null);
 				    	msg_display.setCaretPosition(0);
@@ -226,6 +228,9 @@ public class ChatWindow extends javax.swing.JFrame {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		
 		bar.setValue(bar.getMaximum());
@@ -284,7 +289,7 @@ public class ChatWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ChatWindow(null,new Contact("titi",null), null).setVisible(true);
+                new ChatWindow(null,new Contact("titi",(InetAddress) null), null).setVisible(true);
             }
         });
         

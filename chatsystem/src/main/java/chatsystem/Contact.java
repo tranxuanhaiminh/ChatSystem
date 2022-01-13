@@ -15,19 +15,14 @@ public class Contact implements Serializable{
 	private InetAddress ipaddress;
 	
 	
-	public Contact() {
-		this.pseudo = null;
+	public Contact(String p) {
+		this.pseudo = p;
 		this.ipaddress = null;
 	}
 	
 	public Contact(String p, InetAddress ip) {
 		this.pseudo = p;
 		this.ipaddress = ip;
-	}
-	
-	public Contact(InetAddress ip) {
-		this.pseudo = ip.getHostName();
-		this.ipaddress=ip;
 	}
 	
 	public Contact(String p, String ip) {
@@ -39,13 +34,22 @@ public class Contact implements Serializable{
 			e.printStackTrace();
 		}
 	}
-
+	
+	public Contact(InetAddress ip) {
+		this.pseudo = ip.getHostName();
+		this.ipaddress=ip;
+	}
+	
 	public String getPseudo() {
 		return pseudo;
 	}
 
 	public void setPseudo(String pseudo) {
-		this.pseudo = pseudo;
+			this.pseudo = pseudo;
+	}
+	
+	public void delPseudo() {
+		this.pseudo = this.ipaddress.getHostName();
 	}
 
 	public InetAddress getIpaddress() {
@@ -74,15 +78,13 @@ public class Contact implements Serializable{
 		Contact t=null;
 		try {
 			c=new Contact("titi",InetAddress.getLocalHost());
-			t = new Contact("toto", InetAddress.getByName("LaptopMariétou"));
+			t = new Contact("toto", InetAddress.getLoopbackAddress());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
-		System.out.println(c.getIpaddress()+" "+ t.getIpaddress());
-		System.out.println(c.getIpaddress().equals(t.getIpaddress()));
+		System.out.println(c.getIpaddress()+" "+t.getIpaddress());
 		
 	}
 	

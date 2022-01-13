@@ -4,6 +4,7 @@ import java.net.BindException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import network.UDPReceiver;
 import network.UDPSender;
@@ -26,6 +27,7 @@ public class ContactsManager extends Thread{
 		try {
 			this.ContactReceiver = new UDPReceiver();
 		} catch (BindException e) {
+			e.printStackTrace();
 			this.cc.getAlreadyRunning().setVisible(true);
 		}
 	}
@@ -52,7 +54,12 @@ public class ContactsManager extends Thread{
 					
 					System.out.println("Envoi de la demande de contact (connection)\n");
 					
-					(new UDPSender("ASK")).send();
+					try {
+						(new UDPSender("ASK")).send();
+					} catch (BindException e2) {
+						e2.printStackTrace();
+						this.cc.getAlreadyRunning().setVisible(true);
+					}
 					 
 					System.out.println("Lancement réception des contacts pendant la connection\n");
 					
@@ -85,22 +92,34 @@ public class ContactsManager extends Thread{
 								
 							} else if (msg.equals("DISCONNECTED")) {
 								
-								Contact c= this.cc.getContactList().findIp(InetAddress.getByName(addr));
+								Contact c=null;
+								try {
+									c = this.cc.getContactList().findIp(InetAddress.getByName(addr));
+								} catch (UnknownHostException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								
 								if (c!=null) {
+									c.delPseudo();
 									this.cc.getContactList().removeContact(c);
 									System.out.println("Un contact s'est déconnecté pendant la phase de connexion !\n");
 								}
 								
 							}else {
 								
-								Contact c = new Contact(msg,addr);
-								
 								//pour eviter le double ajout lorsuq'il y a modification d'un contact pendant la connexion
-								Contact cin = this.cc.getContactList().findIp(InetAddress.getByName(addr));
+								Contact cin=null;
+								try {
+									cin = this.cc.getContactList().findIp(InetAddress.getByName(addr));
+								} catch (UnknownHostException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 								
 								if (cin==null) {
 									System.out.println("\nAJOUT DU CONTACT depuis la phase  de connexion" + addr+" "+ msg+" \n");
-									cl.addContact(c);
+									cl.addContact(new Contact(msg,addr));
 								} else {
 									System.out.println(cin.getIpaddress()+" a modifié son pseudo pendant la phase  de connexion ! New username= "+ msg+" \n");
 									cin.setPseudo(msg);
@@ -138,7 +157,12 @@ public class ContactsManager extends Thread{
 					//on envoie son contact aux autres 
 			    	
 					System.out.println("\nENVOI de son contact aux autres\n");
-					(new UDPSender(this.cc.getMain().getMe().getPseudo())).send();
+					try {
+						(new UDPSender(this.cc.getMain().getMe().getPseudo())).send();
+					} catch (BindException e1) {
+						e1.printStackTrace();
+						this.cc.getAlreadyRunning();
+					}
 					
 					//lancement du receiver
 					System.out.println("Lancement receiver lors de la session\n");
@@ -157,11 +181,23 @@ public class ContactsManager extends Thread{
 							//traitement de la reception de conctacts
 							if (msg.equals("ASK")){ //on traite les envois de son contact
 								
-								(new UDPSender(main.getMe().getPseudo(), addr)).send();
+								try {
+									(new UDPSender(main.getMe().getPseudo(), addr)).send();
+								} catch (BindException e) {
+									e.printStackTrace();
+									this.cc.getAlreadyRunning().setVisible(true);
+								}
+								
 						    	System.out.println("\nENVOI de son contact à "+ addr+"\n");
 	
 							} else if (msg.equals("DISCONNECTED")) {
-								Contact c = cl.findIp(InetAddress.getByName(addr));
+								Contact c=null;
+								try {
+									c = cl.findIp(InetAddress.getByName(addr));
+								} catch (UnknownHostException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								
 						        if (c== null) {
 						        	System.out.println("Ce contact n'est pas dans la liste de vos contacts\n");
@@ -170,30 +206,35 @@ public class ContactsManager extends Thread{
 						        	main.getContactList().removeContact(c);
 						        	
 						        	//modif connected users
-						        	System.out.println("Modification de la liste des contacts" + main.modUser(c.getIpaddress(), main.getDisconnected(), c.getPseudo())+ "\n");
-						        	c.setPseudo(null);
+						        	String oldusername = c.getPseudo();
+						        	c.delPseudo();
+						        	System.out.println("Modification de la liste des contacts" + main.modUser(c.getPseudo(), main.getDisconnected(), oldusername)+ "\n");
 						        	
-						        	// mettre Ã  jour la conversation
+						        	// mettre à jour la conversation
 						        	main.getMessMan().removeConv(c);
 						        }
 						        
 							} else { //on traite les contacts reÃ§us (soit modif soit nouveau
 								
-								Contact c;
-								c = cl.exists(addr);
+								Contact c=null;
+								try {
+									c = cl.findIp(InetAddress.getByName(addr));
+								} catch (UnknownHostException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								
 						        if (c!= null) {
 						        	System.out.println("\n MODIF D'UN CONTACT pendant un session " + msg+" "+ addr +" \n");
 						        	
 						        	//modifier la liste des contacts
-						        	System.out.println("Modification de la liste des contacts"+main.modUser(msg, main.getConnected(), c.getPseudo())+"\n");
-						        	
-						        	//modifier le contact
+						        	String oldusername = c.getPseudo();
 						        	c.setPseudo(msg);
+						        	System.out.println("Modification de la liste des contacts"+main.modUser(c.getPseudo(), main.getConnected(), oldusername)+"\n");
 						        	
 						        } else {
 						        	c = new Contact(msg,addr);
-						        	System.out.println("\n AJOUT DU CONTACT pendant un session " + msg+" "+ addr +" \n");
+						        	System.out.println("\n AJOUT DU CONTACT pendant une session " + msg+" "+ addr +" \n");
 						        	cl.addContact(c);
 						        	main.addUser(c.getPseudo(), main.getConnected());
 						        }
@@ -224,7 +265,12 @@ public class ContactsManager extends Thread{
 	//////////////////gestion de l'envoi de msg udp
 	public void signalDatagram(String m, String ad) {
 			System.out.println("Sending : "+ m +" to " + ad+" .\n");
-			(new UDPSender(m, ad)).send();
+			try {
+				(new UDPSender(m, ad)).send();
+			} catch (BindException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 	
 }

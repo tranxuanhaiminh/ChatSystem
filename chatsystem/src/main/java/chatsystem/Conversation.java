@@ -30,7 +30,6 @@ public class Conversation {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public void startConv(Socket saccepted) {
@@ -38,7 +37,6 @@ public class Conversation {
 		r = new MsgReceiver(saccepted, this.chatw);
 		r.start();
 		System.out.println("CONVERSATION LANCEE avec " + this.interlocutor + "\n");
-		
 	}
 	
 	public void stopConv() {

@@ -95,7 +95,7 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 		Socket clientSocket = new Socket(host, port);
 		MsgSender m= new MsgSender(clientSocket);
 		
-		Message msg = new Message(new Contact("toto",null), "test 1");
+		Message msg = new Message(new Contact("toto",(String)null), "test 1");
 		m.send(msg);		
 		try {
 			Thread.sleep(3000);
@@ -103,7 +103,7 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		msg = new Message(new Contact("toto",null), "test 2");
+		msg = new Message(new Contact("toto",(String)null), "test 2");
 		m.send(msg);
 		
 		try {

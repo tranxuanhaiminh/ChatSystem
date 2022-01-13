@@ -16,12 +16,15 @@ public class UDPSender{
 	private String message;
 	public InetAddress dest;
 	
-	public UDPSender(String message) {
+	public UDPSender(String message) throws BindException {
 		this.port= 58799;
 		
 		try {
 			this.sendersocket = new DatagramSocket();
-		} catch (SocketException e) {
+		} catch (BindException e) {
+			System.out.println("already running \n");
+			throw e; 
+		}catch (SocketException e) {
 			System.out.println("Erreur lors de la creation du socket d'envoi\n");
 		}
 

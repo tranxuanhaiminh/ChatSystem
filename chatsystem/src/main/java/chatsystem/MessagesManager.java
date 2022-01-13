@@ -71,15 +71,10 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 						boolean in = false;
 						Conversation ec = null;
 						for (Conversation withknownhost : ConvList) {
-							try {
-								if (host.equals(InetAddress.getByName(withknownhost.getInterlocutor().getIpaddress()))) {
-									System.out.println("on a trouve la conv\n");
-									in = true;
-									ec = withknownhost;
-								}
-							} catch (UnknownHostException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+							if (host.equals(withknownhost.getInterlocutor().getIpaddress())) {
+								System.out.println("on a trouve la conv\n");
+								in = true;
+								ec = withknownhost;
 							} 
 						}
 						System.out.println("sortie ");
@@ -94,7 +89,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 								public void run() {
 									//sock est l'aceptation de notre socket d'envoi
 									encours.startConv(sock);
-									System.out.println("On a lancï¿½ une conv\n");
+									System.out.println("On a lancïé une conv\n");
 								}
 									
 							}).start();
@@ -107,10 +102,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 								@Override
 								public void run() {
 									// TODO Auto-generated method stub
-									Contact contact = getMm().getContactList().exists(host.getHostName());
-									
-									if (contact ==null)
-										contact = getMm().getContactList().exists(host.toString());
+									Contact contact = getMm().getContactList().findIp(host);
 									
 									if (contact ==null) {
 											System.out.println("Pas dans la liste de contacts\n");
@@ -118,7 +110,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 										Conversation cn = new Conversation(mm,contact);
 										ConvList.add(cn);
 										cn.startConv(sock);
-										System.out.println("On a acceptï¿½ une conv\n");
+										System.out.println("On a accepté une conv\n");
 									
 									}
 								}
@@ -142,7 +134,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 						 sendMessTo(c,m);
 					}
 					
-					for (Conversation c : ConvList)  // en arrï¿½tant le mess man on trop toutes les conv
+					for (Conversation c : ConvList)  // en arrêtant le mess man on trop toutes les conv
 						c.stopConv();
 					
 					System.out.println("L'envoyeur du messages manager a ï¿½tï¿½ arrï¿½tï¿½ !\n");
@@ -205,7 +197,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			Contact me = new Contact("toto","127.0.0.1");
+			Contact me = new Contact("toto",InetAddress.getLoopbackAddress());
 			
 			new MainMenu(me, cl, null);
 	}
