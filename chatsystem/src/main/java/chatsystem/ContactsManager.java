@@ -29,11 +29,11 @@ public class ContactsManager extends Thread{
 			this.ContactReceiver = new UDPReceiver();
 		} catch (BindException e) {
 			e.printStackTrace();
-			this.cc.getAlreadyRunning().setVisible(true);
+			this.cc.getAlreadyRunning().display();
 			this.cc.getAlreadyRunning().requestFocus();
 		} catch (SocketException e) {
 			e.printStackTrace();
-			this.cc.getProblem().setVisible(true);
+			this.cc.getProblem().display();
 			this.cc.getAlreadyRunning().requestFocus();
 
 		}
@@ -47,7 +47,7 @@ public class ContactsManager extends Thread{
 				Thread.sleep(1);
 			} catch (InterruptedException e2) {
 				e2.printStackTrace();
-				this.cc.getProblem().setVisible(true);
+				this.cc.getProblem().display();
 			}			
 			int i=0;
 			
@@ -65,19 +65,19 @@ public class ContactsManager extends Thread{
 						System.out.println("Envoi de la demande de contacts pendant la phase de connection.\n");
 					} catch (BindException e2) {
 						e2.printStackTrace();
-						this.cc.getAlreadyRunning().setVisible(true);
+						this.cc.getAlreadyRunning().display();
 						
 					} catch (SocketException e1) {
 						e1.printStackTrace();
-						this.cc.getProblem().setVisible(true);
+						this.cc.getProblem().display();
 						
 					} catch (UnknownHostException e1) {
 						e1.printStackTrace();
-						this.cc.getProblem().setVisible(true);
+						this.cc.getProblem().display();
 						
 					} catch (IOException e1) {
 						e1.printStackTrace();
-						this.cc.getProblem().setVisible(true);
+						this.cc.getProblem().display();
 						
 					}
 					 
@@ -94,7 +94,7 @@ public class ContactsManager extends Thread{
 							rs.setSoTimeout((int)(e-System.currentTimeMillis()));
 						} catch (SocketException e1) {
 							e1.printStackTrace();
-							this.cc.getProblem().setVisible(true);
+							this.cc.getProblem().display();
 						}
 			    		
 						String[] response=null;
@@ -102,7 +102,7 @@ public class ContactsManager extends Thread{
 							response = ContactReceiver.receive(); // cette fonction est bloquante
 						} catch (IOException e2) {
 							e2.printStackTrace();
-							this.cc.getProblem().setVisible(true);
+							this.cc.getProblem().display();
 						} 
 						
 						if (response!=null) {
@@ -123,7 +123,7 @@ public class ContactsManager extends Thread{
 									c = this.cc.getContactList().findIp(InetAddress.getByName(addr));
 								} catch (UnknownHostException e1) {
 									e1.printStackTrace();
-									this.cc.getProblem().setVisible(true);
+									this.cc.getProblem().display();
 								}
 								
 								if (c!=null) {
@@ -140,7 +140,7 @@ public class ContactsManager extends Thread{
 									cin = this.cc.getContactList().findIp(InetAddress.getByName(addr));
 								} catch (UnknownHostException e1) {
 									e1.printStackTrace();
-									this.cc.getProblem().setVisible(true);
+									this.cc.getProblem().display();
 								}
 								
 								if (cin==null) {
@@ -165,7 +165,7 @@ public class ContactsManager extends Thread{
 						rs.setSoTimeout(0);
 					} catch (SocketException e1) {
 						e1.printStackTrace();
-						this.cc.getProblem().setVisible(true);
+						this.cc.getProblem().display();
 
 					}
 	
@@ -174,7 +174,7 @@ public class ContactsManager extends Thread{
 						Thread.sleep(1000); // on attends que les autres données soient misent à jour
 					} catch (InterruptedException err) {
 						err.printStackTrace();
-						this.cc.getProblem().setVisible(true);
+						this.cc.getProblem().display();
 
 					}
 			    	
@@ -193,13 +193,13 @@ public class ContactsManager extends Thread{
 						this.cc.getAlreadyRunning();
 					} catch (SocketException e) {
 						e.printStackTrace();
-						main.getProblem().setVisible(true);
+						main.getProblem().display();
 					} catch (UnknownHostException e) {
 						e.printStackTrace();
-						main.getProblem().setVisible(true);
+						main.getProblem().display();
 					} catch (IOException e) {
 						e.printStackTrace();
-						main.getProblem().setVisible(true);
+						main.getProblem().display();
 					}
 					
 					//lancement du receiver
@@ -214,7 +214,7 @@ public class ContactsManager extends Thread{
 							response = ContactReceiver.receive();
 						} catch (IOException e1) {
 							e1.printStackTrace();
-							main.getProblem().setVisible(true);
+							main.getProblem().display();
 						}
 						
 						if (response!=null) {
@@ -232,11 +232,11 @@ public class ContactsManager extends Thread{
 
 								} catch (BindException e) {
 									e.printStackTrace();
-									this.cc.getAlreadyRunning().setVisible(true);
+									this.cc.getAlreadyRunning().display();
 									
 								} catch (IOException e) {
 									e.printStackTrace();
-									main.getProblem().setVisible(true);
+									main.getProblem().display();
 									
 								}
 								
@@ -249,7 +249,7 @@ public class ContactsManager extends Thread{
 								} catch (UnknownHostException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
-									main.getProblem().setVisible(true);
+									main.getProblem().display();
 
 								}
 								
@@ -278,7 +278,7 @@ public class ContactsManager extends Thread{
 								} catch (UnknownHostException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
-									main.getProblem().setVisible(true);
+									main.getProblem().display();
 
 								}
 								

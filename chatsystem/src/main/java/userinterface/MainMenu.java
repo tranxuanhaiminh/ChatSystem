@@ -95,6 +95,8 @@ public class MainMenu extends javax.swing.JFrame {
 		
         modifyFrame = new Modify();
         modifyFrame.getVerifyPseudo().addActionListener(new Action(this));
+        modifyFrame.getEnterpseudo().addActionListener(new Action(this));
+
         
         changepseudo = jButton1;
         changepseudo.setText(Interfacedisplay.modifybutton);

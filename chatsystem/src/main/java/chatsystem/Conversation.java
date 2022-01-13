@@ -25,10 +25,10 @@ public class Conversation {
 			s = new MsgSender(new Socket(i.getIpaddress(), port));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-			main.getProblem().setVisible(true);
+			main.getProblem().display();
 		} catch (IOException e) {
 			e.printStackTrace();
-			main.getProblem().setVisible(true);
+			main.getProblem().display();
 		}
 		main.getMessMan().getConvList().add(this);
 		
@@ -43,7 +43,7 @@ public class Conversation {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-			main.getProblem().setVisible(true);
+			main.getProblem().display();
 
 		}
 		
@@ -64,7 +64,7 @@ public class Conversation {
 			s.closeSend();
 		} catch (IOException e) {
 			e.printStackTrace();
-			main.getProblem().setVisible(true);
+			main.getProblem().display();
 		}
 		
 		System.out.println("Stopping the conversation with "+ this.interlocutor + "! \n");

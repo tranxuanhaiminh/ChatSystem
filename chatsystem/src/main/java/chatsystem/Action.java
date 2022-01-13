@@ -40,12 +40,13 @@ public class Action implements ActionListener, ListSelectionListener{
 	public void actionPerformed(ActionEvent event) {
 		
 		// pour la premiere connection
-		if(pageC != null && event.getSource().equals(pageC.getVerifyPseudo())) {
+		if(pageC != null && (event.getSource().equals(pageC.getVerifyPseudo()) || event.getSource().equals(pageC.getEnterPseudo()))) {
 			
 			final Contact me = pageC.getMe();
 			
 			if (pageC.getEnterPseudo().getText()==null && !(pageC.getEnterPseudo().getText().equals(""))){
-				pageC.getPseudoNull().setVisible(true);
+				
+				pageC.getPseudoNull().display();
 				
 			} else {
 	        	me.setPseudo(pageC.getEnterPseudo().getText());			
@@ -55,11 +56,11 @@ public class Action implements ActionListener, ListSelectionListener{
 				
 				try {
 					//on attend de finir de recevoir les contacts
-					Thread.sleep(3300);
+					Thread.sleep(3001);
 				
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-					pageC.getProblem().setVisible(true);
+					pageC.getProblem().display();
 				}
 				
 				pageC.getCm().setRunning(false);
@@ -104,7 +105,7 @@ public class Action implements ActionListener, ListSelectionListener{
 	        //Display the window.
 			pageM.getModifyFrame().setVisible(true);
 	        
-		} else if (pageM != null && event.getSource().equals(pageM.getModifyFrame().getVerifyPseudo())) {
+		} else if (pageM != null && (event.getSource().equals(pageM.getModifyFrame().getVerifyPseudo()) || event.getSource().equals(pageM.getModifyFrame().getEnterpseudo()))) {
 
 			if (pageM.getModifyFrame().getEnterpseudo().getText() == null || pageM.getModifyFrame().getEnterpseudo().getText().equals("")) {
 				
@@ -210,7 +211,7 @@ public class Action implements ActionListener, ListSelectionListener{
 		        		 
 					} catch (UnknownHostException e1) {
 						e1.printStackTrace();
-						this.pageM.getProblem().setVisible(true);
+						this.pageM.getProblem().display();
 					}
 		        	 pageM.getUserNotConnected().display();
 		        }

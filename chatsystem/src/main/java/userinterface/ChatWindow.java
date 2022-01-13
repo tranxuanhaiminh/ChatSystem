@@ -221,7 +221,7 @@ public class ChatWindow extends javax.swing.JFrame {
 				    	msg_display.setCaretPosition(0);
 					} catch (BadLocationException e) {
 						e.printStackTrace();
-						problem.setVisible(true);
+						problem.display();
 					}
 				} else {
 					person = getMain().getContactList().findIp(InetAddress.getByName(personip)).getPseudo();
@@ -230,7 +230,7 @@ public class ChatWindow extends javax.swing.JFrame {
 				    	msg_display.setCaretPosition(0);
 					} catch (BadLocationException e) {
 						e.printStackTrace();
-						problem.setVisible(true);
+						problem.display();
 
 					}
 				}
@@ -238,10 +238,10 @@ public class ChatWindow extends javax.swing.JFrame {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			problem.setVisible(true);
+			problem.display();
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
-			problem.setVisible(true);
+			problem.display();
 		}
 	}
     

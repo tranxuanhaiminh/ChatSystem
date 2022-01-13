@@ -26,7 +26,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			this.chatw.getProblem().setVisible(true);
+			this.chatw.getProblem().display();
 		}
 	}
 	
@@ -45,13 +45,13 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 					
 				} catch (ClassNotFoundException e1) {
 					e1.printStackTrace();
-					this.chatw.getProblem().setVisible(true);
+					this.chatw.getProblem().display();
 				} catch (EOFException e) {
 					//Do Nothing if the end has been reached
 					
 				} catch (IOException e) {
 					e.printStackTrace();
-					this.chatw.getProblem().setVisible(true);
+					this.chatw.getProblem().display();
 				}
 				
 				mess = null;
@@ -64,7 +64,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 			System.out.println("Socket de reception de msg fermé\n");
 		} catch (IOException e) {
 			e.printStackTrace();
-			this.chatw.getProblem().setVisible(true);
+			this.chatw.getProblem().display();
 
 		}
 	}

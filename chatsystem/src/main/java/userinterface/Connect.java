@@ -78,7 +78,7 @@ public class Connect extends javax.swing.JFrame {
         verifyPseudo.addActionListener(this.verify);
 
         enterpseudo = jTextField1;
-        enterpseudo.setText("");
+        enterpseudo.setText(null);
         enterpseudo.addActionListener(this.verify);
         /////////////////////////////////////////////
         

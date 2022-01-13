@@ -35,7 +35,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 			 ss = new ServerSocket(port);
 		} catch (IOException e) {
 			e.printStackTrace();
-			main.getProblem().setVisible(true);
+			main.getProblem().display();
 		}
 	}
 	
@@ -47,19 +47,17 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 				public void run() {
 					
 					Socket doorbell=null;
-					int i=0;// pour test
-					while (running && i<2) {
-						i++;
+					while (running) {
 							
 						try {
 							doorbell = ss.accept();
 						} catch (java.net.BindException e1) {
 							e1.printStackTrace();
-							main.getProblem().setVisible(true);
+							main.getProblem().display();
 							
 						}catch (IOException e) {
 							e.printStackTrace();
-							main.getProblem().setVisible(true);
+							main.getProblem().display();
 
 						}
 						
@@ -176,7 +174,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 					System.out.println("Un message a été envoyé.\n");
 				} catch (IOException e) {
 					e.printStackTrace();
-					main.getProblem().setVisible(true);
+					main.getProblem().display();
 				}
 				this.c = null;
 				this.m = null;
