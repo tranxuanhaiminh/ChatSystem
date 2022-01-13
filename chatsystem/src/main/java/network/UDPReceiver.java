@@ -15,13 +15,18 @@ public class UDPReceiver{
 	private byte[] buffer;
 	private DatagramPacket in;
 	
-	public UDPReceiver(){
+	public UDPReceiver() throws BindException{
 		
 		this.port = 58799;
 		this.running=true;
 		try {
 			this.receiversocket = new DatagramSocket(port);
-		} catch (SocketException e) {
+		} catch (BindException e) {
+			System.out.println("already running \n");
+			// faire quelque chose
+			throw e; 
+			
+		}catch (SocketException e) {
 			e.printStackTrace();
 			System.out.println("Erreur lors de la creation du socket de reception \n");
 		}
@@ -116,7 +121,13 @@ public class UDPReceiver{
 
 	public static void main(String[] args) {
 		
-		UDPReceiver r = new UDPReceiver();
+		UDPReceiver r=null;
+		try {
+			r = new UDPReceiver();
+		} catch (BindException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		while (true) {
 			r.receive();
 		}

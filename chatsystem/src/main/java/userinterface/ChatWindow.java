@@ -6,10 +6,13 @@ package userinterface;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JScrollBar;
 import javax.swing.JTextField;
+import javax.swing.text.BadLocationException;
 
 import chatsystem.Action;
 import chatsystem.Contact;
@@ -39,12 +42,13 @@ public class ChatWindow extends javax.swing.JFrame {
 	private Conversation conv;
 	
 	//lien page principale
-	private MainMenu mm;
-	
+	private MainMenu main;
+
 	//listeners
 	private Action sendMess;
 	
-	private String[][] chatHistory;
+	//nbre de msg de l'historique à afficher
+	private final int nbMsgToLoad = 20;
     
     /**
      * Creates new form NewJFrame
@@ -55,7 +59,7 @@ public class ChatWindow extends javax.swing.JFrame {
         initComponents();
 
         this.dest = dest;
-        this.mm = m;
+        this.main = m;
 		this.conv = conv;
 		
 		this.sendMess = new Action(this);
@@ -79,7 +83,9 @@ public class ChatWindow extends javax.swing.JFrame {
 		});
         
         bar = jScrollPane1.getVerticalScrollBar();
-        bar.setValue(bar.getMaximum());
+        
+        //on charge l'historique
+        this.loadHistory(nbMsgToLoad, 0);
         
         this.setVisible(true);
     }
@@ -113,7 +119,7 @@ public class ChatWindow extends javax.swing.JFrame {
         msg_display.setColumns(20);
         msg_display.setLineWrap(true);
         msg_display.setRows(5);
-        msg_display.setText("this can't be changed\nsdfsdf\nsdf\nsd\nf\nsdf\nsdf\nsd\nfs\ndf\nsdf\nsdf\nsd\nfsd\nfs\ndf\nsdf\nsd\nfsdfsdrgsdfgsdfgsdfgsdfgsdfgdsfgsdfgjfsdfsdrgsdfgsdfgsdfgsdfgsdfgdsfgsdfgjfsdfsdrgsdfgsdfgsdfgsdfgsdfgdsfgsdfgjfsdfsdrgsdfgsdfgsdfgsdfgsdfgdsfgsdfgj");
+        msg_display.setText("");
         jScrollPane1.setViewportView(msg_display);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -158,7 +164,11 @@ public class ChatWindow extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
    
-
+    /**
+     * Add chatline to the chat window and insert to the database
+     * @param chatline
+     * @param isMe
+     */
     public void addChatLine(Message chatline, boolean isMe) {
     	if (isMe) {
     		msg_display.append("Me : "+chatline.toString() + newline);
@@ -169,15 +179,56 @@ public class ChatWindow extends javax.swing.JFrame {
     	bar.setValue(bar.getMaximum());
     	
     	//add the msg to database
+    	System.out.println("Adding the msg to the chat history\n");
+    	getMain().getConDB().insertChat(chatline.getDest().getIpaddress(), chatline.toString(), chatline.convertDateToFormat(), isMe);
     	
     }
     
-    public void addToDataBase(String chat) {
+    /**
+     * Load chat history and add to the chatwindow
+     * @param limit
+     * @param offset
+     */
+    public void loadHistory(int limit, int offset) {
     	
-    }
-    
-    public String[][] getChatHistory() {
-		return null;
+    	System.out.println("Loading the chat history\n");
+    	
+		ResultSet rs = getMain().getConDB().getChatHistory(dest.getIpaddress(), limit, offset);
+		
+		try {
+			while (rs.next()) {
+				String chatline = rs.getString("sentChat");
+				System.out.println("a msg loaded "+chatline);
+				String personip = rs.getString("sender");
+				String person = null;
+				if (personip == null) {
+					personip = rs.getString("receiver");
+					person = getMain().getContactList().exists(personip).getPseudo();
+					try {
+						msg_display.getDocument().insertString(0, person + " : " + chatline + newline, null);
+				    	msg_display.setCaretPosition(0);
+					} catch (BadLocationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					person = getMain().getContactList().exists(personip).getPseudo();
+					try {
+						msg_display.getDocument().insertString(0, "Me : " + chatline + newline, null);
+				    	msg_display.setCaretPosition(0);
+					} catch (BadLocationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		bar.setValue(bar.getMaximum());
 	}
     
     public Action getSendMess() {
@@ -194,8 +245,8 @@ public class ChatWindow extends javax.swing.JFrame {
 	public JButton getSendChat() {
 		return sendChat;
 	}
-	public MainMenu getMm() {
-		return mm;
+	public MainMenu getMain() {
+		return main;
 	}
 
 	public Conversation getConv() {
@@ -239,5 +290,4 @@ public class ChatWindow extends javax.swing.JFrame {
         
     }
 
-	
 }

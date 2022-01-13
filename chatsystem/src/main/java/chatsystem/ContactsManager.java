@@ -1,5 +1,6 @@
 package chatsystem;
 
+import java.net.BindException;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
@@ -20,7 +21,12 @@ public class ContactsManager extends Thread{
 		this.cc = c;
 		this.running = false;
 		this.state = false;
-		this.ContactReceiver = new UDPReceiver();
+		this.ContactReceiver = null;
+		try {
+			this.ContactReceiver = new UDPReceiver();
+		} catch (BindException e) {
+			this.cc.getAlreadyRunning().setVisible(true);
+		}
 	}
 	
 	public void run() {

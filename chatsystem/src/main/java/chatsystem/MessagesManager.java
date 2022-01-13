@@ -190,11 +190,9 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 	}
 	
 	public synchronized void signalMess(Conversation c, Message m) {
-		//synchronized (sending) {
 			this.c = c;
 			this.m = m;
 			System.out.println("MESSAGE EN COURS D ENVOI\n");
-		//}
 	}
 	
 	public static void main(String[] args) {
@@ -208,10 +206,8 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 				e.printStackTrace();
 			}
 			Contact me = new Contact("toto","127.0.0.1");
-			ContactsManager cm=null;
 			
-			MainMenu1 mm= new MainMenu1(me, cl, cm);
-			
+			new MainMenu(me, cl, null);
 	}
 	
 	

@@ -1,8 +1,6 @@
 package database;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import ressources.Databasequerries;
 
@@ -13,6 +11,10 @@ public class Databasecon {
 	private String dbfile;
 	private Connection c;
 	
+
+	/*
+	 * Connect to the database from the databasefile name (dbfile)
+	 */
 	public Databasecon(String dbfile) {
 		this.dbfile=dbfile;
 		
@@ -22,36 +24,20 @@ public class Databasecon {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (createTable(c)) {
-			System.out.println("The datbase is created !\n");
+		if (createTable()) {
+			System.out.println("The database is created !\n");
 		}else {
 			System.out.println("You already have a database !\n");
 		}
-	}
-	
-
-
-	/*
-	 * Connect to the database from the databasefile name
-	 */
-	public Connection connect(String dbfile) {
-		Connection c = null;
-		try {
-			c = DriverManager.getConnection(url + dbfile);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return c;
 	}
 
 	/*
 	 * Check if table existed in database
 	 */
-	public boolean checktable(Connection conn, String table) {
+	public boolean checktable(String table) {
 		DatabaseMetaData md;
 		try {
-			md = conn.getMetaData();
+			md = c.getMetaData();
 			ResultSet rs = md.getTables(null, null, "chatHistory", null);
 			return rs.next();
 		} catch (SQLException e) {
@@ -66,7 +52,6 @@ public class Databasecon {
 	 */
 	public boolean createTable(Connection c) {
 		String sql = Databasequerries.createTable;
-
 		try {
 			Statement stmt = c.createStatement();
 			stmt.execute(sql);
@@ -157,7 +142,7 @@ public class Databasecon {
 	/*
 	 * Insert chat to database
 	 */
-	public int insertChat(Connection c, String person, String chatline, String time, boolean sent) {
+	public int insertChat(String person, String chatline, String time, boolean sent) {
 		String sql = null;
 		if (sent) {
 			sql = Databasequerries.insertChat1;
@@ -188,7 +173,7 @@ public class Databasecon {
 			pstmt.setString(2, person);
 			pstmt.setInt(3, limit);
 			pstmt.setInt(4, offset);
-			return pstmt.executeQuery(sql);
+			return pstmt.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
