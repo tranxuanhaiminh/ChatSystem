@@ -92,7 +92,6 @@ public class Action implements ActionListener, ListSelectionListener{
 			            	pageC.getCm().setRunning(true);
 			            	pageC.setMain(new MainMenu(me, contactList,pageC.getCm()));
 			            	
-			            	pageC.dispose();
 			            }
 			        });
 			        t.setRepeats(false); // Only execute once

@@ -138,9 +138,6 @@ public class MainMenu extends javax.swing.JFrame {
         	addUser(c.getPseudo(), connected);
         }
         
-        addUser("user1", connected);
-        addUser("user2", disconnected);
-        
         this.setVisible(true);
     }
 

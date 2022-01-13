@@ -30,9 +30,12 @@ public class ContactsManager extends Thread{
 		} catch (BindException e) {
 			e.printStackTrace();
 			this.cc.getAlreadyRunning().setVisible(true);
+			this.cc.getAlreadyRunning().requestFocus();
 		} catch (SocketException e) {
 			e.printStackTrace();
 			this.cc.getProblem().setVisible(true);
+			this.cc.getAlreadyRunning().requestFocus();
+
 		}
 	}
 	
@@ -182,22 +185,19 @@ public class ContactsManager extends Thread{
 					//on envoie son contact aux autres 
 			    	
 					try {
-						(new UDPSender(this.cc.getMain().getMe().getPseudo())).send();
+						(new UDPSender(main.getMe().getPseudo())).send();
 						System.out.println("\nENVOI de son contact à tout le monde !\n");
 
 					} catch (BindException e1) {
 						e1.printStackTrace();
 						this.cc.getAlreadyRunning();
 					} catch (SocketException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						main.getProblem().setVisible(true);
 					} catch (UnknownHostException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						main.getProblem().setVisible(true);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						main.getProblem().setVisible(true);
 					}

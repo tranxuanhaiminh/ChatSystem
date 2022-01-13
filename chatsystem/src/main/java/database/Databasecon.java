@@ -17,7 +17,6 @@ public class Databasecon {
 	 */
 	public Databasecon(String dbfile) {
 		this.dbfile=dbfile;
-		
 		try {
 			this.c = DriverManager.getConnection(url + this.dbfile);
 		} catch (SQLException e) {
