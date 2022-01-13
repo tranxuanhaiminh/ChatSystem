@@ -16,6 +16,8 @@ import ressources.Interfacedisplay;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -327,9 +329,13 @@ public class MainMenu extends javax.swing.JFrame {
             	
             	ContactList cl = new ContactList();
         		
-        		cl.addContact(new Contact("titi","LaptopMariétou"));
-
-        		Contact me = new Contact("toto","127.0.0.1");
+        		try {
+					cl.addContact(new Contact("titi",InetAddress.getLocalHost()));
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        		Contact me = new Contact("toto",InetAddress.getLoopbackAddress());
         		ContactsManager cm=null;
         		
         		new MainMenu(me, cl, cm);

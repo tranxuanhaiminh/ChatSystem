@@ -23,9 +23,7 @@ public class UDPReceiver{
 			this.receiversocket = new DatagramSocket(port);
 		} catch (BindException e) {
 			System.out.println("already running \n");
-			// faire quelque chose
 			throw e; 
-			
 		}catch (SocketException e) {
 			e.printStackTrace();
 			System.out.println("Erreur lors de la creation du socket de reception \n");
@@ -45,7 +43,7 @@ public class UDPReceiver{
 		
 		String[] ret = null;
 		
-		System.out.println("Pret Ã  recevoir \n");
+		System.out.println("Pret à  recevoir \n");
 		
 		buffer = new byte[256];
 		in = new DatagramPacket(buffer, buffer.length);
@@ -56,7 +54,7 @@ public class UDPReceiver{
 			String msg = new String(in.getData(),0,in.getLength());
 			String addr = in.getAddress().getHostName();
 		
-			//On rÃ©cupÃ¨re toutes nos addresses pour filtrer les messages
+			/*//On récupère toutes nos addresses pour filtrer les messages
 			ArrayList<InetAddress> m= new ArrayList<InetAddress>();
 	        Enumeration<NetworkInterface> e = null;
 			try {
@@ -78,16 +76,20 @@ public class UDPReceiver{
 			        m.add(i);
 			    }
 			}
-			
+			*/
 			
 			
 			boolean cond = false;
-			try {
+			
+			/*try {
 				cond = !(m.contains(InetAddress.getByName(addr)));
 			} catch (UnknownHostException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}
+			}*/
+			
+			cond = InetAddress.getLoopbackAddress().equals(in.getAddress());
+			
 			
 			if (cond) { // on ne peut pas recevoir un msg u'on a envoyÃ© nous mÃªme
 				ret = new String[] {msg,addr};
@@ -99,7 +101,6 @@ public class UDPReceiver{
 			System.out.println("Erreur lors de la reception du mess\n");
 			e.printStackTrace();
 		}
-		
 		
 		return ret;
 		

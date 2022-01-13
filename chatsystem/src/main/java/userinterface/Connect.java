@@ -55,7 +55,7 @@ public class Connect extends javax.swing.JFrame {
 	  this.welcome = new NotifyFrame("Welcome to the Chat System !");
 	  this.pseudoNull = new NotifyFrame("Please enter a value");
 	  this.alreadyRunning = new NotifyFrame("The program is already running !\nPlease close this session !");
-
+	  this.alreadyRunning.setDefaultCloseOperation(EXIT_ON_CLOSE);
         
 		contactList = new ContactList();
 		me =new Contact();

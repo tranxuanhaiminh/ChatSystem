@@ -1,5 +1,6 @@
 package chatsystem;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class ContactList { //
@@ -9,7 +10,6 @@ public class ContactList { //
 	public ContactList() {
 		this.list = new ArrayList<Contact>();
 	}
-	
 	
 	
 	public void addContact(Contact c) {
@@ -23,25 +23,25 @@ public class ContactList { //
 	public boolean comparePseudo(Contact c) {
 		boolean isUnique = true;
 		for (Contact ct : this.list) {
-			if (ct==null) // pourquoi ??
-				System.out.println("null");
-			if (c.getPseudo().compareTo(ct.getPseudo())==0) {
+			if (ct==null) // si jamais des contacts nulls sont dans la list
+				System.out.println("Contact null");
+			if (c.getPseudo().equals(ct.getPseudo())) {
 				isUnique = false;
 			}
 		}
 		return isUnique;
 	}
 	
-	public Contact exists(String ip) {
+	public Contact findIp(InetAddress ip) {
 		Contact res= null;
 		for (Contact c : this.list) {
-			if (ip.compareTo(c.getIpaddress())==0)
+			if (ip.equals(c.getIpaddress()))
 				res = c;
 		}
 		return res;
 	}
 	
-	public Contact existsP(String pseudo) {
+	public Contact findP(String pseudo) {
 		Contact res= null;
 		for (Contact c : this.list) {
 			if (pseudo.compareTo(c.getPseudo())==0)

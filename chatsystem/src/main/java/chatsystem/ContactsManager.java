@@ -2,6 +2,7 @@ package chatsystem;
 
 import java.net.BindException;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 
 import network.UDPReceiver;
@@ -51,11 +52,9 @@ public class ContactsManager extends Thread{
 					
 					System.out.println("Envoi de la demande de contact (connection)\n");
 					
-					//this.ContactSender = new UDPSender("ASK");
-					//this.ContactSender.send();
 					(new UDPSender("ASK")).send();
 					 
-					System.out.println("Lancement rÃ©ception des contacts pendant la connection\n");
+					System.out.println("Lancement réception des contacts pendant la connection\n");
 					
 					long s = System.currentTimeMillis();
 					long e = s + 3000;
@@ -80,17 +79,33 @@ public class ContactsManager extends Thread{
 							ContactList cl = this.cc.getContactList();
 							
 							//traitement de la reception de conctacts
-							if (!(msg.equals("ASK"))) { //on ne traite que les contacts reÃ§us
+							if ((msg.equals("ASK"))) {
 								
-								System.out.println("\nAJOUT DU CONTACT depuis la phase  de connexion" + addr+" "+ msg+" \n");
-					        	
+								//on ne fait rien 
+								
+							} else if (msg.equals("DISCONNECTED")) {
+								
+								Contact c= this.cc.getContactList().findIp(InetAddress.getByName(addr));
+								if (c!=null) {
+									this.cc.getContactList().removeContact(c);
+									System.out.println("Un contact s'est déconnecté pendant la phase de connexion !\n");
+								}
+								
+							}else {
+								
 								Contact c = new Contact(msg,addr);
-								cl.addContact(c);
 								
-							} else {
-								System.out.println("\n NON TRAITE \n");
-							}
-			    	        	
+								//pour eviter le double ajout lorsuq'il y a modification d'un contact pendant la connexion
+								Contact cin = this.cc.getContactList().findIp(InetAddress.getByName(addr));
+								
+								if (cin==null) {
+									System.out.println("\nAJOUT DU CONTACT depuis la phase  de connexion" + addr+" "+ msg+" \n");
+									cl.addContact(c);
+								} else {
+									System.out.println(cin.getIpaddress()+" a modifié son pseudo pendant la phase  de connexion ! New username= "+ msg+" \n");
+									cin.setPseudo(msg);
+								}
+							}  	
 			    		} else {
 			    			System.out.println("On a recu null.\n");
 			    		}
@@ -123,8 +138,6 @@ public class ContactsManager extends Thread{
 					//on envoie son contact aux autres 
 			    	
 					System.out.println("\nENVOI de son contact aux autres\n");
-					/*this.ContactSender = new UDPSender(this.cc.getMain().getMe().getPseudo());
-					this.ContactSender.send();*/
 					(new UDPSender(this.cc.getMain().getMe().getPseudo())).send();
 					
 					//lancement du receiver
@@ -144,14 +157,11 @@ public class ContactsManager extends Thread{
 							//traitement de la reception de conctacts
 							if (msg.equals("ASK")){ //on traite les envois de son contact
 								
-								//this.ContactSender = new UDPSender(this.cc.getMain().getMe().getPseudo(), addr);
-								//this.ContactSender.send();
 								(new UDPSender(main.getMe().getPseudo(), addr)).send();
-						    	System.out.println("\nENVOI de son contact ï¿½ "+ addr+"\n");
+						    	System.out.println("\nENVOI de son contact à "+ addr+"\n");
 	
 							} else if (msg.equals("DISCONNECTED")) {
-								Contact c;
-								c = cl.exists(addr);
+								Contact c = cl.findIp(InetAddress.getByName(addr));
 								
 						        if (c== null) {
 						        	System.out.println("Ce contact n'est pas dans la liste de vos contacts\n");

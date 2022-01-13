@@ -180,7 +180,7 @@ public class ChatWindow extends javax.swing.JFrame {
     	
     	//add the msg to database
     	System.out.println("Adding the msg to the chat history\n");
-    	getMain().getConDB().insertChat(chatline.getDest().getIpaddress(), chatline.toString(), chatline.convertDateToFormat(), isMe);
+    	getMain().getConDB().insertChat(chatline.getDest().getIpaddress().getAddress().toString(), chatline.toString(), chatline.convertDateToFormat(), isMe);
     	
     }
     
@@ -193,7 +193,7 @@ public class ChatWindow extends javax.swing.JFrame {
     	
     	System.out.println("Loading the chat history\n");
     	
-		ResultSet rs = getMain().getConDB().getChatHistory(this.getMain().getConDB().getC(), dest.getIpaddress(), limit, offset);
+		ResultSet rs = getMain().getConDB().getChatHistory(this.getMain().getConDB().getC(), dest.getIpaddress().getAddress().toString(), limit, offset);
 		
 		try {
 			while (rs.next()) {
@@ -284,7 +284,7 @@ public class ChatWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ChatWindow(null,new Contact("titi"," "), null).setVisible(true);
+                new ChatWindow(null,new Contact("titi",null), null).setVisible(true);
             }
         });
         
