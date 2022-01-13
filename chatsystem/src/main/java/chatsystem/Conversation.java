@@ -15,39 +15,63 @@ public class Conversation {
 	private MsgSender s;
 	private Contact interlocutor;
 	private int port = 55555;
-	private MainMenu mm;
+	private MainMenu main;
 	private ChatWindow chatw=null;
 	
 	public Conversation(MainMenu mm2,Contact i) {
 		this.interlocutor = i;
-		this.mm = mm2;
+		this.main = mm2;
 		try {
 			s = new MsgSender(new Socket(i.getIpaddress(), port));
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			main.getProblem().setVisible(true);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			main.getProblem().setVisible(true);
 		}
+		main.getMessMan().getConvList().add(this);
+		
 	}
 	
 	public void startConv(Socket saccepted) {
-		this.chatw = new ChatWindow(mm,this.interlocutor,this);
-		r = new MsgReceiver(saccepted, this.chatw);
+		
+		this.chatw = new ChatWindow(main,this.interlocutor,this);
+		
+		try {
+			r = new MsgReceiver(saccepted, this.chatw);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			main.getProblem().setVisible(true);
+
+		}
+		
 		r.start();
 		System.out.println("CONVERSATION LANCEE avec " + this.interlocutor + "\n");
+		
+		System.out.println(main.getMessMan().getConvList());
 	}
 	
 	public void stopConv() {
 		//supprimer du mess man
-		mm.getMessMan().getConvList().remove(this);
+		main.getMessMan().getConvList().remove(this);
 				
-		r.setRunning(false);
-		s.closeCo();
+		//r.setRunning(false); On peut toujours recevoir des messages après avoir fermé une conversation
+		main.getMessMan().getStoppedConvList().add(this);
+		
+		try {
+			s.closeSend();
+		} catch (IOException e) {
+			e.printStackTrace();
+			main.getProblem().setVisible(true);
+		}
 		
 		System.out.println("Stopping the conversation with "+ this.interlocutor + "! \n");
+		System.out.println(main.getMessMan().getConvList());
+
 	}
+	
 
 	public MsgReceiver getR() {
 		return r;

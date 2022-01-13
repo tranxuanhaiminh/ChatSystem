@@ -16,7 +16,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 	private ObjectInputStream in=null;
 	private ChatWindow chatw;
 	
-	public MsgReceiver(Socket sock, ChatWindow chatw2) {
+	public MsgReceiver(Socket sock, ChatWindow chatw2) throws IOException {
 		super();
 		this.socketreceive = sock;
 		this.chatw = chatw2;
@@ -26,6 +26,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			this.chatw.getProblem().setVisible(true);
 		}
 	}
 	
@@ -42,16 +43,17 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 					System.out.println("MESSAGE RECU = "+ mess+"\n");
 					this.chatw.addChatLine(mess,false);
 					
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+					this.chatw.getProblem().setVisible(true);
 				} catch (EOFException e) {
 					//Do Nothing if the end has been reached
 					
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
+					this.chatw.getProblem().setVisible(true);
 				}
+				
 				mess = null;
 			
 		}
@@ -59,10 +61,11 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 		try {
 			socketreceive.close();
 			in.close();
-			System.out.println("Socket de reception de msg fermï¿½\n");
+			System.out.println("Socket de reception de msg fermé\n");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			this.chatw.getProblem().setVisible(true);
+
 		}
 	}
 
@@ -84,9 +87,8 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 			MsgReceiver m= new MsgReceiver(socketDoorbell,null);
 			m.start();
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(10000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			m.setRunning(false);

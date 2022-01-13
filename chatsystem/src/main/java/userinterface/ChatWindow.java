@@ -39,6 +39,9 @@ public class ChatWindow extends javax.swing.JFrame {
     private javax.swing.JTextField chatInput;
     private javax.swing.JButton sendChat;
     private JScrollBar bar;
+    
+    //////Notify Frames 
+    NotifyFrame problem;
 
 	private Contact dest;
 	private Conversation conv;
@@ -59,6 +62,8 @@ public class ChatWindow extends javax.swing.JFrame {
     	
         this.setTitle(dest.getPseudo());
         initComponents();
+        
+        problem = new NotifyFrame("Error : Please close this chat window ! ");
 
         this.dest = dest;
         this.main = m;
@@ -226,11 +231,11 @@ public class ChatWindow extends javax.swing.JFrame {
 				
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			problem.setVisible(true);
 		} catch (UnknownHostException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			problem.setVisible(true);
 		}
 		
 		bar.setValue(bar.getMaximum());
@@ -256,6 +261,10 @@ public class ChatWindow extends javax.swing.JFrame {
 
 	public Conversation getConv() {
 		return conv;
+	}
+	
+	public NotifyFrame getProblem() {
+		return problem;
 	}
 	
     /**

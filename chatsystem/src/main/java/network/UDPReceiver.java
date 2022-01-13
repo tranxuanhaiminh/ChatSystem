@@ -15,7 +15,7 @@ public class UDPReceiver{
 	private byte[] buffer;
 	private DatagramPacket in;
 	
-	public UDPReceiver() throws BindException{
+	public UDPReceiver() throws SocketException{
 		
 		this.port = 58799;
 		this.running=true;
@@ -27,26 +27,26 @@ public class UDPReceiver{
 		}catch (SocketException e) {
 			e.printStackTrace();
 			System.out.println("Erreur lors de la creation du socket de reception \n");
+			throw e;
 		}
 
 		try {
 			receiversocket.setBroadcast(true);
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw e;
 		}
 	}
 	
 	
 	
-	public String[] receive() {
+	public String[] receive() throws IOException {
 		
 		String[] ret = null;
-		
-		System.out.println("Pret à  recevoir \n");
-		
 		buffer = new byte[256];
 		in = new DatagramPacket(buffer, buffer.length);
+
+		System.out.println("Pret à  recevoir \n");
 		
 		try {
 			
@@ -96,10 +96,11 @@ public class UDPReceiver{
 			}
 			
 		} catch (SocketTimeoutException e) {
-			System.out.println("Timer expirÃ© fin du receive (connection).\n");
+			System.out.println("Timer expiré fin du receive (connection).\n");
 		} catch (IOException e) {
 			System.out.println("Erreur lors de la reception du mess\n");
 			e.printStackTrace();
+			throw e;
 		}
 		
 		return ret;
@@ -120,13 +121,12 @@ public class UDPReceiver{
 	}
 	
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
 		UDPReceiver r=null;
 		try {
 			r = new UDPReceiver();
 		} catch (BindException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		while (true) {

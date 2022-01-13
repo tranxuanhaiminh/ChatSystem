@@ -12,29 +12,30 @@ import userinterface.MainMenu;
 
 public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½ par un Msgsender et un Msgreceiver
 	
-	private MainMenu mm;
+	private MainMenu main;
 	private boolean running;
 	private int port = 55555;
-	private ServerSocket ss;
+	private ServerSocket ss; 
 	
 	private ArrayList<Conversation> ConvList;
+	private ArrayList<Conversation> stoppedConvList;
 	
 	private Conversation c=null;
 	private Message m=null;
-	//private Object sending = new Object();
 	
 	
 	public MessagesManager(MainMenu mainMenu) {
 		super();
-		this.mm = mainMenu;
+		this.main = mainMenu;
 		this.running = true;
 		this.ConvList = new ArrayList<Conversation>();
+		this.stoppedConvList = new ArrayList<Conversation>();
 		
 		try {
 			 ss = new ServerSocket(port);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			main.getProblem().setVisible(true);
 		}
 	}
 	
@@ -53,62 +54,53 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 						try {
 							doorbell = ss.accept();
 						} catch (java.net.BindException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
+							main.getProblem().setVisible(true);
+							
 						}catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
-						}
-						
-						try {
-							System.out.println(doorbell.getInetAddress()+" "+doorbell.getLocalAddress()+" "+InetAddress.getLocalHost());
-						} catch (UnknownHostException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							main.getProblem().setVisible(true);
+
 						}
 						
 						InetAddress host = doorbell.getInetAddress();
-						boolean in = false;
 						Conversation ec = null;
 						for (Conversation withknownhost : ConvList) {
 							if (host.equals(withknownhost.getInterlocutor().getIpaddress())) {
-								System.out.println("on a trouve la conv\n");
-								in = true;
+								System.out.println("La conversation a été trouvé.\n");
 								ec = withknownhost;
 							} 
 						}
-						System.out.println("sortie ");
 						
 						final Conversation encours = ec;
 						final Socket sock = doorbell;
-						if (in) {
-							//create convo (initiï¿½ par nous)
+						if (encours != null) {
+							//create convo (initié par nous)
 							new Thread(new Runnable() {
 								
 								@Override
 								public void run() {
 									//sock est l'aceptation de notre socket d'envoi
 									encours.startConv(sock);
-									System.out.println("On a lancïé une conv\n");
+									System.out.println("On a lancé une conversation\n");
 								}
 									
 							}).start();
 							
 						} else {
 							
-							//create convo initiï¿½ par l'autre
+							//create convo initié par l'autre
 							new Thread(new Runnable() {
 								
 								@Override
 								public void run() {
-									// TODO Auto-generated method stub
-									Contact contact = getMm().getContactList().findIp(host);
+									
+									Contact contact = getMain().getContactList().findIp(host);
 									
 									if (contact ==null) {
 											System.out.println("Pas dans la liste de contacts\n");
 									} else {
-										Conversation cn = new Conversation(mm,contact);
-										ConvList.add(cn);
+										Conversation cn = new Conversation(main,contact);
 										cn.startConv(sock);
 										System.out.println("On a accepté une conv\n");
 									
@@ -118,7 +110,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 							}).start();
 						}
 					}
-					System.out.println("Le receiver du messages manager a ï¿½tï¿½ arrï¿½tï¿½ !\n");
+					System.out.println("Le receiver du messages manager a été arrêté !\n");
 					
 				}
 			}).start();
@@ -131,13 +123,19 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 					// TODO Auto-generated method stub
 					while (running) {
 						if (c!=null && m!=null)
-						 sendMessTo(c,m);
+							sendMessTo(c,m);
 					}
 					
-					for (Conversation c : ConvList)  // en arrêtant le mess man on trop toutes les conv
+					//On arrête les conversations en cours
+					for (Conversation c : ConvList) {  
 						c.stopConv();
+					}
 					
-					System.out.println("L'envoyeur du messages manager a ï¿½tï¿½ arrï¿½tï¿½ !\n");
+					//On arrete tous les recepteurs de messages des conv stoppées
+					for (Conversation c : stoppedConvList) {  // en arrêtant le mess man on trop toutes les conv
+						c.getR().setRunning(false); //On ne peut plus recevoir de messages
+					}
+					System.out.println("L'envoyeur du messages manager a été arêté !\n");
 				}
 				
 			}).start();
@@ -145,18 +143,24 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 	}
 
 
-	public MainMenu getMm() {
-		return mm;
+	public MainMenu getMain() {
+		return main;
 	}
 	
 	public ArrayList<Conversation> getConvList(){
 		return this.ConvList;
 	}
 	
+	/* 
+	*Cette fonction est appelée par le ContactsManager lorsqu'un utilisateur se déconnecte 
+	* on peut donc tout stopper
+	*/
 	public synchronized void removeConv(Contact c) {
 		for (Conversation cv : this.ConvList) {
 			if (cv.getInterlocutor().equals(c)) {
 				cv.stopConv();
+				this.stoppedConvList.remove(cv);
+				cv.getR().setRunning(false);
 			}
 		}
 	}
@@ -166,25 +170,28 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 	}
 	
 	public synchronized void sendMessTo(Conversation c, Message m) {
-		//synchronized (sending) {
 			if (ConvList.contains(c)) {
-				System.out.println("MESS PRET\n");
-				c.getS().send(m);
+				try {
+					c.getS().send(m);
+					System.out.println("Un message a été envoyé.\n");
+				} catch (IOException e) {
+					e.printStackTrace();
+					main.getProblem().setVisible(true);
+				}
 				this.c = null;
 				this.m = null;
 			} else {
-				System.out.println("la conversation n'est pas rï¿½pertoriï¿½\n");
+				System.out.println("la conversation n'est pas répertorié.\n");
 				this.c = null;
 				this.m = null;
 			}
-		//}
 		
 	}
 	
 	public synchronized void signalMess(Conversation c, Message m) {
 			this.c = c;
 			this.m = m;
-			System.out.println("MESSAGE EN COURS D ENVOI\n");
+			System.out.println("Préparation de l'envoi d'un message\n");
 	}
 	
 	public static void main(String[] args) {
@@ -194,14 +201,16 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 			try {
 				cl.addContact(new Contact("titi",InetAddress.getLocalHost().getHostName()));
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			Contact me = new Contact("toto",InetAddress.getLoopbackAddress());
 			
 			new MainMenu(me, cl, null);
 	}
-	
-	
+
+
+	public ArrayList<Conversation> getStoppedConvList() {
+		return stoppedConvList;
+	}
 
 }

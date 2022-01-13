@@ -1,5 +1,6 @@
 package chatsystem;
 
+import java.io.IOException;
 import java.net.BindException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -29,6 +30,9 @@ public class ContactsManager extends Thread{
 		} catch (BindException e) {
 			e.printStackTrace();
 			this.cc.getAlreadyRunning().setVisible(true);
+		} catch (SocketException e) {
+			e.printStackTrace();
+			this.cc.getProblem().setVisible(true);
 		}
 	}
 	
@@ -39,8 +43,8 @@ public class ContactsManager extends Thread{
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
+				this.cc.getProblem().setVisible(true);
 			}			
 			int i=0;
 			
@@ -52,13 +56,26 @@ public class ContactsManager extends Thread{
 				
 				if (state == false && i==1) {
 					
-					System.out.println("Envoi de la demande de contact (connection)\n");
 					
 					try {
 						(new UDPSender("ASK")).send();
+						System.out.println("Envoi de la demande de contacts pendant la phase de connection.\n");
 					} catch (BindException e2) {
 						e2.printStackTrace();
 						this.cc.getAlreadyRunning().setVisible(true);
+						
+					} catch (SocketException e1) {
+						e1.printStackTrace();
+						this.cc.getProblem().setVisible(true);
+						
+					} catch (UnknownHostException e1) {
+						e1.printStackTrace();
+						this.cc.getProblem().setVisible(true);
+						
+					} catch (IOException e1) {
+						e1.printStackTrace();
+						this.cc.getProblem().setVisible(true);
+						
 					}
 					 
 					System.out.println("Lancement réception des contacts pendant la connection\n");
@@ -73,11 +90,17 @@ public class ContactsManager extends Thread{
 			    		try {
 							rs.setSoTimeout((int)(e-System.currentTimeMillis()));
 						} catch (SocketException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
+							this.cc.getProblem().setVisible(true);
 						}
 			    		
-						String[] response = ContactReceiver.receive(); // cette fonction est bloquante
+						String[] response=null;
+						try {
+							response = ContactReceiver.receive(); // cette fonction est bloquante
+						} catch (IOException e2) {
+							e2.printStackTrace();
+							this.cc.getProblem().setVisible(true);
+						} 
 						
 						if (response!=null) {
 							
@@ -96,8 +119,8 @@ public class ContactsManager extends Thread{
 								try {
 									c = this.cc.getContactList().findIp(InetAddress.getByName(addr));
 								} catch (UnknownHostException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
+									this.cc.getProblem().setVisible(true);
 								}
 								
 								if (c!=null) {
@@ -113,8 +136,8 @@ public class ContactsManager extends Thread{
 								try {
 									cin = this.cc.getContactList().findIp(InetAddress.getByName(addr));
 								} catch (UnknownHostException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
+									this.cc.getProblem().setVisible(true);
 								}
 								
 								if (cin==null) {
@@ -138,30 +161,45 @@ public class ContactsManager extends Thread{
 		    		try {
 						rs.setSoTimeout(0);
 					} catch (SocketException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						this.cc.getProblem().setVisible(true);
+
 					}
 	
 				} else if (state == true) {
 			    	try {
-						Thread.sleep(1000); // on attends que les autres donnÃ©es soient misent Ã  jour
+						Thread.sleep(1000); // on attends que les autres données soient misent à jour
 					} catch (InterruptedException err) {
-						// TODO Auto-generated catch block
 						err.printStackTrace();
+						this.cc.getProblem().setVisible(true);
+
 					}
 			    	
-					////////////////////////////////////Contact manager aprÃ¨s la phase de connection
+					////////////////////////////////////Contact manager après la phase de connection
 	
 					MainMenu main = this.cc.getMain();
 					
 					//on envoie son contact aux autres 
 			    	
-					System.out.println("\nENVOI de son contact aux autres\n");
 					try {
 						(new UDPSender(this.cc.getMain().getMe().getPseudo())).send();
+						System.out.println("\nENVOI de son contact à tout le monde !\n");
+
 					} catch (BindException e1) {
 						e1.printStackTrace();
 						this.cc.getAlreadyRunning();
+					} catch (SocketException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						main.getProblem().setVisible(true);
+					} catch (UnknownHostException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						main.getProblem().setVisible(true);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						main.getProblem().setVisible(true);
 					}
 					
 					//lancement du receiver
@@ -171,7 +209,14 @@ public class ContactsManager extends Thread{
 					while (this.isRunning()) {
 						
 						/////////////////////////////gestion reception de contact /////////////////////////////
-						String[] response = ContactReceiver.receive();
+						String[] response=null;
+						try {
+							response = ContactReceiver.receive();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+							main.getProblem().setVisible(true);
+						}
+						
 						if (response!=null) {
 							String msg = response[0];
 							String addr = response[1];
@@ -183,24 +228,34 @@ public class ContactsManager extends Thread{
 								
 								try {
 									(new UDPSender(main.getMe().getPseudo(), addr)).send();
+							    	System.out.println("\nENVOI de son contact à "+ addr+"\n");
+
 								} catch (BindException e) {
 									e.printStackTrace();
 									this.cc.getAlreadyRunning().setVisible(true);
+									
+								} catch (IOException e) {
+									e.printStackTrace();
+									main.getProblem().setVisible(true);
+									
 								}
 								
-						    	System.out.println("\nENVOI de son contact à "+ addr+"\n");
 	
 							} else if (msg.equals("DISCONNECTED")) {
 								Contact c=null;
 								try {
 									c = cl.findIp(InetAddress.getByName(addr));
+									
 								} catch (UnknownHostException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
+									main.getProblem().setVisible(true);
+
 								}
 								
 						        if (c== null) {
-						        	System.out.println("Ce contact n'est pas dans la liste de vos contacts\n");
+						        	System.out.println("Ce contact n'etait pas dans la liste de vos contacts.\n");
+						        	
 						        } else {
 						        	System.out.println("\n SUPPRESSION DU CONTACT pendant la session " + msg+" "+ addr +" \n");
 						        	main.getContactList().removeContact(c);
@@ -208,20 +263,23 @@ public class ContactsManager extends Thread{
 						        	//modif connected users
 						        	String oldusername = c.getPseudo();
 						        	c.delPseudo();
-						        	System.out.println("Modification de la liste des contacts" + main.modUser(c.getPseudo(), main.getDisconnected(), oldusername)+ "\n");
+						        	System.out.println("Modification de la liste des contacts affichés\n" + main.modUser(c.getPseudo(), main.getDisconnected(), oldusername)+ "\n");
 						        	
 						        	// mettre à jour la conversation
 						        	main.getMessMan().removeConv(c);
 						        }
 						        
-							} else { //on traite les contacts reÃ§us (soit modif soit nouveau
+							} else { //on traite les contacts reçus (soit modif soit nouveau)
 								
 								Contact c=null;
 								try {
 									c = cl.findIp(InetAddress.getByName(addr));
+									
 								} catch (UnknownHostException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
+									main.getProblem().setVisible(true);
+
 								}
 								
 						        if (c!= null) {
@@ -268,8 +326,12 @@ public class ContactsManager extends Thread{
 			try {
 				(new UDPSender(m, ad)).send();
 			} catch (BindException e) {
+				e.printStackTrace();
+				this.cc.getAlreadyRunning();
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				this.cc.getProblem().setVisible(true);
 			}
 	}
 	

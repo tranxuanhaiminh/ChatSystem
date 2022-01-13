@@ -4,6 +4,8 @@
  */
 package userinterface;
 
+import java.net.InetAddress;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -33,6 +35,7 @@ public class Connect extends javax.swing.JFrame {
     private NotifyFrame welcome;
     private NotifyFrame pseudoNull;
     private NotifyFrame alreadyRunning;
+    private NotifyFrame problem;
 
 	private Action verify;
 	
@@ -50,15 +53,15 @@ public class Connect extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         
-      ///////////////NotifyFrames 
-	  this.pseudoUsed = new NotifyFrame("This username is already used ! Try again");
-	  this.welcome = new NotifyFrame("Welcome to the Chat System !");
-	  this.pseudoNull = new NotifyFrame("Please enter a value");
-	  this.alreadyRunning = new NotifyFrame("The program is already running !\nPlease close this session !");
-	  this.alreadyRunning.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+       ///////////////NotifyFrames 
+	   this.pseudoUsed = new NotifyFrame("This username is already used ! Try again");
+	   this.welcome = new NotifyFrame("Welcome to the Chat System !");
+	   this.pseudoNull = new NotifyFrame("Please enter a value");
+	   this.alreadyRunning = new NotifyFrame("The program is already running !\nPlease close this session !");
+       this.problem = new NotifyFrame("Error : Please close the program (connecting phase) ! ");
+       
 		contactList = new ContactList();
-		me =new Contact();
+		me =new Contact(InetAddress.getLoopbackAddress());
 		
 		// initialisation du contacts manager
 		cm = new ContactsManager(this);
@@ -239,5 +242,9 @@ public class Connect extends javax.swing.JFrame {
 
 	public NotifyFrame getAlreadyRunning() {
 		return alreadyRunning;
+	}
+
+	public NotifyFrame getProblem() {
+		return problem;
 	}
 }

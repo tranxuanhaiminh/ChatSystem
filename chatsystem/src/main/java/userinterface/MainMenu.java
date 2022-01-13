@@ -49,6 +49,7 @@ public class MainMenu extends javax.swing.JFrame {
     private NotifyFrame pseudoUsed;
     private NotifyFrame pseudoNull;
     private NotifyFrame modifSuccess;
+    private NotifyFrame problem;
 	
     //gestion des contacts
 	private ContactsManager cm;
@@ -72,10 +73,10 @@ public class MainMenu extends javax.swing.JFrame {
 		/////////////////// Notify Frames
 		        
 		this.pseudoNull = new NotifyFrame("Please enter a value");
-		this.modifSuccess= new NotifyFrame("Succes !");
-		this.pseudoUsed = new NotifyFrame("This username is already used ! Try again !");
+		this.modifSuccess= new NotifyFrame("Success !");
+		this.pseudoUsed = new NotifyFrame("This username is already used !");
 		this.userNotConnected = new NotifyFrame("This user is not connected ! You can't send messages !");
-
+		this.problem = new NotifyFrame("Error : Please close the program (Main phase) !\n");
         
         this.conDB = new Databasecon("datbase.db");
         
@@ -357,6 +358,10 @@ public class MainMenu extends javax.swing.JFrame {
 
 	public NotifyFrame getModifSuccess() {
 		return modifSuccess;
+	}
+
+	public NotifyFrame getProblem() {
+		return problem;
 	}
 
 }
