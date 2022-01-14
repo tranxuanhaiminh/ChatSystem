@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import chatsystem.Message;
+import database.Databasecon;
 import userinterface.ChatWindow;
 
 public class MsgReceiver extends Thread{ // Server tcp //client tcp
@@ -15,6 +16,8 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 	private boolean running;
 	private ObjectInputStream in=null;
 	private ChatWindow chatw;
+    private Databasecon dbcon = new Databasecon();
+
 	
 	public MsgReceiver(Socket sock, ChatWindow chatw2) throws IOException {
 		super();
@@ -41,8 +44,16 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 				try {
 					mess = (Message) in.readObject();
 					System.out.println("MESSAGE RECU = "+ mess+"\n");
-					this.chatw.addChatLine(mess,false);
 					
+					if (chatw !=null){
+						//displaying the msg
+						this.chatw.addChatLine(mess,false);
+					}
+					
+					//adding to the chat history
+			    	dbcon.insertChat(mess.getDest().getIpaddress().getAddress().toString(), mess.toString(), mess.convertDateToFormat(), false);
+			    	System.out.println("Adding the msg to the chat history\n");
+			    	
 				} catch (ClassNotFoundException e1) {
 					e1.printStackTrace();
 					this.chatw.getProblem().display();
@@ -61,7 +72,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 		try {
 			socketreceive.close();
 			in.close();
-			System.out.println("Socket de reception de msg fermé\n");
+			System.out.println("Socket de reception de msg fermï¿½\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 			this.chatw.getProblem().display();

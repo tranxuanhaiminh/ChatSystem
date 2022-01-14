@@ -10,6 +10,7 @@ import chatsystem.Action;
 import chatsystem.Contact;
 import chatsystem.ContactList;
 import chatsystem.ContactsManager;
+import chatsystem.Message;
 import chatsystem.MessagesManager;
 import database.Databasecon;
 import ressources.Interfacedisplay;
@@ -92,6 +93,8 @@ public class MainMenu extends javax.swing.JFrame {
 		
 		//gestion des contacts
 		this.cm = cm;
+		this.cm.setState();
+		this.cm.setRunning(true);
 		
         modifyFrame = new Modify();
         modifyFrame.getVerifyPseudo().addActionListener(new Action(this));
@@ -248,9 +251,6 @@ public class MainMenu extends javax.swing.JFrame {
     	}
     	return res;
     }
-    
-    
-    
     
     public Contact getMe() {
 		return me;

@@ -56,7 +56,7 @@ public class ChatWindow extends javax.swing.JFrame {
 	//listeners
 	private Action sendMess;
 	
-	//nbre de msg de l'historique à  afficher
+	//nbre de msg de l'historique ï¿½ afficher
 	private final int nbMsgToLoad = 20;
     
     /**
@@ -187,13 +187,7 @@ public class ChatWindow extends javax.swing.JFrame {
     	} else {
     		msg_display.append(this.getDest().getPseudo()+" : "+chatline.toString() + newline);
     	}
-    	
     	bar.setValue(bar.getMaximum());
-    	
-    	//add the msg to database
-    	dbcon.insertChat(chatline.getDest().getIpaddress().getAddress().toString(), chatline.toString(), chatline.convertDateToFormat(), isMe);
-    	System.out.println("Adding the msg to the chat history\n");
-    	
     }
     
     /**

@@ -22,6 +22,8 @@
 	</properties>
 
 	<build>
+	
+		<finalName>ChatSystem</finalName>
         <plugins>
 
             <plugin>

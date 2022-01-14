@@ -51,7 +51,7 @@ public class Action implements ActionListener, ListSelectionListener{
 			} else {
 	        	me.setPseudo(pageC.getEnterPseudo().getText());			
 	
-				//on crée et on lance le contacts manager
+				//on crï¿½e et on lance le contacts manager
 				pageC.getCm().setRunning(true);
 				
 				try {
@@ -71,7 +71,7 @@ public class Action implements ActionListener, ListSelectionListener{
 	        	
 				if (contactList.comparePseudo(me)==false) {
 					
-					//on arrête le contacts manager	
+					//on arrï¿½te le contacts manager	
 					pageC.getCm().setRunning(false);
 			        
 					pageC.getPseudoUsed().display();
@@ -81,17 +81,14 @@ public class Action implements ActionListener, ListSelectionListener{
 				        
 				} else {
 					
+	            	pageC.setMain(new MainMenu(me, contactList,pageC.getCm()));
 					pageC.getWelcome().display();
-			        
-			        Timer t = new Timer(500, new ActionListener() {
+
+			        Timer t = new Timer(700, new ActionListener() {
 			            public void actionPerformed(ActionEvent e) {
 			            	
 			            	pageC.getWelcome().setVisible(false);
-			            	
 			            	pageC.setVisible(false);
-			            	pageC.getCm().setState(); // mode Main
-			            	pageC.getCm().setRunning(true);
-			            	pageC.setMain(new MainMenu(me, contactList,pageC.getCm()));
 			            	
 			            }
 			        });
@@ -162,6 +159,10 @@ public class Action implements ActionListener, ListSelectionListener{
 					//afficher le message sur la page et le mettre dans la DB
 					pageW.addChatLine(msg,true);
 					
+					//adding to the chat history
+			    	pageM.getConDB().insertChat(msg.getDest().getIpaddress().getAddress().toString(), msg.toString(), msg.convertDateToFormat(), false);
+			    	System.out.println("Adding the msg to the chat history\n");
+					
 					//utiliser le contact manager
 					pageW.getMain().getMessMan().signalMess(pageW.getConv(), msg);
 				}
@@ -194,17 +195,17 @@ public class Action implements ActionListener, ListSelectionListener{
 					}
 					if (in==null) {
 						
-						System.out.println("Contact trouvé, on lance la conversation\n");
+						System.out.println("Contact trouvï¿½, on lance la conversation\n");
 						
 						new Conversation(pageM,dest);
 						
 					} else {
-						System.out.println("Vous avez déjà cette conversation !\n");
+						System.out.println("Vous avez dï¿½jï¿½ cette conversation !\n");
 						in.getChatw().requestFocus();
 					}
 					
 		        } else {
-		        	 System.out.println("Personne non connectée, on affiche la conversation\n");
+		        	 System.out.println("Personne non connectï¿½e, on affiche la conversation\n");
 		        	 try {
 		        		 
 		        		 new ChatWindow(pageM, new Contact(InetAddress.getByName(pseudo)), null);
