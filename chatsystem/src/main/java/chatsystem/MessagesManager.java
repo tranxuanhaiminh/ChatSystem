@@ -65,29 +65,55 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 						Conversation ec = null;
 						for (Conversation withknownhost : ConvList) {
 							if (host.equals(withknownhost.getInterlocutor().getIpaddress())) {
-								System.out.println("La conversation a été trouvé.\n");
+								System.out.println("La conversation a ï¿½tï¿½ trouvï¿½.\n");
 								ec = withknownhost;
+							} 
+						}
+						
+						Conversation stopped = null;
+						for (Conversation withknownhost : stoppedConvList) {
+							if (host.equals(withknownhost.getInterlocutor().getIpaddress())) {
+								System.out.println("La conversation a Ã©tait dans les conv arrÃªtÃ©es.\n");
+								stopped = withknownhost;
 							} 
 						}
 						
 						final Conversation encours = ec;
 						final Socket sock = doorbell;
 						if (encours != null) {
-							//create convo (initié par nous)
+							//create convo (initiï¿½ par nous)
 							new Thread(new Runnable() {
 								
 								@Override
 								public void run() {
 									//sock est l'aceptation de notre socket d'envoi
-									encours.startConv(sock);
-									System.out.println("On a lancé une conversation\n");
+									if (encours.getChatw()==null) {
+										encours.startConv(sock);
+										System.out.println("On a lancï¿½ une conversation\n");
+									} else {
+										encours.reStartConv(sock);
+										System.out.println("La conversation Ã©tait dÃ©jÃ  ouverte.\n");
+									}
+								}
+									
+							}).start();
+							
+						} else if (stopped != null){
+								final Conversation s = stopped;
+								new Thread(new Runnable() {
+								
+								@Override
+								public void run() {
+									//sock est l'aceptation de notre socket d'envoi
+									s.reStartConv(sock);
+									System.out.println("On a relancÃ© une conversation.\n");
 								}
 									
 							}).start();
 							
 						} else {
 							
-							//create convo initié par l'autre
+							//create convo initiï¿½ par l'autre
 							new Thread(new Runnable() {
 								
 								@Override
@@ -100,7 +126,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 									} else {
 										Conversation cn = new Conversation(main,contact);
 										cn.startConv(sock);
-										System.out.println("On a accepté une conv\n");
+										System.out.println("On a acceptï¿½ une conv\n");
 									
 									}
 								}
@@ -108,7 +134,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 							}).start();
 						}
 					}
-					System.out.println("Le receiver du messages manager a été arrêté !\n");
+					System.out.println("Le receiver du messages manager a ï¿½tï¿½ arrï¿½tï¿½ !\n");
 					
 				}
 			}).start();
@@ -124,16 +150,16 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 							sendMessTo(c,m);
 					}
 					
-					//On arrête les conversations en cours
-					for (Conversation c : ConvList) {  
+					//On arrï¿½te les conversations en cours elsse sont arrÃªtÃ©es lros de la fermeture des chatwindow
+					/*for (Conversation c : ConvList) {  
 						c.stopConv();
-					}
+					}*/
 					
-					//On arrete tous les recepteurs de messages des conv stoppées
-					for (Conversation c : stoppedConvList) {  // en arrêtant le mess man on trop toutes les conv
+					//On arrete tous les recepteurs de messages des conv stoppï¿½es
+					for (Conversation c : stoppedConvList) {  // en arrï¿½tant le mess man on trop toutes les conv
 						c.getR().setRunning(false); //On ne peut plus recevoir de messages
 					}
-					System.out.println("L'envoyeur du messages manager a été arêté !\n");
+					System.out.println("L'envoyeur du messages manager a ï¿½tï¿½ arï¿½tï¿½ !\n");
 				}
 				
 			}).start();
@@ -150,17 +176,33 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 	}
 	
 	/* 
-	*Cette fonction est appelée par le ContactsManager lorsqu'un utilisateur se déconnecte 
+	*Cette fonction est appelï¿½e par le ContactsManager lorsqu'un utilisateur se dï¿½connecte 
 	* on peut donc tout stopper
 	*/
-	public synchronized void removeConv(Contact c) {
+	public synchronized void removeConv(Conversation cv) {
+		cv.stopConv();
+		this.stoppedConvList.remove(cv);
+		cv.getR().setRunning(false);
+	}
+	
+	public Conversation getConv(Contact c) {
+		Conversation res = null;
 		for (Conversation cv : this.ConvList) {
 			if (cv.getInterlocutor().equals(c)) {
-				cv.stopConv();
-				this.stoppedConvList.remove(cv);
-				cv.getR().setRunning(false);
+				res = cv;
 			}
 		}
+		return res;
+	}
+	
+	public Conversation getStoppedConv(Contact c) {
+		Conversation res = null;
+		for (Conversation cv : this.stoppedConvList) {
+			if (cv.getInterlocutor().equals(c)) {
+				res = cv;
+			}
+		}
+		return res;
 	}
 	
 	public void setRunning(boolean b) {
@@ -171,7 +213,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 			if (ConvList.contains(c)) {
 				try {
 					c.getS().send(m);
-					System.out.println("Un message a été envoyé.\n");
+					System.out.println("Un message a ï¿½tï¿½ envoyï¿½.\n");
 				} catch (IOException e) {
 					e.printStackTrace();
 					main.getProblem().display();
@@ -179,7 +221,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 				this.c = null;
 				this.m = null;
 			} else {
-				System.out.println("la conversation n'est pas répertorié.\n");
+				System.out.println("la conversation n'est pas rï¿½pertoriï¿½.\n");
 				this.c = null;
 				this.m = null;
 			}
@@ -189,7 +231,7 @@ public class MessagesManager extends Thread{ // chaque conversation est gï¿½rï¿½
 	public synchronized void signalMess(Conversation c, Message m) {
 			this.c = c;
 			this.m = m;
-			System.out.println("Préparation de l'envoi d'un message\n");
+			System.out.println("Prï¿½paration de l'envoi d'un message\n");
 	}
 	
 	public static void main(String[] args) {

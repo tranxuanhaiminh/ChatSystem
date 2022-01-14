@@ -79,7 +79,7 @@ public class MainMenu extends javax.swing.JFrame {
 		this.userNotConnected = new NotifyFrame("This user is not connected ! You can't send messages !");
 		this.problem = new NotifyFrame("Error : Please close the program (Main phase) !\n");
         
-        this.conDB = new Databasecon("database.db");
+        this.conDB = new Databasecon("date.db");
         
 		this.me = m; 
 		this.contactList = l;
@@ -241,6 +241,7 @@ public class MainMenu extends javax.swing.JFrame {
     public boolean modUser(String newname, String img, String oldname ) {
     	DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
     	boolean res = false;
+    	
     	int n = model.getRowCount();
     	for (int i=0; i<n;i++) {
     		if (oldname.equals(model.getValueAt(i, 1))) {
@@ -249,6 +250,7 @@ public class MainMenu extends javax.swing.JFrame {
     			res = true;
     		}
     	}
+    	
     	return res;
     }
     

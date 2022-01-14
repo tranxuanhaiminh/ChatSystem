@@ -5,10 +5,11 @@ build:
 start : build
 	@echo "\n==== LOADING CONNECTION ====\n"
 	mvn package
-	java -cp target/ChatSystem.jar
+	java -cp target/ChatSystem-jar-with-dependencies.jar chatsystem.ChatSystem
 
 clean:
 	@echo "\n==== CLEANING ====\n"
+	-rm *.db
 	-rm target/*.jar
 	
 test:

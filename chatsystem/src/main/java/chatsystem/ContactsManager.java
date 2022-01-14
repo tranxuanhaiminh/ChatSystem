@@ -81,7 +81,7 @@ public class ContactsManager extends Thread{
 						
 					}
 					 
-					System.out.println("Lancement réception des contacts pendant la connection\n");
+					System.out.println("Lancement rï¿½ception des contacts pendant la connection\n");
 					
 					long s = System.currentTimeMillis();
 					long e = s + 3000;
@@ -129,7 +129,7 @@ public class ContactsManager extends Thread{
 								if (c!=null) {
 									c.delPseudo();
 									this.cc.getContactList().removeContact(c);
-									System.out.println("Un contact s'est déconnecté pendant la phase de connexion !\n");
+									System.out.println("Un contact s'est dï¿½connectï¿½ pendant la phase de connexion !\n");
 								}
 								
 							}else {
@@ -147,7 +147,7 @@ public class ContactsManager extends Thread{
 									System.out.println("\nAJOUT DU CONTACT depuis la phase  de connexion" + addr+" "+ msg+" \n");
 									cl.addContact(new Contact(msg,addr));
 								} else {
-									System.out.println(cin.getIpaddress()+" a modifié son pseudo pendant la phase  de connexion ! New username= "+ msg+" \n");
+									System.out.println(cin.getIpaddress()+" a modifiï¿½ son pseudo pendant la phase  de connexion ! New username= "+ msg+" \n");
 									cin.setPseudo(msg);
 								}
 							}  	
@@ -170,25 +170,26 @@ public class ContactsManager extends Thread{
 					}
 	
 				} else if (state == true) {
-			    	try {
-						Thread.sleep(1000); // on attends que les autres données soient misent à jour
-					} catch (InterruptedException err) {
-						err.printStackTrace();
-						this.cc.getProblem().display();
-
-					}
 			    	
-					////////////////////////////////////Contact manager après la phase de connection
+					////////////////////////////////////Contact manager aprï¿½s la phase de connection
 	
 					MainMenu main = this.cc.getMain();
-					
+					while (main == null) {
+						try {
+							Thread.sleep(10); // on attends que les autres donnï¿½es soient misent ï¿½ jour
+						} catch (InterruptedException err) {
+							err.printStackTrace();
+							this.cc.getProblem().display();
+						}
+						main = this.cc.getMain();
+					}
 					//on envoie son contact aux autres 
 			    	
 					try {
 						(new UDPSender(main.getMe().getPseudo())).send();
-						System.out.println("\nENVOI de son contact à tout le monde !\n");
+						System.out.println("\nENVOI de son contact ï¿½ tout le monde !\n");
 
-					} catch (BindException e1) {
+					}  catch (BindException e1) {
 						e1.printStackTrace();
 						this.cc.getAlreadyRunning();
 					} catch (SocketException e) {
@@ -228,7 +229,7 @@ public class ContactsManager extends Thread{
 								
 								try {
 									(new UDPSender(main.getMe().getPseudo(), addr)).send();
-							    	System.out.println("\nENVOI de son contact à "+ addr+"\n");
+							    	System.out.println("\nENVOI de son contact ï¿½ "+ addr+"\n");
 
 								} catch (BindException e) {
 									e.printStackTrace();
@@ -263,13 +264,13 @@ public class ContactsManager extends Thread{
 						        	//modif connected users
 						        	String oldusername = c.getPseudo();
 						        	c.delPseudo();
-						        	System.out.println("Modification de la liste des contacts affichés\n" + main.modUser(c.getPseudo(), main.getDisconnected(), oldusername)+ "\n");
+						        	System.out.println("Modification de la liste des contacts affichï¿½s\n" + main.modUser(c.getPseudo(), main.getDisconnected(), oldusername)+ "\n");
 						        	
-						        	// mettre à jour la conversation
-						        	main.getMessMan().removeConv(c);
+						        	// mettre ï¿½ jour la conversation
+						        	main.getMessMan().removeConv(main.getMessMan().getConv(c));
 						        }
 						        
-							} else { //on traite les contacts reçus (soit modif soit nouveau)
+							} else { //on traite les contacts reï¿½us (soit modif soit nouveau)
 								
 								Contact c=null;
 								try {

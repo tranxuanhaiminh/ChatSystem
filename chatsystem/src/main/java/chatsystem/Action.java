@@ -56,7 +56,7 @@ public class Action implements ActionListener, ListSelectionListener{
 				
 				try {
 					//on attend de finir de recevoir les contacts
-					Thread.sleep(3001);
+					Thread.sleep(3099);
 				
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -121,19 +121,21 @@ public class Action implements ActionListener, ListSelectionListener{
 				} else {
 					
 					pageM.getModifSuccess().display();
+			        pageM.getMe().setPseudo(pseudo);
+	    			pageM.getPseudoLabel().setText(pageM.getMe().getPseudo());
 			        pageM.getModifyFrame().getEnterpseudo().setText(null);
 
+	    			//envoyer son pseudo aux autres 
+	    			ContactsManager cm = pageM.getCm();
+	    			cm.signalDatagram(pageM.getMe().getPseudo(), "255.255.255.255");
+	    			
+	    			
 			        Timer t = new Timer(500, new ActionListener() {
 			            public void actionPerformed(ActionEvent e) {
 			            	
 			            	pageM.getModifSuccess().setVisible(false);
 			            	pageM.getModifyFrame().setVisible(false);
-			    			pageM.getMe().setPseudo(pseudo);
-			    			pageM.getPseudoLabel().setText(pageM.getMe().getPseudo());
 			    			
-			    			//envoyer son pseudo aux autres 
-			    			ContactsManager cm = pageM.getCm();
-			    			cm.signalDatagram(pageM.getMe().getPseudo(), "255.255.255.255");
 			            }
 			        });
 			        t.setRepeats(false); // Only execute once
@@ -154,17 +156,18 @@ public class Action implements ActionListener, ListSelectionListener{
 			
 					// creating the msg
 					Message msg = new Message(pageW.getDest(), chatInput.getText());
-					chatInput.setText(null);
 					
 					//afficher le message sur la page et le mettre dans la DB
 					pageW.addChatLine(msg,true);
 					
-					//adding to the chat history
-			    	pageM.getConDB().insertChat(msg.getDest().getIpaddress().getAddress().toString(), msg.toString(), msg.convertDateToFormat(), false);
-			    	System.out.println("Adding the msg to the chat history\n");
-					
 					//utiliser le contact manager
 					pageW.getMain().getMessMan().signalMess(pageW.getConv(), msg);
+					
+					//adding to the chat history
+			    	pageW.getMain().getConDB().insertChat(msg.getDest().getIpaddress().getHostAddress(), msg.toString(), msg.convertDateToFormat(), true);
+			    	System.out.println("Adding the msg you re sending to "+msg.getDest().getIpaddress().getHostAddress()+" to the chat history\n");
+			    	
+			    	chatInput.setText(null);
 				}
 			}
 			
@@ -188,37 +191,36 @@ public class Action implements ActionListener, ListSelectionListener{
 				if (dest!=null) {
 					
 					Conversation in=null;
-					for (Conversation c : pageM.getMessMan().getConvList()) {
-						if (c.getInterlocutor().equals(dest)){
-							in = c;
-						}
-					}
-					if (in==null) {
+					in = pageM.getMessMan().getConv(dest);
+					
+					if (in!=null) {
+						System.out.println("Vous avez déjà cette conversation !\n");
+						in.getChatw().requestFocus();
 						
-						System.out.println("Contact trouv�, on lance la conversation\n");
+					} else if ((in = pageM.getMessMan().getStoppedConv(dest)) !=null){
 						
+						System.out.println("Vous aviez stoppée cette conversation, on la relance \n");
 						new Conversation(pageM,dest);
 						
 					} else {
-						System.out.println("Vous avez d�j� cette conversation !\n");
-						in.getChatw().requestFocus();
+						System.out.println("Contact trouvé, on lance la conversation\n");
+						new Conversation(pageM,dest);
 					}
 					
 		        } else {
 		        	 System.out.println("Personne non connect�e, on affiche la conversation\n");
 		        	 try {
-		        		 
-		        		 new ChatWindow(pageM, new Contact(InetAddress.getByName(pseudo)), null);
+				        pageM.getUserNotConnected().display();
+		        		new ChatWindow(pageM, new Contact(InetAddress.getByName(pseudo)), null);
 		        		 
 					} catch (UnknownHostException e1) {
 						e1.printStackTrace();
 						this.pageM.getProblem().display();
 					}
-		        	 pageM.getUserNotConnected().display();
+		        	
 		        }
 			}
 		}
 	}
 	
-
 }

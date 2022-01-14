@@ -18,7 +18,7 @@ public class Databasequerries {
 
 	public static String getSentTime = "SELECT createdDate FROM chatHistory WHERE id = ?";
 
-	public static String insertChat1 = "INSERT INTO chatHistory(receiver, sentChat, createdDate) VALUES(?, ?, ?)";
+	public static String insertChat1 = "INSERT INTO chatHistory(sender, sentChat, createdDate) VALUES(?, ?, ?)";
 
 	public static String insertChat2 = "INSERT INTO chatHistory(receiver, sentChat, createdDate) VALUES(?, ?, ?)";
 

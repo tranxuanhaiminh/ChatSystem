@@ -84,7 +84,8 @@ public class Contact implements Serializable{
 			e.printStackTrace();
 		}
 		
-		System.out.println(c.getIpaddress()+" "+t.getIpaddress());
+		for (int i=0; i<5;i++)
+			System.out.println(c.getIpaddress().getHostAddress()+" "+t.getIpaddress().getHostAddress());
 		
 	}
 	

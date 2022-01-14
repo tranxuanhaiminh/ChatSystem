@@ -53,7 +53,7 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 		try {
 			socketsend.close();
 			out.close();
-			System.out.println("Socket d'envoi de messages fermé\n");
+			System.out.println("Socket d'envoi de messages fermï¿½\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw e;
