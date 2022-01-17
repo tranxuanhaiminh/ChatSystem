@@ -264,8 +264,13 @@ public class ContactsManager extends Thread{
 						        	//modif connected users
 						        	String oldusername = c.getPseudo();
 						        	c.delPseudo();
-						        	System.out.println("Modification de la liste des contacts affich�s\n" + main.modUser(c.getPseudo(), main.getDisconnected(), oldusername)+ "\n");
+						        	int index=-1;
+						        	//if the hostname of the contact is in the contected user table we rove it to modify the pseudo
+						        	if ((index = main.isInTable(c.getPseudo()))!=-1) 
+						        		main.removeUser(i);
 						        	
+					        		System.out.println("Modification de la liste des contacts affich�s\n" + main.modUser(c.getPseudo(), main.getDisconnected(), oldusername)+ "\n");
+
 						        	// mettre � jour la conversation
 						        	main.getMessMan().removeConv(main.getMessMan().getConv(c));
 						        }
@@ -295,7 +300,18 @@ public class ContactsManager extends Thread{
 						        	c = new Contact(msg,addr);
 						        	System.out.println("\n AJOUT DU CONTACT pendant une session " + msg+" "+ addr +" \n");
 						        	cl.addContact(c);
-						        	main.addUser(c.getPseudo(), main.getConnected());
+						        	String hostname = null;
+						        	try {
+							        	hostname = InetAddress.getByName(addr).getHostName();
+									} catch (UnknownHostException e) {
+										e.printStackTrace();
+										main.getProblem().setVisible(true);
+									}
+						        	if ( main.isInTable(hostname)!= -1) {
+										main.modUser(c.getPseudo(), main.getConnected(), hostname);
+									} else {
+										main.addUser(c.getPseudo(), main.getConnected());
+									}
 						        }
 							}
 					}
