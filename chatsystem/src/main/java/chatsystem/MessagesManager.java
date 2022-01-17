@@ -185,6 +185,11 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 		cv.getR().setRunning(false);
 	}
 	
+	public synchronized void removeStoppedConv(Conversation cv) {
+		this.stoppedConvList.remove(cv);
+		cv.getR().setRunning(false);
+	}
+	
 	public Conversation getConv(Contact c) {
 		Conversation res = null;
 		for (Conversation cv : this.ConvList) {

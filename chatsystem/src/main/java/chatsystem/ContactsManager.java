@@ -53,7 +53,6 @@ public class ContactsManager extends Thread{
 			
 			while (this.isRunning()) {
 				i++;
-				//System.out.println("is running \n");
 				
 				///////////////////////////////////////////////////// Contact manager de la phase de connection
 				
@@ -263,18 +262,25 @@ public class ContactsManager extends Thread{
 						        	System.out.println("\n SUPPRESSION DU CONTACT pendant la session " + msg+" "+ addr +" \n");
 						        	main.getContactList().removeContact(c);
 						        	
-						        	//modif connected users
+						        	//modif of the connected users tab
 						        	String oldusername = c.getPseudo();
 						        	c.delPseudo();
 						        	int index=-1;
-						        	//if the hostname of the contact is in the contected user table we rove it to modify the pseudo
+						        	//if the hostname (of the ip addr) of the contact is in the connected users table we remove it
 						        	if ((index = main.isInTable(c.getPseudo()))!=-1) 
 						        		main.removeUser(i);
 						        	
-					        		System.out.println("Modification de la liste des contacts affich�s\n" + main.modUser(c.getPseudo(), main.getDisconnected(), oldusername)+ "\n");
+					        		System.out.println("Modification de la liste des contacts affichés resulat de la modif --> " + main.modUser(c.getPseudo(), main.getDisconnected(), oldusername)+ "\n");
 
-						        	// mettre � jour la conversation
-						        	main.getMessMan().removeConv(main.getMessMan().getConv(c));
+						        	// updating the conversation
+					        		Conversation cv = main.getMessMan().getConv(c);
+					        		if (cv != null) {
+							        	main.getMessMan().removeConv(cv);
+					        		} else if ((cv = main.getMessMan().getStoppedConv(c))!= null) {
+					        			main.getMessMan().removeStoppedConv(cv);
+					        		} else {
+					        			System.out.println("You don't have a conversation with the disconnected user.\n");
+					        		}
 						        }
 						        
 							} else { //on traite les contacts re�us (soit modif soit nouveau)
