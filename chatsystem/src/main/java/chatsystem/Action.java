@@ -157,7 +157,7 @@ public class Action implements ActionListener, ListSelectionListener{
 					// creating the msg
 					Message msg = new Message(pageW.getDest(), chatInput.getText());
 					
-					//afficher le message sur la page et le mettre dans la DB
+					//afficher le message sur la page
 					pageW.addChatLine(msg,true);
 					
 					//utiliser le contact manager

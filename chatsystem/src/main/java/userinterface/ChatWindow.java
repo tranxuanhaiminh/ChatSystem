@@ -98,6 +98,8 @@ public class ChatWindow extends javax.swing.JFrame {
         //on charge l'historique
         this.loadHistory(nbMsgToLoad, 0);
         
+        bar.setValue(bar.getMaximum());
+        
         this.setVisible(true);
        
     }
