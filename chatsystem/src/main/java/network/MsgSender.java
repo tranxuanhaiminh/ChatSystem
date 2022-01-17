@@ -101,5 +101,3 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 
 
 }
-
-

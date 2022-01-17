@@ -11,9 +11,8 @@ clean:
 	@echo "\n==== CLEANING ====\n"
 	-rm *.db
 	-rm target/*.jar
-	
+
 test:
 	@echo "\n==== LOADING test ====\n"
 	mvn package
 	java -cp target/ChatSystem.jar network.UDPReceiver
-
