@@ -10,12 +10,15 @@ import chatsystem.Action;
 import chatsystem.Contact;
 import chatsystem.ContactList;
 import chatsystem.ContactsManager;
+import chatsystem.Message;
 import chatsystem.MessagesManager;
 import database.Databasecon;
 import ressources.Interfacedisplay;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -47,6 +50,7 @@ public class MainMenu extends javax.swing.JFrame {
     private NotifyFrame pseudoUsed;
     private NotifyFrame pseudoNull;
     private NotifyFrame modifSuccess;
+    private NotifyFrame problem;
 	
     //gestion des contacts
 	private ContactsManager cm;
@@ -70,12 +74,12 @@ public class MainMenu extends javax.swing.JFrame {
 		/////////////////// Notify Frames
 		        
 		this.pseudoNull = new NotifyFrame("Please enter a value");
-		this.modifSuccess= new NotifyFrame("Succes !");
-		this.pseudoUsed = new NotifyFrame("This username is already used ! Try again !");
+		this.modifSuccess= new NotifyFrame("Success !");
+		this.pseudoUsed = new NotifyFrame("This username is already used !");
 		this.userNotConnected = new NotifyFrame("This user is not connected ! You can't send messages !");
-
+		this.problem = new NotifyFrame("Error : Please close the program (Main phase) !\n");
         
-        this.conDB = new Databasecon("datbase.db");
+        this.conDB = new Databasecon("date.db");
         
 		this.me = m; 
 		this.contactList = l;
@@ -89,9 +93,13 @@ public class MainMenu extends javax.swing.JFrame {
 		
 		//gestion des contacts
 		this.cm = cm;
+		this.cm.setState();
+		this.cm.setRunning(true);
 		
         modifyFrame = new Modify();
         modifyFrame.getVerifyPseudo().addActionListener(new Action(this));
+        modifyFrame.getEnterpseudo().addActionListener(new Action(this));
+
         
         changepseudo = jButton1;
         changepseudo.setText(Interfacedisplay.modifybutton);
@@ -134,9 +142,6 @@ public class MainMenu extends javax.swing.JFrame {
         for (Contact c : this.contactList.getList()) {
         	addUser(c.getPseudo(), connected);
         }
-        
-        addUser("user1", connected);
-        addUser("user2", disconnected);
         
         this.setVisible(true);
     }
@@ -236,6 +241,7 @@ public class MainMenu extends javax.swing.JFrame {
     public boolean modUser(String newname, String img, String oldname ) {
     	DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
     	boolean res = false;
+    	
     	int n = model.getRowCount();
     	for (int i=0; i<n;i++) {
     		if (oldname.equals(model.getValueAt(i, 1))) {
@@ -244,11 +250,9 @@ public class MainMenu extends javax.swing.JFrame {
     			res = true;
     		}
     	}
+    	
     	return res;
     }
-    
-    
-    
     
     public Contact getMe() {
 		return me;
@@ -327,9 +331,13 @@ public class MainMenu extends javax.swing.JFrame {
             	
             	ContactList cl = new ContactList();
         		
-        		cl.addContact(new Contact("titi","LaptopMariétou"));
-
-        		Contact me = new Contact("toto","127.0.0.1");
+        		try {
+					cl.addContact(new Contact("titi",InetAddress.getLocalHost()));
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        		Contact me = new Contact("toto",InetAddress.getLoopbackAddress());
         		ContactsManager cm=null;
         		
         		new MainMenu(me, cl, cm);
@@ -351,6 +359,10 @@ public class MainMenu extends javax.swing.JFrame {
 
 	public NotifyFrame getModifSuccess() {
 		return modifSuccess;
+	}
+
+	public NotifyFrame getProblem() {
+		return problem;
 	}
 
 }

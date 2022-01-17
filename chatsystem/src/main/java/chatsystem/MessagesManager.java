@@ -12,29 +12,30 @@ import userinterface.MainMenu;
 
 public class MessagesManager extends Thread{ // chaque conversation est g�r� par un Msgsender et un Msgreceiver
 	
-	private MainMenu mm;
+	private MainMenu main;
 	private boolean running;
 	private int port = 55555;
-	private ServerSocket ss;
+	private ServerSocket ss; 
 	
 	private ArrayList<Conversation> ConvList;
+	private ArrayList<Conversation> stoppedConvList;
 	
 	private Conversation c=null;
 	private Message m=null;
-	//private Object sending = new Object();
 	
 	
 	public MessagesManager(MainMenu mainMenu) {
 		super();
-		this.mm = mainMenu;
+		this.main = mainMenu;
 		this.running = true;
 		this.ConvList = new ArrayList<Conversation>();
+		this.stoppedConvList = new ArrayList<Conversation>();
 		
 		try {
 			 ss = new ServerSocket(port);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			main.getProblem().display();
 		}
 	}
 	
@@ -46,55 +47,66 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 				public void run() {
 					
 					Socket doorbell=null;
-					int i=0;// pour test
-					while (running && i<2) {
-						i++;
+					while (running) {
 							
 						try {
 							doorbell = ss.accept();
 						} catch (java.net.BindException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
+							main.getProblem().display();
+							
 						}catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
-						}
-						
-						try {
-							System.out.println(doorbell.getInetAddress()+" "+doorbell.getLocalAddress()+" "+InetAddress.getLocalHost());
-						} catch (UnknownHostException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							main.getProblem().display();
+
 						}
 						
 						InetAddress host = doorbell.getInetAddress();
-						boolean in = false;
 						Conversation ec = null;
 						for (Conversation withknownhost : ConvList) {
-							try {
-								if (host.equals(InetAddress.getByName(withknownhost.getInterlocutor().getIpaddress()))) {
-									System.out.println("on a trouve la conv\n");
-									in = true;
-									ec = withknownhost;
-								}
-							} catch (UnknownHostException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+							if (host.equals(withknownhost.getInterlocutor().getIpaddress())) {
+								System.out.println("La conversation a �t� trouv�.\n");
+								ec = withknownhost;
 							} 
 						}
-						System.out.println("sortie ");
+						
+						Conversation stopped = null;
+						for (Conversation withknownhost : stoppedConvList) {
+							if (host.equals(withknownhost.getInterlocutor().getIpaddress())) {
+								System.out.println("La conversation a était dans les conv arrêtées.\n");
+								stopped = withknownhost;
+							} 
+						}
 						
 						final Conversation encours = ec;
 						final Socket sock = doorbell;
-						if (in) {
+						if (encours != null) {
 							//create convo (initi� par nous)
 							new Thread(new Runnable() {
 								
 								@Override
 								public void run() {
 									//sock est l'aceptation de notre socket d'envoi
-									encours.startConv(sock);
-									System.out.println("On a lanc� une conv\n");
+									if (encours.getChatw()==null) {
+										encours.startConv(sock);
+										System.out.println("On a lanc� une conversation\n");
+									} else {
+										encours.reStartConv(sock);
+										System.out.println("La conversation était déjà ouverte.\n");
+									}
+								}
+									
+							}).start();
+							
+						} else if (stopped != null){
+								final Conversation s = stopped;
+								new Thread(new Runnable() {
+								
+								@Override
+								public void run() {
+									//sock est l'aceptation de notre socket d'envoi
+									s.reStartConv(sock);
+									System.out.println("On a relancé une conversation.\n");
 								}
 									
 							}).start();
@@ -106,17 +118,13 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 								
 								@Override
 								public void run() {
-									// TODO Auto-generated method stub
-									Contact contact = getMm().getContactList().exists(host.getHostName());
 									
-									if (contact ==null)
-										contact = getMm().getContactList().exists(host.toString());
+									Contact contact = getMain().getContactList().findIp(host);
 									
 									if (contact ==null) {
 											System.out.println("Pas dans la liste de contacts\n");
 									} else {
-										Conversation cn = new Conversation(mm,contact);
-										ConvList.add(cn);
+										Conversation cn = new Conversation(main,contact);
 										cn.startConv(sock);
 										System.out.println("On a accept� une conv\n");
 									
@@ -139,13 +147,19 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 					// TODO Auto-generated method stub
 					while (running) {
 						if (c!=null && m!=null)
-						 sendMessTo(c,m);
+							sendMessTo(c,m);
 					}
 					
-					for (Conversation c : ConvList)  // en arr�tant le mess man on trop toutes les conv
+					//On arr�te les conversations en cours elsse sont arrêtées lros de la fermeture des chatwindow
+					/*for (Conversation c : ConvList) {  
 						c.stopConv();
+					}*/
 					
-					System.out.println("L'envoyeur du messages manager a �t� arr�t� !\n");
+					//On arrete tous les recepteurs de messages des conv stopp�es
+					for (Conversation c : stoppedConvList) {  // en arr�tant le mess man on trop toutes les conv
+						c.getR().setRunning(false); //On ne peut plus recevoir de messages
+					}
+					System.out.println("L'envoyeur du messages manager a �t� ar�t� !\n");
 				}
 				
 			}).start();
@@ -153,20 +167,42 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 	}
 
 
-	public MainMenu getMm() {
-		return mm;
+	public MainMenu getMain() {
+		return main;
 	}
 	
 	public ArrayList<Conversation> getConvList(){
 		return this.ConvList;
 	}
 	
-	public synchronized void removeConv(Contact c) {
+	/* 
+	*Cette fonction est appel�e par le ContactsManager lorsqu'un utilisateur se d�connecte 
+	* on peut donc tout stopper
+	*/
+	public synchronized void removeConv(Conversation cv) {
+		cv.stopConv();
+		this.stoppedConvList.remove(cv);
+		cv.getR().setRunning(false);
+	}
+	
+	public Conversation getConv(Contact c) {
+		Conversation res = null;
 		for (Conversation cv : this.ConvList) {
 			if (cv.getInterlocutor().equals(c)) {
-				cv.stopConv();
+				res = cv;
 			}
 		}
+		return res;
+	}
+	
+	public Conversation getStoppedConv(Contact c) {
+		Conversation res = null;
+		for (Conversation cv : this.stoppedConvList) {
+			if (cv.getInterlocutor().equals(c)) {
+				res = cv;
+			}
+		}
+		return res;
 	}
 	
 	public void setRunning(boolean b) {
@@ -174,25 +210,28 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 	}
 	
 	public synchronized void sendMessTo(Conversation c, Message m) {
-		//synchronized (sending) {
 			if (ConvList.contains(c)) {
-				System.out.println("MESS PRET\n");
-				c.getS().send(m);
+				try {
+					c.getS().send(m);
+					System.out.println("Un message a �t� envoy�.\n");
+				} catch (IOException e) {
+					e.printStackTrace();
+					main.getProblem().display();
+				}
 				this.c = null;
 				this.m = null;
 			} else {
-				System.out.println("la conversation n'est pas r�pertori�\n");
+				System.out.println("la conversation n'est pas r�pertori�.\n");
 				this.c = null;
 				this.m = null;
 			}
-		//}
 		
 	}
 	
 	public synchronized void signalMess(Conversation c, Message m) {
 			this.c = c;
 			this.m = m;
-			System.out.println("MESSAGE EN COURS D ENVOI\n");
+			System.out.println("Pr�paration de l'envoi d'un message\n");
 	}
 	
 	public static void main(String[] args) {
@@ -202,14 +241,16 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 			try {
 				cl.addContact(new Contact("titi",InetAddress.getLocalHost().getHostName()));
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			Contact me = new Contact("toto","127.0.0.1");
+			Contact me = new Contact("toto",InetAddress.getLoopbackAddress());
 			
 			new MainMenu(me, cl, null);
 	}
-	
-	
+
+
+	public ArrayList<Conversation> getStoppedConvList() {
+		return stoppedConvList;
+	}
 
 }

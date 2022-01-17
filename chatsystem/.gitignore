@@ -4,3 +4,5 @@
 .settings
 *.class
 /bin/
+*.db
+.metadata

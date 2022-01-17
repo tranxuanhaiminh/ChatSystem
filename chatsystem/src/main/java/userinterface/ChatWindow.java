@@ -6,6 +6,8 @@ package userinterface;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -34,11 +36,14 @@ public class ChatWindow extends javax.swing.JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private final static String newline = "\n";
-	private String msg_in = "";
-
-	private javax.swing.JTextField chatInput;
-	private javax.swing.JButton sendChat;
-	private JScrollBar bar;
+    private String msg_in = "";
+    
+    private javax.swing.JTextField chatInput;
+    private javax.swing.JButton sendChat;
+    private JScrollBar bar;
+    
+    //////Notify Frames 
+    NotifyFrame problem;
 
 	private Databasecon dbcon = new Databasecon();
 	private Contact dest;
@@ -61,6 +66,8 @@ public class ChatWindow extends javax.swing.JFrame {
 
 		this.setTitle(dest.getPseudo());
 		initComponents();
+    
+    problem = new NotifyFrame("Error : Please close this chat window ! ");
 
 		this.dest = dest;
 		this.main = m;
@@ -219,8 +226,9 @@ public class ChatWindow extends javax.swing.JFrame {
 			e.printStackTrace();
 		}
 	}
-
-	public Action getSendMess() {
+    
+    
+  public Action getSendMess() {
 		return this.sendMess;
 	}
 
@@ -243,50 +251,47 @@ public class ChatWindow extends javax.swing.JFrame {
 	public Conversation getConv() {
 		return conv;
 	}
-
-	/**
-	 * @param args the command line arguments
-	 */
-	public static void main(String args[]) {
-		/* Set the Nimbus look and feel */
-		// <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-		// (optional) ">
-		/*
-		 * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-		 * look and feel. For details see
-		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-		 */
-		try {
-			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(ChatWindow.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
-		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(ChatWindow.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
-		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(ChatWindow.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
-		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(ChatWindow.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
-		}
-		// </editor-fold>
-		// </editor-fold>
-
-		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new ChatWindow(null, new Contact("titi", " "), null).setVisible(true);
-
-			}
-		});
-
+	
+	public NotifyFrame getProblem() {
+		return problem;
 	}
+	
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ChatWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ChatWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ChatWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ChatWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ChatWindow(null,new Contact("titi",(InetAddress) null), null);
+				//new ChatWindow(null, new Contact("titi", " "), null).setVisible(true);
+            }
+        });
+        
+    }
 
 }

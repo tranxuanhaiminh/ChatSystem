@@ -35,7 +35,7 @@ public class Modify extends javax.swing.JFrame {
         //setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        enterpseudo.setText("");
+        enterpseudo.setText(null);
 
         labelUsername.setText("New username");
 

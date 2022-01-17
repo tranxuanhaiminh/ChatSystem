@@ -15,7 +15,7 @@ public class UDPReceiver{
 	private byte[] buffer;
 	private DatagramPacket in;
 	
-	public UDPReceiver() throws BindException{
+	public UDPReceiver() throws SocketException{
 		
 		this.port = 58799;
 		this.running=true;
@@ -23,32 +23,30 @@ public class UDPReceiver{
 			this.receiversocket = new DatagramSocket(port);
 		} catch (BindException e) {
 			System.out.println("already running \n");
-			// faire quelque chose
 			throw e; 
-			
 		}catch (SocketException e) {
 			e.printStackTrace();
 			System.out.println("Erreur lors de la creation du socket de reception \n");
+			throw e;
 		}
 
 		try {
 			receiversocket.setBroadcast(true);
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw e;
 		}
 	}
 	
 	
 	
-	public String[] receive() {
+	public String[] receive() throws IOException {
 		
 		String[] ret = null;
-		
-		System.out.println("Pret à recevoir \n");
-		
 		buffer = new byte[256];
 		in = new DatagramPacket(buffer, buffer.length);
+
+		System.out.println("Pret � recevoir \n");
 		
 		try {
 			
@@ -56,7 +54,7 @@ public class UDPReceiver{
 			String msg = new String(in.getData(),0,in.getLength());
 			String addr = in.getAddress().getHostName();
 		
-			//On récupère toutes nos addresses pour filtrer les messages
+			//On r�cup�re toutes nos addresses pour filtrer les messages
 			ArrayList<InetAddress> m= new ArrayList<InetAddress>();
 	        Enumeration<NetworkInterface> e = null;
 			try {
@@ -79,9 +77,8 @@ public class UDPReceiver{
 			    }
 			}
 			
-			
-			
 			boolean cond = false;
+			
 			try {
 				cond = !(m.contains(InetAddress.getByName(addr)));
 			} catch (UnknownHostException e1) {
@@ -94,12 +91,12 @@ public class UDPReceiver{
 			}
 			
 		} catch (SocketTimeoutException e) {
-			System.out.println("Timer expiré fin du receive (connection).\n");
+			System.out.println("Timer expir� fin du receive (connection).\n");
 		} catch (IOException e) {
 			System.out.println("Erreur lors de la reception du mess\n");
 			e.printStackTrace();
+			throw e;
 		}
-		
 		
 		return ret;
 		
@@ -119,13 +116,12 @@ public class UDPReceiver{
 	}
 	
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
 		UDPReceiver r=null;
 		try {
 			r = new UDPReceiver();
 		} catch (BindException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		while (true) {

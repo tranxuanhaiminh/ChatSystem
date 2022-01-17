@@ -3,12 +3,12 @@ package network;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import chatsystem.ChatWindow1;
+import chatsystem.Conversation;
 import chatsystem.Message;
+import database.Databasecon;
 import userinterface.ChatWindow;
 
 public class MsgReceiver extends Thread{ // Server tcp //client tcp
@@ -16,18 +16,20 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 	private Socket socketreceive;
 	private boolean running;
 	private ObjectInputStream in=null;
-	private ChatWindow chatw;
+	private Conversation conv;
+
 	
-	public MsgReceiver(Socket sock, ChatWindow chatw2) {
+	public MsgReceiver(Socket sock, Conversation conv) throws IOException {
 		super();
 		this.socketreceive = sock;
-		this.chatw = chatw2;
+		this.conv = conv;
 		this.setRunning(true);
 		try {
 			in = new ObjectInputStream(socketreceive.getInputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			conv.getChatw().getProblem().display();
 		}
 	}
 	
@@ -42,18 +44,27 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 				try {
 					mess = (Message) in.readObject();
 					System.out.println("MESSAGE RECU = "+ mess+"\n");
-					this.chatw.addChatLine(mess,false);
 					
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if (conv.getChatw() !=null){
+						//displaying the msg
+						conv.getChatw().addChatLine(mess,false);
+					}
+					
+					//adding to the chat history
+			    	conv.getMain().getConDB().insertChat(mess.getDest().getIpaddress().getHostAddress(), mess.toString(), mess.convertDateToFormat(), false);
+			    	System.out.println("Adding the msg sent to you "+ mess.getDest().getIpaddress().getHostAddress()+" to the chat history\n");
+			    	
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+					conv.getChatw().getProblem().display();
 				} catch (EOFException e) {
 					//Do Nothing if the end has been reached
 					
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
+					conv.getChatw().getProblem().display();
 				}
+				
 				mess = null;
 			
 		}
@@ -63,8 +74,9 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 			in.close();
 			System.out.println("Socket de reception de msg ferm�\n");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			conv.getChatw().getProblem().display();
+
 		}
 	}
 
@@ -86,9 +98,8 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 			MsgReceiver m= new MsgReceiver(socketDoorbell,null);
 			m.start();
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(10000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			m.setRunning(false);
