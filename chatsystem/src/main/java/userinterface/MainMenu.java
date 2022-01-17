@@ -238,6 +238,20 @@ public class MainMenu extends javax.swing.JFrame {
         model.addRow(new Object[]{new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(10,10,java.awt.Image.SCALE_SMOOTH)), username});
     }
     
+    public int isInTable(String s) {
+    	DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
+    	for (int i=0; i<model.getRowCount();i++) {
+    		if (s.equals(model.getValueAt(i, 1)))
+    			return i;
+    	}
+    	return -1;
+    }
+    
+    public void removeUser(int i) {
+        DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
+        model.removeRow(i);
+    }
+    
     public boolean modUser(String newname, String img, String oldname ) {
     	DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
     	boolean res = false;
