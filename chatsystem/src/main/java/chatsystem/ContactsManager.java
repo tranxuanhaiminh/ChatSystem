@@ -172,11 +172,29 @@ public class ContactsManager extends Thread{
 				} else if (state == true) {
 			    	
 					////////////////////////////////////Contact manager apr�s la phase de connection
-	
+					
+					try {
+						(new UDPSender(this.cc.getMe().getPseudo())).send();
+						System.out.println("\nENVOI de son contact � tout le monde !\n");
+
+					}  catch (BindException e1) {
+						e1.printStackTrace();
+						this.cc.getAlreadyRunning();
+					} catch (SocketException e) {
+						e.printStackTrace();
+						this.cc.getProblem().display();
+					} catch (UnknownHostException e) {
+						e.printStackTrace();
+						this.cc.getProblem().display();
+					} catch (IOException e) {
+						e.printStackTrace();
+						this.cc.getProblem().display();
+					}
+					
 					MainMenu main = this.cc.getMain();
 					while (main == null) {
 						try {
-							Thread.sleep(10); // on attends que les autres donn�es soient misent � jour
+							Thread.sleep(1); // on attends que les autres donn�es soient misent � jour
 						} catch (InterruptedException err) {
 							err.printStackTrace();
 							this.cc.getProblem().display();
@@ -185,23 +203,7 @@ public class ContactsManager extends Thread{
 					}
 					//on envoie son contact aux autres 
 			    	
-					try {
-						(new UDPSender(main.getMe().getPseudo())).send();
-						System.out.println("\nENVOI de son contact � tout le monde !\n");
-
-					}  catch (BindException e1) {
-						e1.printStackTrace();
-						this.cc.getAlreadyRunning();
-					} catch (SocketException e) {
-						e.printStackTrace();
-						main.getProblem().display();
-					} catch (UnknownHostException e) {
-						e.printStackTrace();
-						main.getProblem().display();
-					} catch (IOException e) {
-						e.printStackTrace();
-						main.getProblem().display();
-					}
+					
 					
 					//lancement du receiver
 					System.out.println("Lancement receiver lors de la session\n");
