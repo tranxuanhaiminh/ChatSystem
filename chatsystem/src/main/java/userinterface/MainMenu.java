@@ -10,15 +10,12 @@ import chatsystem.Action;
 import chatsystem.Contact;
 import chatsystem.ContactList;
 import chatsystem.ContactsManager;
-import chatsystem.Message;
 import chatsystem.MessagesManager;
 import database.Databasecon;
 import ressources.Interfacedisplay;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;

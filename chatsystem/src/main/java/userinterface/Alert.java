@@ -13,6 +13,10 @@ import javax.swing.JLabel;
 public class Alert extends javax.swing.JFrame {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
      * Creates new form Alert
      */
     public Alert(String label) {

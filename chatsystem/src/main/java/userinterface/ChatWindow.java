@@ -6,8 +6,6 @@ package userinterface;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,7 +16,6 @@ import javax.swing.text.BadLocationException;
 
 import chatsystem.Action;
 import chatsystem.Contact;
-import chatsystem.ContactList;
 import chatsystem.Conversation;
 import chatsystem.Message;
 import database.Databasecon;
@@ -36,7 +33,6 @@ public class ChatWindow extends javax.swing.JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private final static String newline = "\n";
-	private String msg_in = "";
 
 	private javax.swing.JTextField chatInput;
 	private javax.swing.JButton sendChat;
@@ -46,7 +42,6 @@ public class ChatWindow extends javax.swing.JFrame {
 
 	private Databasecon dbcon = new Databasecon();
 	private Contact dest;
-	private ContactList contactlist = new ContactList();
 	private Conversation conv;
 
 	// lien page principale
