@@ -20,8 +20,8 @@ public class MessagesManager extends Thread{
 	private ArrayList<Conversation> ConvList;
 	private ArrayList<Conversation> stoppedConvList;
 	
-	private Conversation c=null;
-	private Message m=null;
+	/*private Conversation c=null;
+	private Message m=null;*/
 	
 	
 	public MessagesManager(MainMenu mainMenu) {
@@ -42,9 +42,9 @@ public class MessagesManager extends Thread{
 	
 	public void run() {
 		
-			new Thread(new Runnable() {
+			/*new Thread(new Runnable() {
 				@Override
-				public void run() {
+				public void run() {*/
 					
 					Socket doorbell=null;
 					while (running) {
@@ -126,20 +126,23 @@ public class MessagesManager extends Thread{
 					}
 					System.out.println("The server of the messages manager is stopped !\n");
 					
-				}
-			}).start();
+					for (Conversation c : stoppedConvList) {
+						c.getR().setRunning(false);
+					}
+			/*	}
+			}).start();*/
 			
 			//Sending thread (this thread itself)
-			while (running) {
+			/*while (running) {
 				if (c!=null && m!=null)
 					sendMessTo(c,m);
-			}
+			}*/
 			
-			for (Conversation c : stoppedConvList) {
+			/*for (Conversation c : stoppedConvList) {
 				c.getR().setRunning(false);
-			}
+			}*/
 			
-			System.out.println("The sender part of the messages manager is stopped !\n");
+			//System.out.println("The sender part of the messages manager is stopped !\n");
 		
 	}
 
@@ -189,7 +192,7 @@ public class MessagesManager extends Thread{
 		this.running = b;
 	}
 	
-	public synchronized void sendMessTo(Conversation c, Message m) {
+	public void sendMessTo(Conversation c, Message m) { //mot clé synchronized enlevé
 			if (ConvList.contains(c)) {
 				try {
 					c.getS().send(m);
@@ -201,16 +204,17 @@ public class MessagesManager extends Thread{
 			} else {
 				System.out.println("This conversation is not in the list of on-going conversations.\n");
 			}
-			this.c = null;
+			
+			/*this.c = null;
 			this.m = null;
-		
+		*/
 	}
 	
-	public synchronized void signalMess(Conversation c, Message m) {
+	/*public synchronized void signalMess(Conversation c, Message m) {
 			this.c = c;
 			this.m = m;
 			System.out.println("Preparing the sending of the message...\n");
-	}
+	}*/
 	
 	public static void main(String[] args) {
 			

@@ -14,7 +14,6 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 	private Socket socketsend;
 	private boolean go;
 	private ObjectOutputStream out;
-	boolean sent = true;
 
 	
 	public MsgSender(Socket socket) throws IOException {
@@ -34,13 +33,11 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 		
 		try {
 			if (!socketsend.isOutputShutdown()) {
-				System.out.println("J'envoie un msg\n");
+				System.out.println("The msg is sent.\n");
 				out.writeObject(msg);
 				out.flush();
-				sent = true;
-			}
-			else {
-				System.out.println("The socket output is shutdown\n");
+			} else {
+				System.out.println("Cannot send the msg because the socket output is shutdown.\n");
 			}
 			
 		} catch (IOException e){

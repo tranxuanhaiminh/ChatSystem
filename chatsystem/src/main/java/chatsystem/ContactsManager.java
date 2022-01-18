@@ -272,7 +272,7 @@ public class ContactsManager extends Thread{
 						        	int index=-1;
 						        	//if the hostname (of the ip addr) of the contact is in the connected users table we remove it
 						        	if ((index = main.isInTable(c.getPseudo()))!=-1) 
-						        		main.removeUser(i);
+						        		main.removeUser(index);
 						        	
 					        		System.out.println("Modification de la liste des contacts affichés resulat de la modif --> " + main.modUser(c.getPseudo(), main.getDisconnected(), oldusername)+ "\n");
 

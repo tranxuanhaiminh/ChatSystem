@@ -8,10 +8,8 @@ import java.net.Socket;
 
 import chatsystem.Conversation;
 import chatsystem.Message;
-import database.Databasecon;
-import userinterface.ChatWindow;
 
-public class MsgReceiver extends Thread{ // Server tcp //client tcp
+public class MsgReceiver extends Thread{
 	
 	private Socket socketreceive;
 	private boolean running;
@@ -52,7 +50,7 @@ public class MsgReceiver extends Thread{ // Server tcp //client tcp
 					
 					//adding to the chat history
 			    	conv.getMain().getConDB().insertChat(conv.getInterlocutor().getIpaddress().getHostAddress(), mess.toString(), mess.convertDateToFormat(), false);
-			    	System.out.println("Adding the msg sent to you "+ conv.getInterlocutor().getIpaddress().getHostAddress()+" to the chat history\n");
+			    	System.out.println("Adding the msg sent to you by "+ conv.getInterlocutor()+" to the chat history\n");
 			    	
 				} catch (ClassNotFoundException e1) {
 					e1.printStackTrace();
