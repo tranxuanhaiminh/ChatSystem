@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import userinterface.MainMenu;
 
 
-public class MessagesManager extends Thread{ // chaque conversation est g�r� par un Msgsender et un Msgreceiver
+public class MessagesManager extends Thread{
 	
 	private MainMenu main;
 	private boolean running;
@@ -71,18 +71,18 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 						if (ec != null) {
 							final Conversation encours = ec;
 
-							//create convo (initi� par nous)
+							//We initiated the conversation
 							new Thread(new Runnable() {
 
 								@Override
 								public void run() {
-									//sock est l'aceptation de notre socket d'envoi
+									//sock is the MsgReceiver socket (a response to our MsgSender socket)
 									if (encours.getChatw()==null) {
 										encours.startConv(sock);
-										System.out.println("On a lanc� une conversation\n");
+										System.out.println("A conversation is starting.\n");
 									} else {
 										encours.reStartConv(sock);
-										System.out.println("La conversation était déjà ouverte.\n");
+										System.out.println("This conversation was already openned.\n");
 									}
 								}
 									
@@ -94,16 +94,16 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 								
 								@Override
 								public void run() {
-									//sock est l'aceptation de notre socket d'envoi
+									//sock is the MsgReceiver socket (a response to our MsgSender socket)
 									s.reStartConv(sock);
-									System.out.println("On a relancé une conversation.\n");
+									System.out.println("We have restarted a conversation.\n");
 								}
 									
 							}).start();
 							
 						} else {
 							
-							//create convo initi� par l'autre
+							//The conversation was initiated by one of our contacts
 							new Thread(new Runnable() {
 								
 								@Override
@@ -112,11 +112,11 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 									Contact contact = getMain().getContactList().findIp(host);
 									
 									if (contact ==null) {
-											System.out.println("Pas dans la liste de contacts\n");
+											System.out.println("This person is not in the contacts list !\n");
 									} else {
 										Conversation cn = new Conversation(main,contact);
 										cn.startConv(sock);
-										System.out.println("On a accept� une conv\n");
+										System.out.println("A conversation is accepted.\n");
 									
 									}
 								}
@@ -124,36 +124,23 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 							}).start();
 						}
 					}
-					System.out.println("Le receiver du messages manager a �t� arr�t� !\n");
+					System.out.println("The server of the messages manager is stopped !\n");
 					
 				}
 			}).start();
 			
-			//Thread d'envoi
-			new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					while (running) {
-						if (c!=null && m!=null)
-							sendMessTo(c,m);
-					}
-					
-					//On arr�te les conversations en cours elsse sont arrêtées lros de la fermeture des chatwindow
-					/*for (Conversation c : ConvList) {  
-						c.stopConv();
-					}*/
-					
-					//On arrete tous les recepteurs de messages des conv stopp�es
-					for (Conversation c : stoppedConvList) {  // en arr�tant le mess man on trop toutes les conv
-						c.getR().setRunning(false); //On ne peut plus recevoir de messages
-					}
-					System.out.println("L'envoyeur du messages manager a �t� ar�t� !\n");
-				}
-				
-			}).start();
+			//Sending thread (this thread itself)
+			while (running) {
+				if (c!=null && m!=null)
+					sendMessTo(c,m);
+			}
 			
+			for (Conversation c : stoppedConvList) {
+				c.getR().setRunning(false);
+			}
+			
+			System.out.println("The sender part of the messages manager is stopped !\n");
+		
 	}
 
 
@@ -166,8 +153,7 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 	}
 	
 	/* 
-	*Cette fonction est appel�e par le ContactsManager lorsqu'un utilisateur se d�connecte 
-	* on peut donc tout stopper
+	*This method is called when someone disconnects
 	*/
 	public synchronized void removeConv(Conversation cv) {
 		cv.stopConv();
@@ -208,7 +194,7 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 			if (ConvList.contains(c)) {
 				try {
 					c.getS().send(m);
-					System.out.println("Un message a �t� envoy�.\n");
+					System.out.println("A message was sent.\n");
 				} catch (IOException e) {
 					e.printStackTrace();
 					main.getProblem().display();
@@ -216,7 +202,7 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 				this.c = null;
 				this.m = null;
 			} else {
-				System.out.println("la conversation n'est pas r�pertori�.\n");
+				System.out.println("This conversation is not in the list of on-going conversations.\n");
 				this.c = null;
 				this.m = null;
 			}
@@ -226,7 +212,7 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 	public synchronized void signalMess(Conversation c, Message m) {
 			this.c = c;
 			this.m = m;
-			System.out.println("Pr�paration de l'envoi d'un message\n");
+			System.out.println("Preparing the sending of the message...\n");
 	}
 	
 	public static void main(String[] args) {
