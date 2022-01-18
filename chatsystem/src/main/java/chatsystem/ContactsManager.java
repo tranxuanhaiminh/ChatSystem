@@ -14,12 +14,17 @@ import userinterface.MainMenu;
 
 public class ContactsManager extends Thread{
 	
+	/*
+	 * Fields
+	 */
 	private Connect cc;
 	private UDPReceiver ContactReceiver;
 	private boolean state; // false = connecting phase true = Main 
 	private boolean running;
 	
-	
+	/*
+	 * Constructor
+	 */
 	public ContactsManager(Connect c) {
 		this.cc = c;
 		this.running = false;
@@ -29,16 +34,21 @@ public class ContactsManager extends Thread{
 			this.ContactReceiver = new UDPReceiver();
 		} catch (BindException e) {
 			e.printStackTrace();
+			System.out.println("already running \n");
 			this.cc.getAlreadyRunning().display();
 			this.cc.getAlreadyRunning().requestFocus();
 		} catch (SocketException e) {
 			e.printStackTrace();
+			System.out.println("Erreur lors de la creation du socket de reception \n");
 			this.cc.getProblem().display();
 			this.cc.getAlreadyRunning().requestFocus();
 
 		}
 	}
 	
+	/*
+	 * Thread run method
+	 */
 	public void run() {
 		
 		while (true) {
@@ -62,10 +72,7 @@ public class ContactsManager extends Thread{
 					try {
 						(new UDPSender("ASK")).send();
 						System.out.println("Envoi de la demande de contacts pendant la phase de connection.\n");
-					} catch (BindException e2) {
-						e2.printStackTrace();
-						this.cc.getAlreadyRunning().display();
-						
+											
 					} catch (SocketException e1) {
 						e1.printStackTrace();
 						this.cc.getProblem().display();
@@ -101,6 +108,7 @@ public class ContactsManager extends Thread{
 							response = ContactReceiver.receive(); // cette fonction est bloquante
 						} catch (IOException e2) {
 							e2.printStackTrace();
+							System.out.println("Erreur lors de la reception du mess\n");
 							this.cc.getProblem().display();
 						} 
 						
@@ -165,7 +173,6 @@ public class ContactsManager extends Thread{
 					} catch (SocketException e1) {
 						e1.printStackTrace();
 						this.cc.getProblem().display();
-
 					}
 	
 				} else if (state == true) {
@@ -216,6 +223,7 @@ public class ContactsManager extends Thread{
 							response = ContactReceiver.receive();
 						} catch (IOException e1) {
 							e1.printStackTrace();
+							System.out.println("Erreur lors de la reception du mess\n");
 							main.getProblem().display();
 						}
 						

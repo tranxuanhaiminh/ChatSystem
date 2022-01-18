@@ -28,5 +28,7 @@ public class NotifyFrame extends JFrame{
 		this.requestFocus();
 	}
 
-	
+	public static void main(String[] args) {
+		new NotifyFrame(null).display();
+	}
 }
