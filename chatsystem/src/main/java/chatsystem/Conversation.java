@@ -40,19 +40,20 @@ public class Conversation {
 	}
 
 	public synchronized void stopConv() {
-		// fermer la page si elle est ouverte
+		// if the chat window associated we close it
 		if (this.chatw != null) {
 			this.chatw.setVisible(false);
 			this.chatw.dispose();
 			this.chatw = null;
 		}
 
-		// supprimer du mess man
+		//We remove the conversation from the on-going conversations list in the messages manager
 		main.getMessMan().getConvList().remove(this);
 
-		// On peut toujours recevoir des messages apr�s avoir ferm� une conversation
+		//We put the conversation in the stopped conversations list as we can still receive messages
 		main.getMessMan().getStoppedConvList().add(this);
 
+		//Closing the sender socket as we no longer want to send messages to this user
 		s.closeSend();
 
 		System.out.println("Stopping the conversation with " + this.interlocutor + "! \n");
@@ -60,8 +61,8 @@ public class Conversation {
 	}
 
 	public synchronized void reStartConv(Socket saccepted) {
-		// on crée un nouveau flux d'envoi pour que de l'autre côté reçoive un
-		// socket d'aceptation
+		// we create a new sending flow so that, at the other end, the user's 
+		//messages manager can accept the connection and have a receiving socket
 		try {
 			this.s.closeSend();
 			s = new MsgSender(new Socket(this.interlocutor.getIpaddress(), port));
@@ -76,16 +77,16 @@ public class Conversation {
 			this.chatw.requestFocus();
 		}
 
-		// on crée un flux de reception vu que l'autre était fermé d'un côté
+		//We create a new receiving flow directed to the new sending socket of the interlocutor
 		this.r.setRunning(false);
 		r = new MsgReceiver(saccepted, this);
 		r.start();
 
-		// rajouter la conv au mess man si elle n'y était plus
+		// Adding the conversation in the on-going conversations list if it was not in it
 		if (!(main.getMessMan().getConvList().contains(this)))
 			main.getMessMan().getConvList().add(this);
 
-		// la supprimer du des conv stoppées si elle y était
+		//Removing the ocnversation from the stopped conversations list if it was in it
 		if ((main.getMessMan().getStoppedConvList().contains(this)))
 			main.getMessMan().getStoppedConvList().remove(this);
 

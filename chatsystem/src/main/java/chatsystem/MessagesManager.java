@@ -17,8 +17,8 @@ public class MessagesManager extends Thread {
 	private int port = 55555;
 	private ServerSocket ss;
 
-	private ArrayList<Conversation> ConvList;
-	private ArrayList<Conversation> stoppedConvList;
+	private ArrayList<Conversation> ConvList; // on-going conversations
+	private ArrayList<Conversation> stoppedConvList; //stopped conversation
 	
 	public MessagesManager(MainMenu mainMenu) {
 		super();
@@ -76,7 +76,6 @@ public class MessagesManager extends Thread {
 					final Conversation s = ec;
 					
 					new Thread(() -> {
-						//sock is the MsgReceiver socket (a response to our MsgSender socket)
 						s.reStartConv(sock);
 						System.out.println("We have restarted a conversation.\n");
 						
@@ -114,14 +113,17 @@ public class MessagesManager extends Thread {
 	}
 
 	/*
-	 * This method is called when someone disconnects
+	 * This method is called when someone we were having an on-going conversation with disconnects
 	 */
 	public synchronized void removeConv(Conversation cv) {
 		cv.stopConv();
 		this.stoppedConvList.remove(cv);
 		cv.getR().setRunning(false);
 	}
-
+	
+	/*
+	 * This method is called when someone we were having a stopped conversation with disconnects
+	 */
 	public synchronized void removeStoppedConv(Conversation cv) {
 		this.stoppedConvList.remove(cv);
 		cv.getR().setRunning(false);
@@ -155,7 +157,8 @@ public class MessagesManager extends Thread {
 		return stoppedConvList;
 	}
 	
-	public void sendMessTo(Conversation c, Message m) { //mot cl� synchronized enlev�
+	//To send a message from the Action class
+	public void sendMessTo(Conversation c, Message m) {
 			if (ConvList.contains(c)) {
 				c.getS().send(m);
 				System.out.println("A message was sent.\n");

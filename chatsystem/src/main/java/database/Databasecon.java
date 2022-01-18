@@ -3,6 +3,7 @@ package database;
 import java.sql.*;
 
 import ressources.Databasequerries;
+import userinterface.Alert;
 
 public class Databasecon {
 
@@ -21,6 +22,7 @@ public class Databasecon {
 			this.c = DriverManager.getConnection(url + this.dbfile);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			new Alert("Error : Please close the program !").setVisible(true);
 		}
 		if (createTable()) {
 			System.out.println("The database is created !\n");

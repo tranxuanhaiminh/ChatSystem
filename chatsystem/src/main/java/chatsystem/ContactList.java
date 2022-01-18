@@ -16,33 +16,30 @@ public class ContactList {
 	}
 
 	public boolean comparePseudo(Contact c) {
-		boolean isUnique = true;
 		for (Contact ct : list) {
-			if (ct==null) // si jamais des contacts nulls sont dans la list
-				System.out.println("Contact null");
-			if (c.getPseudo().equals(ct.getPseudo())) {
-				isUnique = false;
+			if (ct==null)
+				System.out.println("Contact null ??? This is not normal.\n");
+			else if (c.getPseudo().equals(ct.getPseudo())) {
+				return false;
 			}
 		}
-		return isUnique;
+		return true;
 	}
 	
 	public Contact findIp(InetAddress ip) {
-		Contact res= null;
 		for (Contact c : list) {
 			if (ip.equals(c.getIpaddress()))
-				res = c;
+				return c;
 		}
-		return res;
+		return null;
 	}
 	
 	public Contact findP(String pseudo) {
-		Contact res= null;
 		for (Contact c : list) {
 			if (pseudo.compareTo(c.getPseudo())==0)
-				res = c;
+				return c;
 		}
-		return res;
+		return null;
 	}
 	
 	public ArrayList<Contact> getList() {

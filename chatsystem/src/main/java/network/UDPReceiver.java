@@ -45,7 +45,7 @@ public class UDPReceiver {
 		buffer = new byte[256];
 		in = new DatagramPacket(buffer, buffer.length);
 
-		System.out.println("Pret � recevoir \n");
+		System.out.println("Ready to receive !\n");
 
 		try {
 
@@ -53,7 +53,7 @@ public class UDPReceiver {
 			String msg = new String(in.getData(), 0, in.getLength());
 			String addr = in.getAddress().getHostName();
 
-			// On r�cup�re toutes nos addresses pour filtrer les messages
+			// Collecting all of our ip addresses
 			ArrayList<InetAddress> m = new ArrayList<InetAddress>();
 			Enumeration<NetworkInterface> e = null;
 			e = NetworkInterface.getNetworkInterfaces();
@@ -70,9 +70,10 @@ public class UDPReceiver {
 					m.add(i);
 				}
 			}
-			boolean cond = false;
-			cond = !(m.contains(InetAddress.getByName(addr)));
-			if (cond) { // on ne peut pas recevoir un msg u'on a envoyé nous même
+			
+			//We don't process messages that we sent
+			boolean cond = !(m.contains(InetAddress.getByName(addr)));
+			if (cond) { 
 				ret = new String[] { msg, addr };
 			}
 
@@ -87,7 +88,7 @@ public class UDPReceiver {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-			new Alert("Error : Please close the program!\n").setVisible(true);
+			new Alert("Error : Please close the program !\n").setVisible(true);
 		}
 
 		return ret;

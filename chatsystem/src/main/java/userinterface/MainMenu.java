@@ -38,17 +38,11 @@ public class MainMenu extends javax.swing.JFrame {
 	private final String connected = "Images/green.png";
 	
 	private Modify modifyFrame;
-    private javax.swing.JButton changepseudo;
-    private javax.swing.JLabel pseudoLabel;
-    private javax.swing.JTable pseudosList;
 	
-    //gestion des contacts
 	private ContactsManager cm;
 
-	//gestions des messages
 	private MessagesManager messMan;
 	
-	//Base de donn�es
 	private Databasecon conDB;
 	
 	
@@ -66,8 +60,7 @@ public class MainMenu extends javax.swing.JFrame {
 		this.me = m; 
 		this.contactList = l;
 		
-		pseudoLabel = jLabel1;
-		pseudoLabel.setText(me.getPseudo());
+		jLabel1.setText(me.getPseudo());
 		
 		//Envoyer et recevoir des messages 
 		this.messMan = new MessagesManager(this);
@@ -82,36 +75,36 @@ public class MainMenu extends javax.swing.JFrame {
         modifyFrame.getVerifyPseudo().addActionListener(new Action(this));
         modifyFrame.getEnterpseudo().addActionListener(new Action(this));
 
+        jButton1.setText(Interfacedisplay.modifybutton);
+        jButton1.addActionListener(new Action(this));
         
-        changepseudo = jButton1;
-        changepseudo.setText(Interfacedisplay.modifybutton);
-        changepseudo.addActionListener(new Action(this));
-        
-        pseudosList = jTable1;
-        pseudosList.setCellSelectionEnabled(true);
-        pseudosList.setColumnSelectionInterval(1, 1);
-        pseudosList.setColumnSelectionAllowed(false);
-        pseudosList.setRowSelectionAllowed(false);
-        pseudosList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		ListSelectionModel listSelectionModel = pseudosList.getSelectionModel();
+        jTable1.setColumnSelectionInterval(1, 1);
+        jTable1.setCellSelectionEnabled(true);
+        jTable1.setColumnSelectionAllowed(false);
+        jTable1.setRowSelectionAllowed(false);
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		ListSelectionModel listSelectionModel = jTable1.getSelectionModel();
 	    listSelectionModel.addListSelectionListener(new Action(this));
 	    
         this.addWindowListener(new WindowAdapter() {
 			 
 			 public void windowClosing(WindowEvent e) {
 				 
-				 // Sending a disconnected msg
-				 System.out.println("\nDISCONNECTING ...\n");
+				 //Telling everybody that we are disconnecting
+				 System.out.println("DISCONNECTING ...\n");
 				 if (cm!=null) {
 					 cm.signalDatagram("DISCONNECTED","255.255.255.255");
 				 }
+				 
 				 // Stopping the Contact manager
 				 if (cm!=null)
 					 cm.setRunning(false);
+				 
 				 //Stopping the message manager
 				 if (messMan!=null)
 					 messMan.setRunning(false);
 				 
+				 //Stopping the program
 			     System.exit(0);
 			  
 			 }
@@ -119,8 +112,7 @@ public class MainMenu extends javax.swing.JFrame {
 			   });
         
         
-        ///////////////adding the users
-        
+        ///////////////adding the users to the connected users' table
         for (Contact c : this.contactList.getList()) {
         	addUser(c.getPseudo(), connected);
         }
@@ -216,12 +208,12 @@ public class MainMenu extends javax.swing.JFrame {
 
     
     public void addUser(String username, String img) {
-        DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.addRow(new Object[]{new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(10,10,java.awt.Image.SCALE_SMOOTH)), username});
     }
     
     public int isInTable(String s) {
-    	DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
+    	DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
     	for (int i=0; i<model.getRowCount();i++) {
     		if (s.equals(model.getValueAt(i, 1)))
     			return i;
@@ -230,12 +222,12 @@ public class MainMenu extends javax.swing.JFrame {
     }
     
     public void removeUser(int i) {
-        DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.removeRow(i);
     }
     
     public boolean modUser(String newname, String img, String oldname ) {
-    	DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
+    	DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
     	boolean res = false;
     	
     	int n = model.getRowCount();
@@ -259,7 +251,7 @@ public class MainMenu extends javax.swing.JFrame {
 	}
 
 	public javax.swing.JButton getChangepseudo() {
-		return changepseudo;
+		return jButton1;
 	}
 
 	public Modify getModifyFrame() {
@@ -267,7 +259,7 @@ public class MainMenu extends javax.swing.JFrame {
 	}
 	
 	public javax.swing.JLabel getPseudoLabel() {
-		return pseudoLabel;
+		return jLabel1;
 	}
 	
 	public ContactsManager getCm() {
@@ -279,7 +271,7 @@ public class MainMenu extends javax.swing.JFrame {
 	}
 
 	public javax.swing.JTable getPseudosList() {
-		return pseudosList;
+		return jTable1;
 	}
 	
 	public String getConnected() {

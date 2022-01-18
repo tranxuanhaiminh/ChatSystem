@@ -18,7 +18,7 @@ public class ContactsManager extends Thread {
 	 */
 	private Connect cc;
 	private UDPReceiver ContactReceiver;
-	private boolean state; // false = connecting phase true = Main
+	private boolean state; // false = connecting phase true = Main phase
 	private boolean running;
 
 	/*
@@ -38,27 +38,27 @@ public class ContactsManager extends Thread {
 	public void run() {
 
 		while (true) {
-			// on dirait qu'il faut nécessairement au moins une instruction
+			//Looks like we need a sleep if we don't want an infinite loop
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e2) {
 				e2.printStackTrace();
 				new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
 			}
+			
 			int i = 0;
 
 			while (this.isRunning()) {
 				i++;
 
-				///////////////////////////////////////////////////// Contact manager de la
-				///////////////////////////////////////////////////// phase de connection
+				///////////////////////////Connection phase
 
 				if (state == false && i == 1) {
 
 					new UDPSender("ASK").send();
-					System.out.println("Envoi de la demande de contacts pendant la phase de connection.\n");
+					System.out.println("Sending the contacts request.\n");
 
-					System.out.println("Lancement r�ception des contacts pendant la connection\n");
+					System.out.println("Starting the contacts reception during the connecting pahse.\n");
 
 					long s = System.currentTimeMillis();
 					long e = s + 3000;
@@ -75,7 +75,7 @@ public class ContactsManager extends Thread {
 						}
 
 						String[] response = null;
-						response = ContactReceiver.receive(); // cette fonction est bloquante
+						response = ContactReceiver.receive(); // this is a blocking method
 
 						if (response != null) {
 
@@ -83,10 +83,10 @@ public class ContactsManager extends Thread {
 							String addr = response[1];
 							ContactList cl = this.cc.getContactList();
 
-							// traitement de la reception de conctacts
+							//Threating the messages received
 							if ((msg.equals("ASK"))) {
 
-								// on ne fait rien
+								// We don't do anything because we don't have a username yet
 
 							} else if (msg.equals("DISCONNECTED")) {
 
@@ -96,46 +96,48 @@ public class ContactsManager extends Thread {
 								} catch (UnknownHostException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
+									new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
 								}
 
 								if (c != null) {
 									c.delPseudo();
 									this.cc.getContactList().removeContact(c);
 									System.out.println(
-											"Un contact s'est d�connect� pendant la phase de connexion !\n");
+											"A contact have disconnected in the connecting phase !\n");
 								}
 
 							} else {
 
-								// pour eviter le double ajout lorsuq'il y a modification d'un contact pendant
-								// la connexion
+								// To avoid adding twince the same person if they changed their 
+								//username during the connecting phase
 								Contact cin = null;
 								try {
 									cin = this.cc.getContactList().findIp(InetAddress.getByName(addr));
 								} catch (UnknownHostException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
+									new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
 								}
 
 								if (cin == null) {
-									System.out.println("\nAJOUT DU CONTACT depuis la phase  de connexion" + addr + " "
+									System.out.println("ADDING A CONTACT from the connecting phase " + addr + " "
 											+ msg + " \n");
 									cl.addContact(new Contact(msg, addr));
 								} else {
 									System.out.println(cin.getIpaddress()
-											+ " a modifi� son pseudo pendant la phase  de connexion ! New username= "
+											+ " has modified his username during the connecting phase ! New username = "
 											+ msg + " \n");
 									cin.setPseudo(msg);
 								}
 							}
 						} else {
-							System.out.println("On a recu null.\n");
+							System.out.println("We've received null.\n");
 						}
 
 					}
 
 					this.ContactReceiver.setRunning(false);
-					System.out.println("Fin de la reception des contacts phase de connection\n");
+					System.out.println("End of the reception of contacts in the connecting phase.\n");
 					DatagramSocket rs = ContactReceiver.getReceiversocket();
 
 					try {
@@ -151,32 +153,28 @@ public class ContactsManager extends Thread {
 		    		
 				} else if (state == true) {
 
-					//////////////////////////////////// Contact manager apr�s la phase de
-					//////////////////////////////////// connection
+					/////////////////////////Main phase
 
 					(new UDPSender(this.cc.getMe().getPseudo())).send();
-					System.out.println("\nENVOI de son contact � tout le monde !\n");
+					System.out.println("SENDING our contact to everybody !\n");
 
 					MainMenu main = this.cc.getMain();
 					while (main == null) {
 						try {
-							Thread.sleep(1); // on attends que les autres donn�es soient misent � jour
+							Thread.sleep(1); // We wait so that we don't have an infinite loop
 						} catch (InterruptedException err) {
 							err.printStackTrace();
-							new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
+							new Alert("Error : Please close the program (connecting phase) !").setVisible(true);
 						}
 						main = this.cc.getMain();
 					}
-					// on envoie son contact aux autres
 
-					// lancement du receiver
-					System.out.println("Lancement receiver lors de la session\n");
+					System.out.println("Starting the receiver in the main pahse\n");
 					this.ContactReceiver.setRunning(true);
 
 					while (this.isRunning()) {
 
-						///////////////////////////// gestion reception de contact
-						///////////////////////////// /////////////////////////////
+						///////////////////////////// Processing the reception of contacts
 						String[] response = null;
 						response = ContactReceiver.receive();
 
@@ -186,11 +184,11 @@ public class ContactsManager extends Thread {
 
 							ContactList cl = main.getContactList();
 
-							// traitement de la reception de conctacts
-							if (msg.equals("ASK")) { // on traite les envois de son contact
+							
+							if (msg.equals("ASK")) {
 
 								new UDPSender(main.getMe().getPseudo(), addr).send();
-								System.out.println("\nENVOI de son contact � " + addr + "\n");
+								System.out.println("SENDING our contact to " + addr + "\n");
 
 							} else if (msg.equals("DISCONNECTED")) {
 								Contact c = null;
@@ -199,26 +197,27 @@ public class ContactsManager extends Thread {
 								} catch (UnknownHostException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
+									new Alert("Error : Please close the program (main phase) !").setVisible(true);
 								}
 								
 								if (c == null) {
-									System.out.println("Ce contact n'etait pas dans la liste de vos contacts.\n");
+									System.out.println("This disconnected contact was not in the contacts list.\n");
 
 								} else {
 									System.out.println(
-											"\n SUPPRESSION DU CONTACT pendant la session " + msg + " " + addr + " \n");
+											"REMOVING the contact : " + msg + " " + addr + " \n");
 									main.getContactList().removeContact(c);
 
-									// modif of the connected users tab
+									// modifying the connected users' table
 									String oldusername = c.getPseudo();
 									c.delPseudo();
-									// if the hostname (of the ip addr) of the contact is in the connected users
+									// if the hostname (of the ip addr) of the contact is in the connected users'
 									// table we remove it
 									if (main.isInTable(c.getPseudo()) != -1)
 										main.removeUser(i);
 
 									System.out.println(
-											"Modification de la liste des contacts affichés resulat de la modif --> "
+											"UPDATING the connected users' table. Result --> "
 													+ main.modUser(c.getPseudo(), main.getDisconnected(), oldusername)
 													+ "\n");
 
@@ -234,7 +233,7 @@ public class ContactsManager extends Thread {
 									}
 								}
 
-							} else { // on traite les contacts re�us (soit modif soit nouveau)
+							} else { // Processing a new user
 
 								Contact c = null;
 								try {
@@ -242,31 +241,34 @@ public class ContactsManager extends Thread {
 								} catch (UnknownHostException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
+									new Alert("Error : Please close the program (main phase) !").setVisible(true);
 								}
 
 								if (c != null) {
 									System.out.println(
-											"\n MODIF D'UN CONTACT pendant un session " + msg + " " + addr + " \n");
+											"UPDATING a contact" + msg + " " + addr + " \n");
 
 									// modifier la liste des contacts
 									String oldusername = c.getPseudo();
 									c.setPseudo(msg);
-									System.out.println("Modification de la liste des contacts"
+									System.out.println("Updating the connected users' table. Result -->"
 											+ main.modUser(c.getPseudo(), main.getConnected(), oldusername) + "\n");
 
 								} else {
 									c = new Contact(msg, addr);
 									System.out.println(
-											"\n AJOUT DU CONTACT pendant une session " + msg + " " + addr + " \n");
+											"ADDING a new contact : " + msg + " " + addr + " \n");
 									cl.addContact(c);
+									
 									String hostname = null;
 									try {
 										hostname = InetAddress.getByName(addr).getHostName();
 									} catch (UnknownHostException e) {
 										e.printStackTrace();
-										new Alert("Error : Please close the program (connecting phase) ! ")
-												.setVisible(true);
+										new Alert("Error : Please close the program (main phase) ! ").setVisible(true);
 									}
+									
+									//If this user was disconnected, we update his row in the connected users' table 
 									if (main.isInTable(hostname) != -1) {
 										main.modUser(c.getPseudo(), main.getConnected(), hostname);
 									} else {
@@ -298,7 +300,7 @@ public class ContactsManager extends Thread {
 		state = true;
 	}
 
-	////////////////// gestion de l'envoi de msg udp
+	////////////////Sending an UDP message
 	public void signalDatagram(String m, String ad) {
 		System.out.println("Sending : " + m + " to " + ad + " .\n");
 		new UDPSender(m, ad).send();

@@ -23,7 +23,7 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			new Alert("Error : Please close the program!\n").setVisible(true);
+			new Alert("Error : Please close the program !\n").setVisible(true);
 		}
 
 	}
@@ -32,7 +32,7 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 		
 		try {
 			if (!socketsend.isOutputShutdown()) {
-				System.out.println("The msg is sent.\n");
+				System.out.println("The message is sent.\n");
 				out.writeObject(msg);
 				out.flush();
 			} else {
@@ -41,7 +41,7 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 			
 		} catch (IOException e){
 			e.printStackTrace();
-			new Alert("Error : Please close the program!\n").setVisible(true);
+			new Alert("Error : Please close the program !\n").setVisible(true);
 		}
 	}
 	
@@ -49,10 +49,10 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 		try {
 			socketsend.close();
 			out.close();
-			System.out.println("Socket d'envoi de messages ferm�\n");
+			System.out.println("Sending socket closed\n");
 		} catch (IOException e) {
 			e.printStackTrace();
-			new Alert("Error : Please close the program!\n").setVisible(true);
+			new Alert("Error : Please close the program !\n").setVisible(true);
 		}
 	}
 	

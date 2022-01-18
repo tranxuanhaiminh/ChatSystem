@@ -40,7 +40,6 @@ public class Action implements ActionListener, ListSelectionListener {
 
 	public void actionPerformed(ActionEvent event) {
 
-		// pour la premiere connection
 		if (pageC != null && (event.getSource().equals(pageC.getVerifyPseudo())
 				|| event.getSource().equals(pageC.getEnterPseudo()))) {
 
@@ -53,9 +52,10 @@ public class Action implements ActionListener, ListSelectionListener {
 			} else {
 				me.setPseudo(pageC.getEnterPseudo().getText());
 
-				// on cr�e et on lance le contacts manager
+				//We start the contact manager
 				pageC.getCm().setRunning(true);
 				
+				//We wait until the contacts have been added (3sec max)
 				synchronized (pageC.getContactList()) {
 					try {
 						pageC.getContactList().wait();
@@ -74,7 +74,7 @@ public class Action implements ActionListener, ListSelectionListener {
 
 				if (contactList.comparePseudo(me) == false) {
 
-					// on arr�te le contacts manager
+					//Stopping the contacts manager
 					pageC.getCm().setRunning(false);
 
 					new Alert("This username is already used ! Try again").setVisible(true);
@@ -85,7 +85,6 @@ public class Action implements ActionListener, ListSelectionListener {
 
 					pageC.setMain(new MainMenu(me, contactList, pageC.getCm()));
 					Alert welcome = new Alert("Welcome to the Chat System !");
-					welcome.setLocationRelativeTo(null);
 					welcome.setVisible(true);
 
 					Timer t = new Timer(700, new ActionListener() {
@@ -132,7 +131,7 @@ public class Action implements ActionListener, ListSelectionListener {
 					pageM.getPseudoLabel().setText(pageM.getMe().getPseudo());
 					pageM.getModifyFrame().getEnterpseudo().setText(null);
 
-					// envoyer son pseudo aux autres
+					// Sending our username to everybody
 					ContactsManager cm = pageM.getCm();
 					cm.signalDatagram(pageM.getMe().getPseudo(), "255.255.255.255");
 
@@ -161,16 +160,16 @@ public class Action implements ActionListener, ListSelectionListener {
 
 				if (chatInput.getText() != null && !(chatInput.getText().equals(""))) {
 
-					// creating the msg
+					// creating the message
 					Message msg = new Message(pageW.getDest(), chatInput.getText());
 
-					// afficher le message sur la page
+					// Displaying the message on the chat window
 					pageW.addChatLine(msg, true);
 
-					// utiliser le contact manager
+					//Sending the message to his destinator
 					pageW.getMain().getMessMan().sendMessTo(pageW.getConv(), msg);
 
-					// adding to the chat history
+					// adding the message to the chat history
 					pageW.getMain().getConDB().insertChat(msg.getDest().getIpaddress().getHostAddress(), msg.toString(),
 							msg.convertDateToFormat(), true);
 					System.out.println("Adding the msg you re sending to "
@@ -203,22 +202,22 @@ public class Action implements ActionListener, ListSelectionListener {
 					in = pageM.getMessMan().getConv(dest);
 
 					if (in != null) {
-						System.out.println("Vous avez déjà cette conversation !\n");
+						System.out.println("You have already openned this conversation ! Check the open chat windows.\n");
 						in.getChatw().requestFocus();
 
 					} else if ((in = pageM.getMessMan().getStoppedConv(dest)) != null) {
 
-						System.out.println("Vous aviez stoppée cette conversation, on la relance \n");
+						System.out.println("You stopped this conversation. We are restarting it.\n");
 						new Conversation(pageM, dest);
 
 					} else {
-						System.out.println("Contact trouvé, on lance la conversation\n");
+						System.out.println("Contact found. We are starting the conversation.\n");
 						new Conversation(pageM, dest);
 					}
 
 				} else {
-					System.out.println("Personne non connect�e, on affiche la conversation\n");
-					new Alert("This user is not connected ! You can't send messages !").setVisible(true);
+					System.out.println("This user is not connected, You can only look at the message history.\n");
+					new Alert("This user is not connected ! You can only look at the message history !").setVisible(true);
 					try {
 						new ChatWindow(pageM, new Contact(InetAddress.getByName(pseudo)), null);
 					} catch (UnknownHostException e1) {

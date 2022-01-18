@@ -34,7 +34,8 @@ public class MsgReceiver extends Thread{
 
 	public void run() {
 
-		System.out.println("Le msg receiver est lanc� pour l'hote : " + socketreceive.getInetAddress() + " \n");
+		System.out.println("The mess receiver starts for the user with the address : " 
+													+ socketreceive.getInetAddress() + " \n");
 
 		Message mess = null;
 
@@ -42,24 +43,24 @@ public class MsgReceiver extends Thread{
 
 			try {
 				mess = (Message) in.readObject();
-				System.out.println("MESSAGE RECU = " + mess + "\n");
+				System.out.println("Received Message = " + mess + "\n");
 
 				if (conv.getChatw() != null) {
-					// displaying the msg
+					// displaying the message
 					conv.getChatw().addChatLine(mess, false);
 				}
 
 				// adding to the chat history
 				conv.getMain().getConDB().insertChat(conv.getInterlocutor().getIpaddress().getHostAddress(),
 						mess.toString(), mess.convertDateToFormat(), false);
-				System.out.println("Adding the msg sent to you "
+				System.out.println("Adding the msg sent to you by "
 						+ conv.getInterlocutor().getIpaddress().getHostAddress() + " to the chat history\n");
 
 			} catch (ClassNotFoundException e1) {
 				e1.printStackTrace();
 				new Alert("Error : Please close this chat window ! ").setVisible(true);
 			} catch (EOFException e) {
-				//Do Nothing if the end has been reached
+				//Do Nothing if the end of the ObjectInputStrem has been reached
 			}catch (IOException e) {
 				e.printStackTrace();
 				new Alert("Error : Please close this chat window ! ").setVisible(true);
@@ -72,7 +73,7 @@ public class MsgReceiver extends Thread{
 		try {
 			socketreceive.close();
 			in.close();
-			System.out.println("Socket de reception de msg ferm�\n");
+			System.out.println("Receiver socket closed.\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 			new Alert("Error : Please close this chat window ! ").setVisible(true);

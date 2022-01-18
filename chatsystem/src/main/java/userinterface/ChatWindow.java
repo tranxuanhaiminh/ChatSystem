@@ -38,19 +38,17 @@ public class ChatWindow extends javax.swing.JFrame {
 	private javax.swing.JButton sendChat;
 	private JScrollBar bar;
 
-	////// Notify Frames
-
 	private Databasecon dbcon = new Databasecon();
 	private Contact dest;
 	private Conversation conv;
 
-	// lien page principale
+	// Main page
 	private MainMenu main;
 
 	// listeners
 	private Action sendMess;
 
-	// nbre de msg de l'historique � afficher
+	//Number of messages to load from the database
 	private final int nbMsgToLoad = 20;
 
 	/**
@@ -87,7 +85,7 @@ public class ChatWindow extends javax.swing.JFrame {
 
 		bar = jScrollPane1.getVerticalScrollBar();
 
-		// on charge l'historique
+		//Loading the history
 		this.loadHistory(nbMsgToLoad, 0);
 
 		bar.setValue(bar.getMaximum());

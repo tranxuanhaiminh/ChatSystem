@@ -4,9 +4,6 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 
 
-/**
- *
- */
 public class Modify extends javax.swing.JFrame {
 
 	/**
@@ -15,9 +12,6 @@ public class Modify extends javax.swing.JFrame {
 	private static final long serialVersionUID = 1L;
 
 
-	/**
-     * Creates new form ChatWindow
-     */
     public Modify() {
     	this.setTitle("Modifying your username...");
         initComponents();
