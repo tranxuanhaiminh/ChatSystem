@@ -8,6 +8,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import userinterface.Alert;
+
 public class UDPSender {
 
 	/*
@@ -21,23 +23,39 @@ public class UDPSender {
 	/*
 	 * Constructor
 	 */
-	public UDPSender(String message) throws SocketException, UnknownHostException, BindException {
+	public UDPSender(String message) {
 		this.port = 58799;
 		this.message = message;
-		this.sendersocket = new DatagramSocket();
-		sendersocket.setBroadcast(true);
-		this.dest = InetAddress.getByName("255.255.255.255");
+		try {
+			this.sendersocket = new DatagramSocket();
+			sendersocket.setBroadcast(true);
+			this.dest = InetAddress.getByName("255.255.255.255");
+		} catch (SocketException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+            new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+            new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
+		}
 	}
 
-	public UDPSender(String message, InetAddress addr) throws SocketException, BindException {
+	public UDPSender(String message, InetAddress addr) {
 		this.port = 58799;
 		this.message = message;
 		this.dest = addr;
-		this.sendersocket = new DatagramSocket();
-		sendersocket.setBroadcast(true);
+		try {
+			this.sendersocket = new DatagramSocket();
+			sendersocket.setBroadcast(true);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+            new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
+		}
 	}
 
-	public UDPSender(String message, String addr) throws BindException {
+	public UDPSender(String message, String addr) {
 		this.port = 58799;
 		this.message = message;
 
@@ -57,11 +75,17 @@ public class UDPSender {
 	/*
 	 * Methods
 	 */
-	public void send() throws IOException {
+	public void send() {
 		DatagramPacket out = null;
 		System.out.println("On envoie un datagram.\n");
 		out = new DatagramPacket(message.getBytes(), message.length(), dest, port);
-		sendersocket.send(out);
+		try {
+			sendersocket.send(out);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+            new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
+		}
 		sendersocket.close();
 		System.out.println("Fermeture du socket d'envoi\n");
 	}

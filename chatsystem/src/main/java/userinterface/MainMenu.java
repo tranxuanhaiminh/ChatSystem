@@ -44,13 +44,6 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JButton changepseudo;
     private javax.swing.JLabel pseudoLabel;
     private javax.swing.JTable pseudosList;
-    
-    // Notification frames 
-    private NotifyFrame userNotConnected;
-    private NotifyFrame pseudoUsed;
-    private NotifyFrame pseudoNull;
-    private NotifyFrame modifSuccess;
-    private NotifyFrame problem;
 	
     //gestion des contacts
 	private ContactsManager cm;
@@ -70,14 +63,6 @@ public class MainMenu extends javax.swing.JFrame {
     	this.setTitle(Interfacedisplay.mainmenutitle);
         initComponents();
         this.setLocationRelativeTo(null);
-        
-		/////////////////// Notify Frames
-		        
-		this.pseudoNull = new NotifyFrame("Please enter a value");
-		this.modifSuccess= new NotifyFrame("Success !");
-		this.pseudoUsed = new NotifyFrame("This username is already used !");
-		this.userNotConnected = new NotifyFrame("This user is not connected ! You can't send messages !");
-		this.problem = new NotifyFrame("Error : Please close the program (Main phase) !\n");
         
         this.conDB = new Databasecon("date.db");
         
@@ -358,25 +343,5 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
     }
-
-	public NotifyFrame getUserNotConnected() {
-		return userNotConnected;
-	}
-
-	public NotifyFrame getPseudoUsed() {
-		return pseudoUsed;
-	}
-
-	public NotifyFrame getPseudoNull() {
-		return pseudoNull;
-	}
-
-	public NotifyFrame getModifSuccess() {
-		return modifSuccess;
-	}
-
-	public NotifyFrame getProblem() {
-		return problem;
-	}
 
 }

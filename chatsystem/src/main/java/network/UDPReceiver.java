@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 import network.UDPReceiver;
+import userinterface.Alert;
 
 public class UDPReceiver {
 
@@ -21,18 +22,24 @@ public class UDPReceiver {
 	/*
 	 * Constructor
 	 */
-	public UDPReceiver() throws SocketException, BindException {
+	public UDPReceiver() {
 
 		this.port = 58799;
 		this.running = true;
-		this.receiversocket = new DatagramSocket(port);
-		receiversocket.setBroadcast(true);
+		try {
+			this.receiversocket = new DatagramSocket(port);
+			receiversocket.setBroadcast(true);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
+		}
 	}
 
 	/*
 	 * Methods
 	 */
-	public String[] receive() throws IOException {
+	public String[] receive() {
 
 		String[] ret = null;
 		buffer = new byte[256];
@@ -77,6 +84,10 @@ public class UDPReceiver {
 			e1.printStackTrace();
 		} catch (SocketTimeoutException e) {
 			System.out.println("Timer expir� fin du receive (connection).\n");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			new Alert("Error : Please close the program!\n").setVisible(true);
 		}
 
 		return ret;
@@ -94,5 +105,5 @@ public class UDPReceiver {
 	public DatagramSocket getReceiversocket() {
 		return receiversocket;
 	}
-	
+
 }

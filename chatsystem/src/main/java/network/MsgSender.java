@@ -8,6 +8,7 @@ import java.net.Socket;
 
 import chatsystem.Contact;
 import chatsystem.Message;
+import userinterface.Alert;
 
 public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sinon �a close la connexion; //ON FERME LE receiver d'abord D4ABORD
 	
@@ -17,7 +18,7 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 	boolean sent = true;
 
 	
-	public MsgSender(Socket socket) throws IOException {
+	public MsgSender(Socket socket) {
 		this.socketsend = socket;
 		this.setGo(true);
 		try {
@@ -25,12 +26,12 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw e;
+			new Alert("Error : Please close the program!\n").setVisible(true);
 		}
 
 	}
 	
-	public void send(Message msg) throws IOException {
+	public void send(Message msg) {
 		
 		try {
 			if (!socketsend.isOutputShutdown()) {
@@ -45,18 +46,18 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 			
 		} catch (IOException e){
 			e.printStackTrace();
-			throw e;
+			new Alert("Error : Please close the program!\n").setVisible(true);
 		}
 	}
 	
-	public void closeSend() throws IOException {
+	public void closeSend() {
 		try {
 			socketsend.close();
 			out.close();
 			System.out.println("Socket d'envoi de messages ferm�\n");
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw e;
+			new Alert("Error : Please close the program!\n").setVisible(true);
 		}
 	}
 	
@@ -71,33 +72,5 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 	public Socket getSocketsend() {
 		return socketsend;
 	}
-
-	public static void main(String[] args) throws IOException {
-		
-		String host = InetAddress.getLocalHost().getHostName();
-		int port = 55555;
-		Socket clientSocket = new Socket(host, port);
-		MsgSender m= new MsgSender(clientSocket);
-		
-		Message msg = new Message(new Contact("toto",(String)null), "test 1");
-		m.send(msg);		
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		/*msg = new Message(new Contact("toto",(String)null), "test 2");
-		/m.send(msg);
-		
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
-		
-		m.closeSend();
-		
-	}
-
 
 }

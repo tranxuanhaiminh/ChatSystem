@@ -43,7 +43,6 @@ public class ChatWindow extends javax.swing.JFrame {
     private JScrollBar bar;
     
     //////Notify Frames 
-    NotifyFrame problem;
 
     private Databasecon dbcon = new Databasecon();
 	private Contact dest;
@@ -67,7 +66,6 @@ public class ChatWindow extends javax.swing.JFrame {
         this.setTitle(dest.getPseudo());
         initComponents();
         
-        problem = new NotifyFrame("Error : Please close this chat window ! ");
 
         this.dest = dest;
         this.main = m;
@@ -217,7 +215,7 @@ public class ChatWindow extends javax.swing.JFrame {
 				    	msg_display.setCaretPosition(0);
 					} catch (BadLocationException e) {
 						e.printStackTrace();
-						problem.display();
+						new Alert("Error : Please close the program!\n").setVisible(true);
 					}
 				} else {
 					try {
@@ -225,7 +223,7 @@ public class ChatWindow extends javax.swing.JFrame {
 				    	msg_display.setCaretPosition(0);
 					} catch (BadLocationException e) {
 						e.printStackTrace();
-						problem.display();
+						new Alert("Error : Please close the program!\n").setVisible(true);
 
 					}
 				}
@@ -233,7 +231,7 @@ public class ChatWindow extends javax.swing.JFrame {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			problem.display();
+			new Alert("Error : Please close the program!\n").setVisible(true);
 		}
 	}
     
@@ -258,10 +256,6 @@ public class ChatWindow extends javax.swing.JFrame {
 
 	public Conversation getConv() {
 		return conv;
-	}
-	
-	public NotifyFrame getProblem() {
-		return problem;
 	}
 	
     /**
@@ -295,7 +289,7 @@ public class ChatWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ChatWindow(null,new Contact("titi",(InetAddress) null), null);
+                new Alert("The program is already running. Please close this session!").setVisible(true);
             }
         });
         
