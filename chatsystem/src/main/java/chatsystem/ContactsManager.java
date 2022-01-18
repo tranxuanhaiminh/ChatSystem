@@ -146,7 +146,11 @@ public class ContactsManager extends Thread {
 						e1.printStackTrace();
 						new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
 					}
-
+		    		
+		    		synchronized (this.cc.getContactList()) {
+		    			this.cc.getContactList().notify();
+		    		}
+		    		
 				} else if (state == true) {
 
 					//////////////////////////////////// Contact manager apr�s la phase de

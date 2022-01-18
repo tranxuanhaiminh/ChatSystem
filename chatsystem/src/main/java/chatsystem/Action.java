@@ -55,14 +55,15 @@ public class Action implements ActionListener, ListSelectionListener {
 
 				// on cr�e et on lance le contacts manager
 				pageC.getCm().setRunning(true);
-
-				try {
-					// on attend de finir de recevoir les contacts
-					Thread.sleep(3099);
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				
+				synchronized (pageC.getContactList()) {
+					try {
+						pageC.getContactList().wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
+
+					}
 				}
 
 				pageC.getCm().setRunning(false);
