@@ -4,6 +4,8 @@
  */
 package userinterface;
 
+import javax.swing.JLabel;
+
 /**
  *
  * @author Minh
@@ -15,7 +17,9 @@ public class Alert extends javax.swing.JFrame {
      */
     public Alert(String label) {
         initComponents();
+        setLocationRelativeTo(null);
         jLabel1.setText(label);
+        jLabel1.setHorizontalAlignment(JLabel.CENTER);
     }
 
     /**

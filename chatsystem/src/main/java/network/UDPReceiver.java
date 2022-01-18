@@ -76,7 +76,9 @@ public class UDPReceiver {
 				ret = new String[] { msg, addr };
 			}
 
-		} catch (SocketException e2) {
+		} catch (SocketTimeoutException e2) {
+			//do nothing
+		}catch (SocketException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		} catch (UnknownHostException e1) {

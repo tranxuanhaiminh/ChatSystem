@@ -85,6 +85,7 @@ public class Action implements ActionListener, ListSelectionListener {
 
 					pageC.setMain(new MainMenu(me, contactList, pageC.getCm()));
 					Alert welcome = new Alert("Welcome to the Chat System !");
+					welcome.setLocationRelativeTo(null);
 					welcome.setVisible(true);
 
 					Timer t = new Timer(700, new ActionListener() {
@@ -167,7 +168,7 @@ public class Action implements ActionListener, ListSelectionListener {
 					pageW.addChatLine(msg, true);
 
 					// utiliser le contact manager
-					pageW.getMain().getMessMan().signalMess(pageW.getConv(), msg);
+					pageW.getMain().getMessMan().sendMessTo(pageW.getConv(), msg);
 
 					// adding to the chat history
 					pageW.getMain().getConDB().insertChat(msg.getDest().getIpaddress().getHostAddress(), msg.toString(),

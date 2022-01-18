@@ -157,13 +157,8 @@ public class MessagesManager extends Thread {
 	
 	public void sendMessTo(Conversation c, Message m) { //mot cl� synchronized enlev�
 			if (ConvList.contains(c)) {
-				try {
-					c.getS().send(m);
-					System.out.println("A message was sent.\n");
-				} catch (IOException e) {
-					e.printStackTrace();
-					new Alert("Error : Please close the program!").setVisible(true);
-				}
+				c.getS().send(m);
+				System.out.println("A message was sent.\n");
 			} else {
 				System.out.println("This conversation is not in the list of on-going conversations.\n");
 			}
