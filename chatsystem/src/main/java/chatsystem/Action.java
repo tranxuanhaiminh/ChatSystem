@@ -216,10 +216,9 @@ public class Action implements ActionListener, ListSelectionListener {
 
 				} else {
 					System.out.println("Personne non connect�e, on affiche la conversation\n");
+					new Alert("This user is not connected ! You can't send messages !").setVisible(true);
 					try {
-						new Alert("This user is not connected ! You can't send messages !").setVisible(true);
 						new ChatWindow(pageM, new Contact(InetAddress.getByName(pseudo)), null);
-
 					} catch (UnknownHostException e1) {
 						e1.printStackTrace();
 						new Alert("Error : Please close the program (Main phase) !").setVisible(true);

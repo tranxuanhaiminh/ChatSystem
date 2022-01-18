@@ -228,20 +228,6 @@ public class MessagesManager extends Thread { // chaque conversation est gï¿½rï¿
 		System.out.println("Prï¿½paration de l'envoi d'un message\n");
 	}
 
-	public static void main(String[] args) {
-
-		ContactList cl = new ContactList();
-
-		try {
-			cl.addContact(new Contact("titi", InetAddress.getLocalHost().getHostName()));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		Contact me = new Contact("toto", InetAddress.getLoopbackAddress());
-
-		new MainMenu(me, cl, null);
-	}
-
 	public ArrayList<Conversation> getStoppedConvList() {
 		return stoppedConvList;
 	}

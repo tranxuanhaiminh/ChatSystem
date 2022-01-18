@@ -59,9 +59,6 @@ public class MsgReceiver extends Thread { // Server tcp //client tcp
 			} catch (ClassNotFoundException e1) {
 				e1.printStackTrace();
 				new Alert("Error : Please close this chat window ! ").setVisible(true);
-			} catch (EOFException e) {
-				// Do Nothing if the end has been reached
-
 			} catch (IOException e) {
 				e.printStackTrace();
 				new Alert("Error : Please close this chat window ! ").setVisible(true);
@@ -88,25 +85,6 @@ public class MsgReceiver extends Thread { // Server tcp //client tcp
 
 	public void setRunning(boolean go) {
 		this.running = go;
-	}
-
-	public static void main(String[] args) throws IOException {
-
-		int port = 55555;
-		try (ServerSocket serversock = new ServerSocket(port)) {
-			System.out.println("WAITING FOR CONNEXION on port : " + port + "\n");
-			Socket socketDoorbell = serversock.accept();
-			System.out.println("CONNEXION ACCEPTED with : " + socketDoorbell.getInetAddress() + " on port : " + port
-					+ " Local addr is : " + socketDoorbell.getLocalAddress() + "\n");
-			MsgReceiver m = new MsgReceiver(socketDoorbell, null);
-			m.start();
-			Thread.sleep(10000);
-
-			m.setRunning(false);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
 	}
 
 }

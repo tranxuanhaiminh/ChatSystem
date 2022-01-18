@@ -47,12 +47,6 @@ public class Message implements Serializable{
 	    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    return sdf.format(date);
 	}
-	
-    public static void main(String args[]) {
-    	
-    	System.out.println((new Message()).convertDateToFormat());
-    	
-    }
 
     	
 	
