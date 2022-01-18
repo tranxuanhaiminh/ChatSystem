@@ -73,20 +73,4 @@ public class Contact implements Serializable{
 		}
 	}
 	
-	public static void main(String[] args) {
-		Contact c=null;
-		Contact t=null;
-		try {
-			c=new Contact("titi",InetAddress.getLocalHost());
-			t = new Contact("toto", InetAddress.getLoopbackAddress());
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		for (int i=0; i<5;i++)
-			System.out.println(c.getIpaddress().getHostAddress()+" "+t.getIpaddress().getHostAddress());
-		
-	}
-	
 }

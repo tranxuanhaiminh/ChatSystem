@@ -9,15 +9,19 @@ import java.net.Socket;
 import chatsystem.Conversation;
 import chatsystem.Message;
 
+import database.Databasecon;
+import userinterface.Alert;
+import userinterface.ChatWindow;
+
+
 public class MsgReceiver extends Thread{
 	
 	private Socket socketreceive;
 	private boolean running;
-	private ObjectInputStream in=null;
+	private ObjectInputStream in = null;
 	private Conversation conv;
 
-	
-	public MsgReceiver(Socket sock, Conversation conv) throws IOException {
+	public MsgReceiver(Socket sock, Conversation conv) {
 		super();
 		this.socketreceive = sock;
 		this.conv = conv;
@@ -27,53 +31,52 @@ public class MsgReceiver extends Thread{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			conv.getChatw().getProblem().display();
+			new Alert("Error : Please close this chat window ! ").setVisible(true);
 		}
 	}
-	
-	public void run() {
-		
-		System.out.println("Le msg receiver est lanc� pour l'hote : " + socketreceive.getInetAddress()+ " \n");
 
-		Message mess=null;
-		
+	public void run() {
+
+		System.out.println("Le msg receiver est lanc� pour l'hote : " + socketreceive.getInetAddress() + " \n");
+
+		Message mess = null;
+
 		while (running) {
-			
-				try {
-					mess = (Message) in.readObject();
-					System.out.println("MESSAGE RECU = "+ mess+"\n");
-					
-					if (conv.getChatw() !=null){
-						//displaying the msg
-						conv.getChatw().addChatLine(mess,false);
-					}
-					
-					//adding to the chat history
-			    	conv.getMain().getConDB().insertChat(conv.getInterlocutor().getIpaddress().getHostAddress(), mess.toString(), mess.convertDateToFormat(), false);
-			    	System.out.println("Adding the msg sent to you by "+ conv.getInterlocutor()+" to the chat history\n");
-			    	
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
-					conv.getChatw().getProblem().display();
-				} catch (EOFException e) {
-					//Do Nothing if the end has been reached
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-					conv.getChatw().getProblem().display();
+
+			try {
+				mess = (Message) in.readObject();
+				System.out.println("MESSAGE RECU = " + mess + "\n");
+
+				if (conv.getChatw() != null) {
+					// displaying the msg
+					conv.getChatw().addChatLine(mess, false);
 				}
-				
-				mess = null;
-			
+
+				// adding to the chat history
+				conv.getMain().getConDB().insertChat(conv.getInterlocutor().getIpaddress().getHostAddress(),
+						mess.toString(), mess.convertDateToFormat(), false);
+				System.out.println("Adding the msg sent to you "
+						+ conv.getInterlocutor().getIpaddress().getHostAddress() + " to the chat history\n");
+
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+				new Alert("Error : Please close this chat window ! ").setVisible(true);
+			} catch (IOException e) {
+				e.printStackTrace();
+				new Alert("Error : Please close this chat window ! ").setVisible(true);
+			}
+
+			mess = null;
+
 		}
-		
+
 		try {
 			socketreceive.close();
 			in.close();
 			System.out.println("Socket de reception de msg ferm�\n");
 		} catch (IOException e) {
 			e.printStackTrace();
-			conv.getChatw().getProblem().display();
+			new Alert("Error : Please close this chat window ! ").setVisible(true);
 
 		}
 	}
@@ -85,25 +88,5 @@ public class MsgReceiver extends Thread{
 	public void setRunning(boolean go) {
 		this.running = go;
 	}
-	
-	public static void main(String[] args) throws IOException {
-		
-		int port= 55555;
-		try (ServerSocket serversock = new ServerSocket(port)) {
-			System.out.println("WAITING FOR CONNEXION on port : "+ port+ "\n");
-			Socket socketDoorbell = serversock.accept();
-			System.out.println("CONNEXION ACCEPTED with : " + socketDoorbell.getInetAddress() +" on port : "+ port+ " Local addr is : "+ socketDoorbell.getLocalAddress()+"\n");
-			MsgReceiver m= new MsgReceiver(socketDoorbell,null);
-			m.start();
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			m.setRunning(false);
-		}
-	
-	}
-
 
 }

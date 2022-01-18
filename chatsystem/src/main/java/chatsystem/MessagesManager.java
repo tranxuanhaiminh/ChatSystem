@@ -7,19 +7,18 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import userinterface.Alert;
 import userinterface.MainMenu;
 
+public class MessagesManager extends Thread {
 
-public class MessagesManager extends Thread{
-	
 	private MainMenu main;
 	private boolean running;
 	private int port = 55555;
-	private ServerSocket ss; 
-	
+	private ServerSocket ss;
+
 	private ArrayList<Conversation> ConvList;
 	private ArrayList<Conversation> stoppedConvList;
-	
 	
 	public MessagesManager(MainMenu mainMenu) {
 		super();
@@ -27,30 +26,25 @@ public class MessagesManager extends Thread{
 		this.running = true;
 		this.ConvList = new ArrayList<Conversation>();
 		this.stoppedConvList = new ArrayList<Conversation>();
-		
+
 		try {
-			 ss = new ServerSocket(port);
+			ss = new ServerSocket(port);
 		} catch (IOException e) {
 			e.printStackTrace();
-			main.getProblem().display();
+			new Alert("Error : Please close the program!").setVisible(true);
 		}
 	}
-	
-	
+
 	public void run() {
 	
 		Socket doorbell=null;
 		while (running) {
-				
+			
 			try {
 				doorbell = ss.accept();
-			} catch (java.net.BindException e1) {
-				e1.printStackTrace();
-				main.getProblem().display();
-				
-			}catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
-				main.getProblem().display();
+				new Alert("Error : Please close the program!").setVisible(true);
 
 			}
 			
@@ -100,7 +94,6 @@ public class MessagesManager extends Thread{
 						cn.startConv(sock);
 						System.out.println("A conversation is accepted.\n");
 					}
-					
 				}).start();
 			}
 		}
@@ -115,25 +108,25 @@ public class MessagesManager extends Thread{
 	public MainMenu getMain() {
 		return main;
 	}
-	
-	public ArrayList<Conversation> getConvList(){
+
+	public ArrayList<Conversation> getConvList() {
 		return this.ConvList;
 	}
-	
-	/* 
-	*This method is called when someone disconnects
-	*/
+
+	/*
+	 * This method is called when someone disconnects
+	 */
 	public synchronized void removeConv(Conversation cv) {
 		cv.stopConv();
 		this.stoppedConvList.remove(cv);
 		cv.getR().setRunning(false);
 	}
-	
+
 	public synchronized void removeStoppedConv(Conversation cv) {
 		this.stoppedConvList.remove(cv);
 		cv.getR().setRunning(false);
 	}
-	
+
 	public Conversation getConv(Contact c) {
 		Conversation res = null;
 		for (Conversation cv : this.ConvList) {
@@ -143,7 +136,7 @@ public class MessagesManager extends Thread{
 		}
 		return res;
 	}
-	
+
 	public Conversation getStoppedConv(Contact c) {
 		Conversation res = null;
 		for (Conversation cv : this.stoppedConvList) {
@@ -153,7 +146,7 @@ public class MessagesManager extends Thread{
 		}
 		return res;
 	}
-	
+
 	public void setRunning(boolean b) {
 		this.running = b;
 	}
@@ -169,7 +162,7 @@ public class MessagesManager extends Thread{
 					System.out.println("A message was sent.\n");
 				} catch (IOException e) {
 					e.printStackTrace();
-					main.getProblem().display();
+					new Alert("Error : Please close the program!").setVisible(true);
 				}
 			} else {
 				System.out.println("This conversation is not in the list of on-going conversations.\n");
