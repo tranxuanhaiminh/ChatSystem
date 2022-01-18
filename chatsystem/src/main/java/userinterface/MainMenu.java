@@ -44,13 +44,6 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JButton changepseudo;
     private javax.swing.JLabel pseudoLabel;
     private javax.swing.JTable pseudosList;
-    
-    // Notification frames 
-    private NotifyFrame userNotConnected;
-    private NotifyFrame pseudoUsed;
-    private NotifyFrame pseudoNull;
-    private NotifyFrame modifSuccess;
-    private NotifyFrame problem;
 	
     //gestion des contacts
 	private ContactsManager cm;
@@ -70,14 +63,6 @@ public class MainMenu extends javax.swing.JFrame {
     	this.setTitle(Interfacedisplay.mainmenutitle);
         initComponents();
         this.setLocationRelativeTo(null);
-        
-		/////////////////// Notify Frames
-		        
-		this.pseudoNull = new NotifyFrame("Please enter a value");
-		this.modifSuccess= new NotifyFrame("Success !");
-		this.pseudoUsed = new NotifyFrame("This username is already used !");
-		this.userNotConnected = new NotifyFrame("This user is not connected ! You can't send messages !");
-		this.problem = new NotifyFrame("Error : Please close the program (Main phase) !\n");
         
         this.conDB = new Databasecon("date.db");
         
@@ -310,73 +295,6 @@ public class MainMenu extends javax.swing.JFrame {
 
 	public Databasecon getConDB() {
 		return conDB;
-	}
-	
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-            	
-            	ContactList cl = new ContactList();
-        		
-        		try {
-					cl.addContact(new Contact("titi",InetAddress.getLocalHost()));
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-        		Contact me = new Contact("toto",InetAddress.getLoopbackAddress());
-        		ContactsManager cm=null;
-        		
-        		new MainMenu(me, cl, cm);
-            }
-        });
-    }
-
-	public NotifyFrame getUserNotConnected() {
-		return userNotConnected;
-	}
-
-	public NotifyFrame getPseudoUsed() {
-		return pseudoUsed;
-	}
-
-	public NotifyFrame getPseudoNull() {
-		return pseudoNull;
-	}
-
-	public NotifyFrame getModifSuccess() {
-		return modifSuccess;
-	}
-
-	public NotifyFrame getProblem() {
-		return problem;
 	}
 
 }

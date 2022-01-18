@@ -29,13 +29,6 @@ public class Connect extends javax.swing.JFrame {
     private javax.swing.JLabel labelUsername;
     private javax.swing.JTextField enterpseudo;
     private javax.swing.JButton verifyPseudo;
-    
-    //Notification Frames
-    private NotifyFrame pseudoUsed;
-    private NotifyFrame welcome;
-    private NotifyFrame pseudoNull;
-    private NotifyFrame alreadyRunning;
-    private NotifyFrame problem;
 
 	private Action verify;
 	
@@ -52,13 +45,6 @@ public class Connect extends javax.swing.JFrame {
     	this.setTitle(Interfacedisplay.connecttitle);
         initComponents();
         this.setLocationRelativeTo(null);
-        
-       ///////////////NotifyFrames 
-	   this.pseudoUsed = new NotifyFrame("This username is already used ! Try again");
-	   this.welcome = new NotifyFrame("Welcome to the Chat System !");
-	   this.pseudoNull = new NotifyFrame("Please enter a value");
-	   this.alreadyRunning = new NotifyFrame("The program is already running !\nPlease close this session !");
-       this.problem = new NotifyFrame("Error : Please close the program (connecting phase) ! ");
        
 		contactList = new ContactList();
 		me =new Contact(InetAddress.getLoopbackAddress());
@@ -155,7 +141,11 @@ public class Connect extends javax.swing.JFrame {
 	
     
     /////////////////////////////////////////////////////////////
-	public Contact getMe() {
+    
+    /*
+     * Methods
+     */
+    public Contact getMe() {
 		return me;
 	}
 
@@ -189,62 +179,5 @@ public class Connect extends javax.swing.JFrame {
 
 	public void setMain(MainMenu main) {
 		this.main = main;
-	}
-	
-	
-    /**
-     * @param args the command line arguments
-     */
-    
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Connect.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Connect.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Connect.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Connect.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Connect();
-            }
-        });
-    }
-
-	public NotifyFrame getPseudoUsed() {
-		return pseudoUsed;
-	}
-
-	public NotifyFrame getWelcome() {
-		return welcome;
-	}
-
-	public NotifyFrame getPseudoNull() {
-		return pseudoNull;
-	}
-
-	public NotifyFrame getAlreadyRunning() {
-		return alreadyRunning;
-	}
-
-	public NotifyFrame getProblem() {
-		return problem;
 	}
 }

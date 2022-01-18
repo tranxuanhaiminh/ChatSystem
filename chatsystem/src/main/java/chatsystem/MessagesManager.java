@@ -7,58 +7,61 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import userinterface.Alert;
 import userinterface.MainMenu;
 
+public class MessagesManager extends Thread { // chaque conversation est g�r� par un Msgsender et un Msgreceiver
 
-public class MessagesManager extends Thread{
 	
 	private MainMenu main;
 	private boolean running;
 	private int port = 55555;
-	private ServerSocket ss; 
-	
+	private ServerSocket ss;
+
 	private ArrayList<Conversation> ConvList;
 	private ArrayList<Conversation> stoppedConvList;
-	
-	private Conversation c=null;
-	private Message m=null;
-	
-	
+
+	private Conversation c = null;
+	private Message m = null;
+
 	public MessagesManager(MainMenu mainMenu) {
 		super();
 		this.main = mainMenu;
 		this.running = true;
 		this.ConvList = new ArrayList<Conversation>();
 		this.stoppedConvList = new ArrayList<Conversation>();
-		
+
 		try {
-			 ss = new ServerSocket(port);
+			ss = new ServerSocket(port);
 		} catch (IOException e) {
 			e.printStackTrace();
-			main.getProblem().display();
+			new Alert("Error : Please close the program!\n").setVisible(true);
 		}
 	}
-	
-	
-	public void run() {
-		
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					
-					Socket doorbell=null;
-					while (running) {
-							
-						try {
-							doorbell = ss.accept();
-						} catch (java.net.BindException e1) {
-							e1.printStackTrace();
-							main.getProblem().display();
-							
-						}catch (IOException e) {
-							e.printStackTrace();
-							main.getProblem().display();
 
+	public void run() {
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				Socket doorbell = null;
+				while (running) {
+
+					try {
+						doorbell = ss.accept();
+					} catch (IOException e) {
+						e.printStackTrace();
+						new Alert("Error : Please close the program!\n").setVisible(true);
+
+					}
+
+					InetAddress host = doorbell.getInetAddress();
+					Conversation ec = null;
+					for (Conversation withknownhost : ConvList) {
+						if (host.equals(withknownhost.getInterlocutor().getIpaddress())) {
+							System.out.println("La conversation a �t� trouv�.\n");
+							ec = withknownhost;
 						}
 						
 						InetAddress host = doorbell.getInetAddress();
@@ -120,9 +123,9 @@ public class MessagesManager extends Thread{
 									
 									}
 								}
-								
-							}).start();
-						}
+							}
+
+						}).start();
 					}
 					System.out.println("The server of the messages manager is stopped !\n");
 					
@@ -146,8 +149,8 @@ public class MessagesManager extends Thread{
 	public MainMenu getMain() {
 		return main;
 	}
-	
-	public ArrayList<Conversation> getConvList(){
+
+	public ArrayList<Conversation> getConvList() {
 		return this.ConvList;
 	}
 	
@@ -159,12 +162,12 @@ public class MessagesManager extends Thread{
 		this.stoppedConvList.remove(cv);
 		cv.getR().setRunning(false);
 	}
-	
+
 	public synchronized void removeStoppedConv(Conversation cv) {
 		this.stoppedConvList.remove(cv);
 		cv.getR().setRunning(false);
 	}
-	
+
 	public Conversation getConv(Contact c) {
 		Conversation res = null;
 		for (Conversation cv : this.ConvList) {
@@ -174,7 +177,7 @@ public class MessagesManager extends Thread{
 		}
 		return res;
 	}
-	
+
 	public Conversation getStoppedConv(Contact c) {
 		Conversation res = null;
 		for (Conversation cv : this.stoppedConvList) {
@@ -184,48 +187,30 @@ public class MessagesManager extends Thread{
 		}
 		return res;
 	}
-	
+
 	public void setRunning(boolean b) {
 		this.running = b;
 	}
-	
+
 	public synchronized void sendMessTo(Conversation c, Message m) {
-			if (ConvList.contains(c)) {
-				try {
-					c.getS().send(m);
+		if (ConvList.contains(c)) {
+			c.getS().send(m);
 					System.out.println("A message was sent.\n");
-				} catch (IOException e) {
-					e.printStackTrace();
-					main.getProblem().display();
-				}
-			} else {
-				System.out.println("This conversation is not in the list of on-going conversations.\n");
-			}
 			this.c = null;
 			this.m = null;
-		
+		} else {
+				System.out.println("This conversation is not in the list of on-going conversations.\n");
+			this.c = null;
+			this.m = null;
+		}
+
 	}
-	
+
 	public synchronized void signalMess(Conversation c, Message m) {
 			this.c = c;
 			this.m = m;
 			System.out.println("Preparing the sending of the message...\n");
 	}
-	
-	public static void main(String[] args) {
-			
-			ContactList cl = new ContactList();
-			
-			try {
-				cl.addContact(new Contact("titi",InetAddress.getLocalHost().getHostName()));
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
-			Contact me = new Contact("toto",InetAddress.getLoopbackAddress());
-			
-			new MainMenu(me, cl, null);
-	}
-
 
 	public ArrayList<Conversation> getStoppedConvList() {
 		return stoppedConvList;
