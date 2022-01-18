@@ -143,7 +143,6 @@ public class MessagesManager extends Thread{
 		
 	}
 
-
 	public MainMenu getMain() {
 		return main;
 	}
@@ -199,13 +198,11 @@ public class MessagesManager extends Thread{
 					e.printStackTrace();
 					main.getProblem().display();
 				}
-				this.c = null;
-				this.m = null;
 			} else {
 				System.out.println("This conversation is not in the list of on-going conversations.\n");
-				this.c = null;
-				this.m = null;
 			}
+			this.c = null;
+			this.m = null;
 		
 	}
 	
