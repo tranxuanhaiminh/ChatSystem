@@ -54,15 +54,6 @@ public class Action implements ActionListener, ListSelectionListener{
 				//on cr�e et on lance le contacts manager
 				pageC.getCm().setRunning(true);
 				
-				/*try {
-					//on attend de finir de recevoir les contacts
-					Thread.sleep(3099);
-				
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-					pageC.getProblem().display();
-				}*/
-				
 				synchronized (pageC.getContactList()) {
 					try {
 						pageC.getContactList().wait();
@@ -71,7 +62,6 @@ public class Action implements ActionListener, ListSelectionListener{
 						pageC.getProblem().display();
 
 					}
-				
 				}
 				
 				pageC.getCm().setRunning(false);
