@@ -85,6 +85,7 @@ public class ChatWindow extends javax.swing.JFrame {
         this.addWindowListener(new WindowAdapter() {
 			 
 			 public void windowClosing(WindowEvent e) {
+				 System.out.println("Stopping the window.\n");
 				 if (conv != null)
 					 conv.stopConv();
 			     frame.setVisible(false);

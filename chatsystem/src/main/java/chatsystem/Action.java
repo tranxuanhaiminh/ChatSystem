@@ -162,7 +162,6 @@ public class Action implements ActionListener, ListSelectionListener{
 					pageW.addChatLine(msg,true);
 					
 					//utiliser le contact manager
-					//pageW.getMain().getMessMan().signalMess(pageW.getConv(), msg);
 					pageW.getMain().getMessMan().sendMessTo(pageW.getConv(), msg);
 					
 					//adding to the chat history

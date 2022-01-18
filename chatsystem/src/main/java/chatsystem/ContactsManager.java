@@ -283,7 +283,7 @@ public class ContactsManager extends Thread{
 					        		} else if ((cv = main.getMessMan().getStoppedConv(c))!= null) {
 					        			main.getMessMan().removeStoppedConv(cv);
 					        		} else {
-					        			System.out.println("You don't have a conversation with the disconnected user.\n");
+					        			System.out.println("You didn't have a conversation with this disconnected user.\n");
 					        		}
 						        }
 						        
@@ -306,7 +306,7 @@ public class ContactsManager extends Thread{
 						        	//modifier la liste des contacts
 						        	String oldusername = c.getPseudo();
 						        	c.setPseudo(msg);
-						        	System.out.println("Modification de la liste des contacts"+main.modUser(c.getPseudo(), main.getConnected(), oldusername)+"\n");
+						        	System.out.println("Modification de la liste des contacts. Resulat --> "+main.modUser(c.getPseudo(), main.getConnected(), oldusername)+"\n");
 						        	
 						        } else {
 						        	c = new Contact(msg,addr);
