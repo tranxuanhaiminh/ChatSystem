@@ -1,18 +1,14 @@
 build:
 	@echo "\n==== COMPILING ====\n"
 	mvn compile
-    
-start : build
-	@echo "\n==== LOADING CONNECTION ====\n"
+	@echo "\n==== Fat Jar CREATION ====\n"
 	mvn package
+    
+start :
+	@echo "\n==== LOADING CONNECTION ====\n"
 	java -cp target/ChatSystem-jar-with-dependencies.jar chatsystem.ChatSystem
 
 clean:
 	@echo "\n==== CLEANING ====\n"
 	-rm *.db
-	-rm target/*.jar
-
-test:
-	@echo "\n==== LOADING test ====\n"
-	mvn package
-	java -cp target/ChatSystem.jar network.UDPReceiver
+	mvn clean
