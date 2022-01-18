@@ -62,28 +62,18 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 						}
 						
 						InetAddress host = doorbell.getInetAddress();
-						Conversation ec = null;
-						for (Conversation withknownhost : ConvList) {
-							if (host.equals(withknownhost.getInterlocutor().getIpaddress())) {
-								System.out.println("La conversation a �t� trouv�.\n");
-								ec = withknownhost;
-							} 
-						}
+						Contact c = new Contact(host);
 						
-						Conversation stopped = null;
-						for (Conversation withknownhost : stoppedConvList) {
-							if (host.equals(withknownhost.getInterlocutor().getIpaddress())) {
-								System.out.println("La conversation a était dans les conv arrêtées.\n");
-								stopped = withknownhost;
-							} 
-						}
+						Conversation ec = getConv(c);
 						
-						final Conversation encours = ec;
 						final Socket sock = doorbell;
-						if (encours != null) {
+						
+						if (ec != null) {
+							final Conversation encours = ec;
+
 							//create convo (initi� par nous)
 							new Thread(new Runnable() {
-								
+
 								@Override
 								public void run() {
 									//sock est l'aceptation de notre socket d'envoi
@@ -98,8 +88,8 @@ public class MessagesManager extends Thread{ // chaque conversation est g�r�
 									
 							}).start();
 							
-						} else if (stopped != null){
-								final Conversation s = stopped;
+						} else if ((ec=getStoppedConv(c)) != null){
+								final Conversation s = ec;
 								new Thread(new Runnable() {
 								
 								@Override
