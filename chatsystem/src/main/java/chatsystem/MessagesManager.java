@@ -42,9 +42,7 @@ public class MessagesManager extends Thread{
 	
 	public void run() {
 		
-			/*new Thread(new Runnable() {
-				@Override
-				public void run() {*/
+			/*new Thread(() -> {*/
 					
 					Socket doorbell=null;
 					while (running) {
@@ -72,10 +70,7 @@ public class MessagesManager extends Thread{
 							final Conversation encours = ec;
 
 							//We initiated the conversation
-							new Thread(new Runnable() {
-
-								@Override
-								public void run() {
+							new Thread(() -> {
 									//sock is the MsgReceiver socket (a response to our MsgSender socket)
 									if (encours.getChatw()==null) {
 										encours.startConv(sock);
@@ -84,41 +79,31 @@ public class MessagesManager extends Thread{
 										encours.reStartConv(sock);
 										System.out.println("This conversation was already openned.\n");
 									}
-								}
 									
 							}).start();
+										
 							
 						} else if ((ec=getStoppedConv(c)) != null){
 								final Conversation s = ec;
-								new Thread(new Runnable() {
 								
-								@Override
-								public void run() {
+								new Thread(() -> {
 									//sock is the MsgReceiver socket (a response to our MsgSender socket)
 									s.reStartConv(sock);
 									System.out.println("We have restarted a conversation.\n");
-								}
 									
 							}).start();
 							
 						} else {
 							
 							//The conversation was initiated by one of our contacts
-							new Thread(new Runnable() {
-								
-								@Override
-								public void run() {
-									
-									Contact contact = getMain().getContactList().findIp(host);
-									
-									if (contact ==null) {
-											System.out.println("This person is not in the contacts list !\n");
-									} else {
-										Conversation cn = new Conversation(main,contact);
-										cn.startConv(sock);
-										System.out.println("A conversation is accepted.\n");
-									
-									}
+							new Thread(() -> {
+								Contact contact = getMain().getContactList().findIp(host);
+								if (contact ==null) {
+										System.out.println("This person is not in the contacts list !\n");
+								} else {
+									Conversation cn = new Conversation(main,contact);
+									cn.startConv(sock);
+									System.out.println("A conversation is accepted.\n");
 								}
 								
 							}).start();
@@ -129,8 +114,8 @@ public class MessagesManager extends Thread{
 					for (Conversation c : stoppedConvList) {
 						c.getR().setRunning(false);
 					}
-			/*	}
-			}).start();*/
+			
+			/*}).start();*/
 			
 			//Sending thread (this thread itself)
 			/*while (running) {
