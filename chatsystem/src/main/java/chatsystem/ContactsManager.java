@@ -167,7 +167,11 @@ public class ContactsManager extends Thread{
 						this.cc.getProblem().display();
 
 					}
-	
+		    		
+		    		synchronized (this.cc.getContactList()) {
+		    			this.cc.getContactList().notify();
+		    		}
+		    		
 				} else if (state == true) {
 			    	
 					////////////////////////////////////Contact manager apr�s la phase de connection
