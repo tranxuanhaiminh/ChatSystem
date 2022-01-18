@@ -1,10 +1,15 @@
-# ChatSystem
+# ChatSystem : Xuan Hai Minh Tran and Mariétou Sarr
 
-To compile, go to ./chatsystem and use the command make build.
+The source code is in ./chatsystem.
 
-(In ./chatsystem)
-To compile and run use the command make start.
+In the directory ./chatsystem, you can :
 
-To create the fat jar --> mvn compile package
+- Compile with the command : mvn compile
 
-To run the program --> java -cp target/ChatSystem-jar-with-dependencies.jar chatsystem.ChatSystem or double click on the file ctarget/ChatSystem-jar-with-dependencies.jar
+- Create the .jar files with the command : mvn package 
+
+- Compile and create the .jar files with the command : make build or mvn compile package
+
+- Run the program with the command : java -cp target/ChatSystem-jar-with-dependencies.jar chatsystem.ChatSystem
+
+To run the program, you can also double click on the file target/ChatSystem-jar-with-dependencies.jar.
