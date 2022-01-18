@@ -3,10 +3,8 @@ package network;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 
-import chatsystem.Contact;
 import chatsystem.Message;
 import userinterface.Alert;
 

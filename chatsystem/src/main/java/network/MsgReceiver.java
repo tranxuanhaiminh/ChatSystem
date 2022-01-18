@@ -61,7 +61,9 @@ public class MsgReceiver extends Thread{
 			} catch (ClassNotFoundException e1) {
 				e1.printStackTrace();
 				new Alert("Error : Please close this chat window ! ").setVisible(true);
-			} catch (IOException e) {
+			} catch (EOFException e) {
+				//Do Nothing if the end has been reached
+			}catch (IOException e) {
 				e.printStackTrace();
 				new Alert("Error : Please close this chat window ! ").setVisible(true);
 			}
