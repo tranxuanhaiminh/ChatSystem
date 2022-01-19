@@ -28,7 +28,7 @@ public class Message implements Serializable{
 	}
 	
 	public String toString() {
-		return msg +"\n-------------------------------------------------------------"+this.convertDateToFormat();
+		return msg +"\n------written at "+this.convertDateToFormat();
 	}
 
 	public Contact getDest() {
@@ -48,6 +48,4 @@ public class Message implements Serializable{
 	    return sdf.format(date);
 	}
 
-    	
-	
 }

@@ -6,8 +6,6 @@ package userinterface;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,7 +16,6 @@ import javax.swing.text.BadLocationException;
 
 import chatsystem.Action;
 import chatsystem.Contact;
-import chatsystem.ContactList;
 import chatsystem.Conversation;
 import chatsystem.Message;
 import database.Databasecon;
@@ -36,26 +33,22 @@ public class ChatWindow extends javax.swing.JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private final static String newline = "\n";
-	private String msg_in = "";
 
 	private javax.swing.JTextField chatInput;
 	private javax.swing.JButton sendChat;
 	private JScrollBar bar;
 
-	////// Notify Frames
-
 	private Databasecon dbcon = new Databasecon();
 	private Contact dest;
-	private ContactList contactlist = new ContactList();
 	private Conversation conv;
 
-	// lien page principale
+	// Main page
 	private MainMenu main;
 
 	// listeners
 	private Action sendMess;
 
-	// nbre de msg de l'historique � afficher
+	//Number of messages to load from the database
 	private final int nbMsgToLoad = 20;
 
 	/**
@@ -75,24 +68,24 @@ public class ChatWindow extends javax.swing.JFrame {
 		chatInput = msg_input;
 		chatInput.addActionListener(this.sendMess);
 
-		sendChat = msg_send;
-		sendChat.addActionListener(this.sendMess);
-
-		javax.swing.JFrame frame = this;
-		this.addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				if (conv != null)
-					conv.stopConv();
-				frame.setVisible(false);
-				frame.dispose();
-			}
-
+        sendChat = msg_send;
+        sendChat.addActionListener(this.sendMess);
+        
+        javax.swing.JFrame frame = this; 
+        this.addWindowListener(new WindowAdapter() {
+			 
+			 public void windowClosing(WindowEvent e) {
+				 System.out.println("Stopping the window.\n");
+				 if (conv != null)
+					 conv.stopConv();
+			     frame.setVisible(false);
+			     frame.dispose();
+			 }
 		});
 
 		bar = jScrollPane1.getVerticalScrollBar();
 
-		// on charge l'historique
+		//Loading the history
 		this.loadHistory(nbMsgToLoad, 0);
 
 		bar.setValue(bar.getMaximum());

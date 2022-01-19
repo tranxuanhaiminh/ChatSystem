@@ -22,23 +22,20 @@ import ressources.Interfacedisplay;
  */
 public class Connect extends javax.swing.JFrame {
 
-    /**
+	private static final long serialVersionUID = 1L;
+	/**
      * Creates new form Connect
      */
-
-    private javax.swing.JLabel labelUsername;
-    private javax.swing.JTextField enterpseudo;
-    private javax.swing.JButton verifyPseudo;
 
 	private Action verify;
 	
 	private ContactList contactList;
 	private Contact me;
 	
-	// recevoir les contacts et les mettre dans la liste des contacts
+	//Contacts Manager
 	private ContactsManager cm;
 	
-	//page principale
+	//Main Page
 	private MainMenu main;
 	
     public Connect() {
@@ -55,18 +52,13 @@ public class Connect extends javax.swing.JFrame {
 		
 		this.verify = new Action(this);
 		
-		// WTF /////////////////////////////////////
-        labelUsername = jLabel1;
-        labelUsername.setText("Username");
+        jLabel1.setText("Username");
 
-        verifyPseudo = jButton1;
-        verifyPseudo.setText("Connect");
-        verifyPseudo.addActionListener(this.verify);
+        jButton1.setText("Connect");
+        jButton1.addActionListener(this.verify);
 
-        enterpseudo = jTextField1;
-        enterpseudo.setText(null);
-        enterpseudo.addActionListener(this.verify);
-        /////////////////////////////////////////////
+        jTextField1.setText(null);
+        jTextField1.addActionListener(this.verify);
         
         this.setVisible(true);
 
@@ -154,7 +146,7 @@ public class Connect extends javax.swing.JFrame {
 	}
 	
 	public JTextField getEnterPseudo() {
-		return enterpseudo;
+		return jTextField1;
 	}
 
 	public JFrame getConnectionFrame() {
@@ -162,7 +154,7 @@ public class Connect extends javax.swing.JFrame {
 	}
 
 	public JButton getVerifyPseudo() {
-		return verifyPseudo;
+		return jButton1;
 	}
 
 	public ContactsManager getCm() {

@@ -3,17 +3,16 @@ package network;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 import chatsystem.Conversation;
 import chatsystem.Message;
-import database.Databasecon;
+
 import userinterface.Alert;
-import userinterface.ChatWindow;
 
-public class MsgReceiver extends Thread { // Server tcp //client tcp
 
+public class MsgReceiver extends Thread{
+	
 	private Socket socketreceive;
 	private boolean running;
 	private ObjectInputStream in = null;
@@ -36,7 +35,8 @@ public class MsgReceiver extends Thread { // Server tcp //client tcp
 
 	public void run() {
 
-		System.out.println("Le msg receiver est lanc� pour l'hote : " + socketreceive.getInetAddress() + " \n");
+		System.out.println("The mess receiver starts for the user with the address : " 
+													+ socketreceive.getInetAddress() + " \n");
 
 		Message mess = null;
 
@@ -44,23 +44,25 @@ public class MsgReceiver extends Thread { // Server tcp //client tcp
 
 			try {
 				mess = (Message) in.readObject();
-				System.out.println("MESSAGE RECU = " + mess + "\n");
+				System.out.println("Received Message = " + mess + "\n");
 
 				if (conv.getChatw() != null) {
-					// displaying the msg
+					// displaying the message
 					conv.getChatw().addChatLine(mess, false);
 				}
 
 				// adding to the chat history
 				dbcon.insertChat(conv.getInterlocutor().getIpaddress().getHostAddress(), mess.toString(),
 						mess.convertDateToFormat(), false);
-				System.out.println("Adding the msg sent to you "
+				System.out.println("Adding the msg sent to you by "
 						+ conv.getInterlocutor().getIpaddress().getHostAddress() + " to the chat history\n");
 
 			} catch (ClassNotFoundException e1) {
 				e1.printStackTrace();
 				new Alert("Error : Please close this chat window ! ").setVisible(true);
-			} catch (IOException e) {
+			} catch (EOFException e) {
+				//Do Nothing if the end of the ObjectInputStrem has been reached
+			}catch (IOException e) {
 				e.printStackTrace();
 				new Alert("Error : Please close this chat window ! ").setVisible(true);
 			}
@@ -72,7 +74,7 @@ public class MsgReceiver extends Thread { // Server tcp //client tcp
 		try {
 			socketreceive.close();
 			in.close();
-			System.out.println("Socket de reception de msg ferm�\n");
+			System.out.println("Receiver socket closed.\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 			new Alert("Error : Please close this chat window ! ").setVisible(true);

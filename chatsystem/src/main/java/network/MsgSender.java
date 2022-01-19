@@ -3,10 +3,8 @@ package network;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 
-import chatsystem.Contact;
 import chatsystem.Message;
 import userinterface.Alert;
 
@@ -15,7 +13,6 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 	private Socket socketsend;
 	private boolean go;
 	private ObjectOutputStream out;
-	boolean sent = true;
 
 	
 	public MsgSender(Socket socket) {
@@ -26,7 +23,7 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			new Alert("Error : Please close the program!\n").setVisible(true);
+			new Alert("Error : Please close the program !\n").setVisible(true);
 		}
 
 	}
@@ -35,18 +32,16 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 		
 		try {
 			if (!socketsend.isOutputShutdown()) {
-				System.out.println("J'envoie un msg\n");
+				System.out.println("The message is sent.\n");
 				out.writeObject(msg);
 				out.flush();
-				sent = true;
-			}
-			else {
-				System.out.println("The socket output is shutdown\n");
+			} else {
+				System.out.println("Cannot send the msg because the socket output is shutdown.\n");
 			}
 			
 		} catch (IOException e){
 			e.printStackTrace();
-			new Alert("Error : Please close the program!\n").setVisible(true);
+			new Alert("Error : Please close the program !\n").setVisible(true);
 		}
 	}
 	
@@ -54,10 +49,10 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 		try {
 			socketsend.close();
 			out.close();
-			System.out.println("Socket d'envoi de messages ferm�\n");
+			System.out.println("Sending socket closed\n");
 		} catch (IOException e) {
 			e.printStackTrace();
-			new Alert("Error : Please close the program!\n").setVisible(true);
+			new Alert("Error : Please close the program !\n").setVisible(true);
 		}
 	}
 	

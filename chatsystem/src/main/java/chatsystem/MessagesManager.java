@@ -17,12 +17,9 @@ public class MessagesManager extends Thread {
 	private int port = 55555;
 	private ServerSocket ss;
 
-	private ArrayList<Conversation> ConvList;
-	private ArrayList<Conversation> stoppedConvList;
-
-	private Conversation c = null;
-	private Message m = null;
-
+	private ArrayList<Conversation> ConvList; // on-going conversations
+	private ArrayList<Conversation> stoppedConvList; //stopped conversation
+	
 	public MessagesManager(MainMenu mainMenu) {
 		super();
 		this.main = mainMenu;
@@ -39,102 +36,72 @@ public class MessagesManager extends Thread {
 	}
 
 	public void run() {
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-
-				Socket doorbell = null;
-				while (running) {
-
-					try {
-						doorbell = ss.accept();
-					} catch (IOException e) {
-						e.printStackTrace();
-						new Alert("Error : Please close the program!").setVisible(true);
-
-					}
-
-					InetAddress host = doorbell.getInetAddress();
-					Contact c = new Contact(host);
-
-					Conversation ec = getConv(c);
-
-					final Socket sock = doorbell;
-
-					if (ec != null) {
-						final Conversation encours = ec;
-
-						// We initiated the conversation
-						new Thread(new Runnable() {
-
-							@Override
-							public void run() {
-								// sock is the MsgReceiver socket (a response to our MsgSender socket)
-								if (encours.getChatw() == null) {
-									encours.startConv(sock);
-									System.out.println("A conversation is starting.\n");
-								} else {
-									encours.reStartConv(sock);
-									System.out.println("This conversation was already openned.\n");
-								}
-							}
-
-						}).start();
-
-					} else if ((ec = getStoppedConv(c)) != null) {
-						final Conversation s = ec;
-						new Thread(new Runnable() {
-
-							@Override
-							public void run() {
-								// sock is the MsgReceiver socket (a response to our MsgSender socket)
-								s.reStartConv(sock);
-								System.out.println("We have restarted a conversation.\n");
-							}
-
-						}).start();
-
-					} else {
-
-						// The conversation was initiated by one of our contacts
-						new Thread(new Runnable() {
-
-							@Override
-							public void run() {
-
-								Contact contact = getMain().getContactList().findIp(host);
-
-								if (contact == null) {
-									System.out.println("This person is not in the contacts list !\n");
-								} else {
-									Conversation cn = new Conversation(main, contact);
-									cn.startConv(sock);
-									System.out.println("A conversation is accepted.\n");
-
-								}
-							}
-
-						}).start();
-					}
-				}
-				System.out.println("The server of the messages manager is stopped !\n");
+	
+		Socket doorbell=null;
+		while (running) {
+			
+			try {
+				doorbell = ss.accept();
+			} catch (IOException e) {
+				e.printStackTrace();
+				new Alert("Error : Please close the program!").setVisible(true);
 
 			}
-		}).start();
+			
+			InetAddress host = doorbell.getInetAddress();
+			Contact c = new Contact(host);
+			
+			Conversation ec = getConv(c);
+			
+			final Socket sock = doorbell;
+			
+			if (ec != null) {
+				final Conversation encours = ec;
 
-		// Sending thread (this thread itself)
-		while (running) {
-			if (c != null && m != null)
-				sendMessTo(c, m);
+				//We initiated the conversation
+				new Thread(() -> {
+						//sock is the MsgReceiver socket (a response to our MsgSender socket)
+						if (encours.getChatw()==null) {
+							encours.startConv(sock);
+							System.out.println("A conversation is starting.\n");
+						} else {
+							encours.reStartConv(sock);
+							System.out.println("This conversation was already openned.\n");
+						}
+						
+				}).start();
+							
+				
+			} else if ((ec=getStoppedConv(c)) != null){
+					final Conversation s = ec;
+					
+					new Thread(() -> {
+						s.reStartConv(sock);
+						System.out.println("We have restarted a conversation.\n");
+						
+				}).start();
+				
+			} else {
+				
+				//The conversation was initiated by one of our contacts
+				new Thread(() -> {
+					Contact contact = getMain().getContactList().findIp(host);
+					if (contact ==null) {
+							System.out.println("This person is not in the contacts list !\n");
+					} else {
+						Conversation cn = new Conversation(main,contact);
+						cn.startConv(sock);
+						System.out.println("A conversation is accepted.\n");
+					}
+				}).start();
+			}
 		}
-
+		System.out.println("The messages manager is stopped !\n");
+		
 		for (Conversation c : stoppedConvList) {
 			c.getR().setRunning(false);
 		}
-
-		System.out.println("The sender part of the messages manager is stopped !\n");
-
+		
 	}
 
 	public MainMenu getMain() {
@@ -146,14 +113,17 @@ public class MessagesManager extends Thread {
 	}
 
 	/*
-	 * This method is called when someone disconnects
+	 * This method is called when someone we were having an on-going conversation with disconnects
 	 */
 	public synchronized void removeConv(Conversation cv) {
 		cv.stopConv();
 		this.stoppedConvList.remove(cv);
 		cv.getR().setRunning(false);
 	}
-
+	
+	/*
+	 * This method is called when someone we were having a stopped conversation with disconnects
+	 */
 	public synchronized void removeStoppedConv(Conversation cv) {
 		this.stoppedConvList.remove(cv);
 		cv.getR().setRunning(false);
@@ -183,40 +153,33 @@ public class MessagesManager extends Thread {
 		this.running = b;
 	}
 
-	public synchronized void sendMessTo(Conversation c, Message m) {
-		if (ConvList.contains(c)) {
-			c.getS().send(m);
-			System.out.println("A message was sent.\n");
-		} else {
-			System.out.println("This conversation is not in the list of on-going conversations.\n");
-		}
-		this.c = null;
-		this.m = null;
-
-	}
-
-	public synchronized void signalMess(Conversation c, Message m) {
-		this.c = c;
-		this.m = m;
-		System.out.println("Preparing the sending of the message...\n");
-	}
-
-	public static void main(String[] args) {
-
-		ContactList cl = new ContactList();
-
-		try {
-			cl.addContact(new Contact("titi", InetAddress.getLocalHost().getHostName()));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		Contact me = new Contact("toto", InetAddress.getLoopbackAddress());
-
-		new MainMenu(me, cl, null);
-	}
-
 	public ArrayList<Conversation> getStoppedConvList() {
 		return stoppedConvList;
 	}
-
+	
+	//To send a message from the Action class
+	public void sendMessTo(Conversation c, Message m) {
+			if (ConvList.contains(c)) {
+				c.getS().send(m);
+				System.out.println("A message was sent.\n");
+			} else {
+				System.out.println("This conversation is not in the list of on-going conversations.\n");
+			}
+			
+	}
+	
+	public static void main(String[] args) {
+			
+			ContactList cl = new ContactList();
+			
+			try {
+				cl.addContact(new Contact("titi",InetAddress.getLocalHost().getHostName()));
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+			Contact me = new Contact("toto",InetAddress.getLoopbackAddress());
+			
+			new MainMenu(me, cl, null);
+	}
+	
 }

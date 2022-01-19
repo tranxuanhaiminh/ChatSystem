@@ -1,7 +1,6 @@
 package network;
 
 import java.io.IOException;
-import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -33,11 +32,11 @@ public class UDPSender {
 		} catch (SocketException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-            new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
+            new Alert("Error : Please close the program !").setVisible(true);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-            new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
+            new Alert("Error : Please close the program !").setVisible(true);
 		}
 	}
 
@@ -51,7 +50,7 @@ public class UDPSender {
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-            new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
+            new Alert("Error : Please close the program !").setVisible(true);
 		}
 	}
 
@@ -65,10 +64,14 @@ public class UDPSender {
 			this.dest = InetAddress.getByName(addr);
 
 		} catch (SocketException e) {
-			System.out.println("Erreur lors de la creation du socket d'envoi\n");
+			e.printStackTrace();
+            new Alert("Error : Please close the program !").setVisible(true);
+
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+            new Alert("Error : Please close the program !").setVisible(true);
+
 		}
 	}
 
@@ -77,16 +80,16 @@ public class UDPSender {
 	 */
 	public void send() {
 		DatagramPacket out = null;
-		System.out.println("On envoie un datagram.\n");
+		System.out.println("Sending a datagram.\n");
 		out = new DatagramPacket(message.getBytes(), message.length(), dest, port);
 		try {
 			sendersocket.send(out);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-            new Alert("Error : Please close the program (connecting phase) ! ").setVisible(true);
+            new Alert("Error : Please close the program !").setVisible(true);
 		}
 		sendersocket.close();
-		System.out.println("Fermeture du socket d'envoi\n");
+		System.out.println("Sending socket closed.\n");
 	}
 }

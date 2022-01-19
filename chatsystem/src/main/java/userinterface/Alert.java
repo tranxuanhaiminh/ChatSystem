@@ -4,6 +4,8 @@
  */
 package userinterface;
 
+import javax.swing.JLabel;
+
 /**
  *
  * @author Minh
@@ -11,12 +13,17 @@ package userinterface;
 public class Alert extends javax.swing.JFrame {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
      * Creates new form Alert
      */
     public Alert(String label) {
         initComponents();
         setLocationRelativeTo(null);
         jLabel1.setText(label);
+        jLabel1.setHorizontalAlignment(JLabel.CENTER);
     }
 
     /**

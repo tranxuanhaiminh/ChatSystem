@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import userinterface.Alert;
+
 public class Contact implements Serializable{
 	
 	/**
@@ -32,6 +34,7 @@ public class Contact implements Serializable{
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			new Alert("Error : Please close the program ! ").setVisible(true);
 		}
 	}
 	
