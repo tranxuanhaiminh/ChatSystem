@@ -200,7 +200,7 @@ public class Databasecon {
 
 	}
 	
-	public Connection getC() {
+	public static Connection getC() {
 		return c;
 	}
 }

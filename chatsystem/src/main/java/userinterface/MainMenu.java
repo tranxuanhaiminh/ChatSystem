@@ -98,6 +98,11 @@ public class MainMenu extends javax.swing.JFrame {
         pseudosList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		ListSelectionModel listSelectionModel = pseudosList.getSelectionModel();
 	    listSelectionModel.addListSelectionListener(new Action(this));
+        
+//        addUser("abc", connected);
+//        addUser("xyz", disconnected);
+//        
+//        System.out.println(((ImageIcon)jTable1.getModel().getValueAt(1, 0)).getDescription());
 	    
         this.addWindowListener(new WindowAdapter() {
 			 
@@ -220,7 +225,9 @@ public class MainMenu extends javax.swing.JFrame {
     
     public void addUser(String username, String img) {
         DefaultTableModel model = (DefaultTableModel) pseudosList.getModel();
-        model.addRow(new Object[]{new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(10,10,java.awt.Image.SCALE_SMOOTH)), username});
+        ImageIcon imgicon = new ImageIcon(new ImageIcon(img).getImage().getScaledInstance(10,10,java.awt.Image.SCALE_SMOOTH));
+        imgicon.setDescription(img);
+        model.addRow(new Object[]{imgicon, username});
     }
     
     public int isInTable(String s) {

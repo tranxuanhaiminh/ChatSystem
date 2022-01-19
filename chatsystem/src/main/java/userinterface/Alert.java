@@ -15,6 +15,7 @@ public class Alert extends javax.swing.JFrame {
      */
     public Alert(String label) {
         initComponents();
+        setLocationRelativeTo(null);
         jLabel1.setText(label);
     }
 

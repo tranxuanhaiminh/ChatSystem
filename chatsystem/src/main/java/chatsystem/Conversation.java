@@ -43,7 +43,7 @@ public class Conversation {
 	public synchronized void stopConv() {
 		// fermer la page si elle est ouverte
 		if (this.chatw != null) {
-			this.chatw.setVisible(false);
+//			this.chatw.setVisible(false);
 			this.chatw.dispose();
 			this.chatw = null;
 		}
