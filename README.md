@@ -12,4 +12,4 @@ In the directory ./chatsystem, you can :
 
 - Run the program with the command : java -cp target/ChatSystem-jar-with-dependencies.jar chatsystem.ChatSystem
 
-To run the program, you can also double click on the file target/ChatSystem-jar-with-dependencies.jar.
+To run the program, you can also double click on the file ./chatsystem/target/ChatSystem-jar-with-dependencies.jar.
