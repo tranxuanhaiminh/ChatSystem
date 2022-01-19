@@ -92,7 +92,7 @@ public class ContactsManager extends Thread {
 
 								Contact c = null;
 								try {
-									c = this.cc.getContactList().findIp(InetAddress.getByName(addr));
+									c = cl.findIp(InetAddress.getByName(addr));
 								} catch (UnknownHostException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
@@ -101,7 +101,7 @@ public class ContactsManager extends Thread {
 
 								if (c != null) {
 									c.delPseudo();
-									this.cc.getContactList().removeContact(c);
+									cl.removeContact(c);
 									System.out.println(
 											"A contact have disconnected in the connecting phase !\n");
 								}
@@ -112,7 +112,7 @@ public class ContactsManager extends Thread {
 								//username during the connecting phase
 								Contact cin = null;
 								try {
-									cin = this.cc.getContactList().findIp(InetAddress.getByName(addr));
+									cin = cl.findIp(InetAddress.getByName(addr));
 								} catch (UnknownHostException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();

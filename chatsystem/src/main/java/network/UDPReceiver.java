@@ -88,7 +88,7 @@ public class UDPReceiver {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-			new Alert("Error : Please close the program !\n").setVisible(true);
+			new Alert("Error : Please close the program!!!!\n").setVisible(true);
 		}
 
 		return ret;

@@ -42,7 +42,7 @@ public class Conversation {
 	public synchronized void stopConv() {
 		// if the chat window associated we close it
 		if (this.chatw != null) {
-			this.chatw.setVisible(false);
+//			this.chatw.setVisible(false);
 			this.chatw.dispose();
 			this.chatw = null;
 		}

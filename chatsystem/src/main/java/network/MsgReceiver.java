@@ -17,6 +17,7 @@ public class MsgReceiver extends Thread{
 	private boolean running;
 	private ObjectInputStream in = null;
 	private Conversation conv;
+	private Databasecon dbcon = new Databasecon();
 
 	public MsgReceiver(Socket sock, Conversation conv) {
 		super();
@@ -51,8 +52,8 @@ public class MsgReceiver extends Thread{
 				}
 
 				// adding to the chat history
-				conv.getMain().getConDB().insertChat(conv.getInterlocutor().getIpaddress().getHostAddress(),
-						mess.toString(), mess.convertDateToFormat(), false);
+				dbcon.insertChat(conv.getInterlocutor().getIpaddress().getHostAddress(), mess.toString(),
+						mess.convertDateToFormat(), false);
 				System.out.println("Adding the msg sent to you by "
 						+ conv.getInterlocutor().getIpaddress().getHostAddress() + " to the chat history\n");
 
