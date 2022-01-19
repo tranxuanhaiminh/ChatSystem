@@ -1,4 +1,4 @@
-# ChatSystem : Xuan Hai Minh Tran and Mariétou Sarr
+# INSA Project ChatSystem : Xuan Hai Minh Tran and Mariétou Sarr
 
 The source code is in ./chatsystem.
 
