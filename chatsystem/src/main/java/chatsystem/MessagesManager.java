@@ -17,8 +17,8 @@ public class MessagesManager extends Thread {
 	private int port = 55555;
 	private ServerSocket ss;
 
-	private ArrayList<Conversation> ConvList; // on-going conversations
-	private ArrayList<Conversation> stoppedConvList; //stopped conversation
+	private static ArrayList<Conversation> ConvList; // on-going conversations
+	private static ArrayList<Conversation> stoppedConvList; //stopped conversation
 	
 	public MessagesManager(MainMenu mainMenu) {
 		super();
@@ -115,23 +115,23 @@ public class MessagesManager extends Thread {
 	/*
 	 * This method is called when someone we were having an on-going conversation with disconnects
 	 */
-	public synchronized void removeConv(Conversation cv) {
+	public static synchronized void removeConv(Conversation cv) {
 		cv.stopConv();
-		this.stoppedConvList.remove(cv);
+		stoppedConvList.remove(cv);
 		cv.getR().setRunning(false);
 	}
 	
 	/*
 	 * This method is called when someone we were having a stopped conversation with disconnects
 	 */
-	public synchronized void removeStoppedConv(Conversation cv) {
-		this.stoppedConvList.remove(cv);
+	public static synchronized void removeStoppedConv(Conversation cv) {
+		stoppedConvList.remove(cv);
 		cv.getR().setRunning(false);
 	}
 
-	public Conversation getConv(Contact c) {
+	public static Conversation getConv(Contact c) {
 		Conversation res = null;
-		for (Conversation cv : this.ConvList) {
+		for (Conversation cv : ConvList) {
 			if (cv.getInterlocutor().equals(c)) {
 				res = cv;
 			}
@@ -139,9 +139,9 @@ public class MessagesManager extends Thread {
 		return res;
 	}
 
-	public Conversation getStoppedConv(Contact c) {
+	public static Conversation getStoppedConv(Contact c) {
 		Conversation res = null;
-		for (Conversation cv : this.stoppedConvList) {
+		for (Conversation cv : stoppedConvList) {
 			if (cv.getInterlocutor().equals(c)) {
 				res = cv;
 			}
@@ -179,7 +179,7 @@ public class MessagesManager extends Thread {
 			}
 			Contact me = new Contact("toto",InetAddress.getLoopbackAddress());
 			
-			new MainMenu(me, cl, null);
+			new MainMenu(cl);
 	}
 	
 }

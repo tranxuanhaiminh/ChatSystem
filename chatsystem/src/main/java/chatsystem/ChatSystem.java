@@ -1,5 +1,10 @@
 package chatsystem;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import network.IpAddress;
+import service.Dbservice;
 import userinterface.Connect;
 
 public class ChatSystem {
@@ -37,6 +42,13 @@ public class ChatSystem {
 				new Connect();
 			}
 		});
+		
+		/* Set the ip and broadcast addresses of this machine that is used in the chatsystem */
+		IpAddress.getAddresses();
+;		
+		/* Start database connection */
+		Dbservice.dbInit();
+		
 	}
 
 }

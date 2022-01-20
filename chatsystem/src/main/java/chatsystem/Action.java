@@ -10,6 +10,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import database.Databasecon;
+import network.IpAddress;
+import network.UDPSend;
+
 import javax.swing.Timer;
 
 import userinterface.Alert;
@@ -22,20 +26,28 @@ public class Action implements ActionListener, ListSelectionListener {
 	public Connect pageC;
 	public MainMenu pageM;
 	public ChatWindow pageW;
+	
+	/*
+	 * Fields
+	 */
+	private Databasecon dbcon; 
 
 	public Action(Connect c) {
 		super();
 		this.pageC = c;
+		dbcon = new Databasecon();
 	}
 
 	public Action(MainMenu m) {
 		super();
 		this.pageM = m;
+		dbcon = new Databasecon();
 	}
 
 	public Action(ChatWindow c) {
 		super();
 		this.pageW = c;
+		dbcon = new Databasecon();
 	}
 
 	public void actionPerformed(ActionEvent event) {
@@ -43,17 +55,18 @@ public class Action implements ActionListener, ListSelectionListener {
 		if (pageC != null && (event.getSource().equals(pageC.getVerifyPseudo())
 				|| event.getSource().equals(pageC.getEnterPseudo()))) {
 
-			final Contact me = pageC.getMe();
+//			final Contact me = ContactList.getMe();
 
 			if (pageC.getEnterPseudo().getText() == null && !(pageC.getEnterPseudo().getText().equals(""))) {
 
 				new Alert("Please enter a value").setVisible(true);
 
 			} else {
-				me.setPseudo(pageC.getEnterPseudo().getText());
+				ContactList.setMe(pageC.getEnterPseudo().getText());
+//				me.setPseudo(pageC.getEnterPseudo().getText());
 
 				//We start the contact manager
-				pageC.getCm().setRunning(true);
+//				pageC.getCm().setRunning(true);
 				
 				//We wait until the contacts have been added (3sec max)
 				synchronized (pageC.getContactList()) {
@@ -66,24 +79,24 @@ public class Action implements ActionListener, ListSelectionListener {
 					}
 				}
 
-				pageC.getCm().setRunning(false);
+//				pageC.getCm().setRunning(false);
 				final ContactList contactList = pageC.getContactList();
 
 				for (Contact i : contactList.getList())
 					System.out.println(i.getPseudo());
 
-				if (contactList.comparePseudo(me) == false) {
+				if (contactList.comparePseudo(ContactList.getMe()) == false) {
 
 					//Stopping the contacts manager
-					pageC.getCm().setRunning(false);
+//					pageC.getCm().setRunning(false);
 
 					new Alert("This username is already used ! Try again").setVisible(true);
 
-					me.setPseudo(null);
+					ContactList.getMe().setPseudo(null);
 
 				} else {
 
-					pageC.setMain(new MainMenu(me, contactList, pageC.getCm()));
+					pageC.setMain(new MainMenu(contactList));
 					Alert welcome = new Alert("Welcome to the Chat System !");
 					welcome.setVisible(true);
 
@@ -127,13 +140,14 @@ public class Action implements ActionListener, ListSelectionListener {
 
 					Alert success = new Alert("Success !");
 					success.setVisible(true);
-					pageM.getMe().setPseudo(pseudo);
-					pageM.getPseudoLabel().setText(pageM.getMe().getPseudo());
+					ContactList.getMe().setPseudo(pseudo);
+					pageM.getPseudoLabel().setText(ContactList.getMe().getPseudo());
 					pageM.getModifyFrame().getEnterpseudo().setText(null);
 
 					// Sending our username to everybody
-					ContactsManager cm = pageM.getCm();
-					cm.signalDatagram(pageM.getMe().getPseudo(), "255.255.255.255");
+//					ContactsManager cm = pageM.getCm();
+//					cm.signalDatagram(ContactList.getMe().getPseudo(), "255.255.255.255");
+					UDPSend.send(ContactList.getMe(), IpAddress.getBroadcast());
 
 					Timer t = new Timer(500, new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
@@ -170,7 +184,7 @@ public class Action implements ActionListener, ListSelectionListener {
 					pageW.getMain().getMessMan().sendMessTo(pageW.getConv(), msg);
 
 					// adding the message to the chat history
-					pageW.getMain().getConDB().insertChat(msg.getDest().getIpaddress().getHostAddress(), msg.toString(),
+					dbcon.insertChat(msg.getDest().getIpaddress().getHostAddress(), msg.getDest().getPseudo(), msg.toString(),
 							msg.convertDateToFormat(), true);
 					System.out.println("Adding the msg you re sending to "
 							+ msg.getDest().getIpaddress().getHostAddress() + " to the chat history\n");

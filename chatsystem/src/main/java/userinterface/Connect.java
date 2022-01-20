@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 import chatsystem.Action;
 import chatsystem.Contact;
 import chatsystem.ContactList;
-import chatsystem.ContactsManager;
+//import chatsystem.ContactsManager;
 import ressources.Interfacedisplay;
 
 /**
@@ -30,10 +30,9 @@ public class Connect extends javax.swing.JFrame {
 	private Action verify;
 	
 	private ContactList contactList;
-	private Contact me;
 	
 	//Contacts Manager
-	private ContactsManager cm;
+//	private ContactsManager cm;
 	
 	//Main Page
 	private MainMenu main;
@@ -44,11 +43,10 @@ public class Connect extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
        
 		contactList = new ContactList();
-		me =new Contact(InetAddress.getLoopbackAddress());
 		
 		// initialisation du contacts manager
-		cm = new ContactsManager(this);
-		cm.start();
+//		cm = new ContactsManager(this);
+//		cm.start();
 		
 		this.verify = new Action(this);
 		
@@ -137,10 +135,6 @@ public class Connect extends javax.swing.JFrame {
     /*
      * Methods
      */
-    public Contact getMe() {
-		return me;
-	}
-
 	public ContactList getContactList() {
 		return contactList;
 	}
@@ -157,13 +151,13 @@ public class Connect extends javax.swing.JFrame {
 		return jButton1;
 	}
 
-	public ContactsManager getCm() {
-		return cm;
-	}
+//	public ContactsManager getCm() {
+//		return cm;
+//	}
 	
-	public void setCm(ContactsManager m) {
-		cm = m;
-	}
+//	public void setCm(ContactsManager m) {
+//		cm = m;
+//	}
 
 	public MainMenu getMain() {
 		return main;

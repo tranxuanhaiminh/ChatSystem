@@ -9,9 +9,10 @@ import javax.swing.ListSelectionModel;
 import chatsystem.Action;
 import chatsystem.Contact;
 import chatsystem.ContactList;
-import chatsystem.ContactsManager;
+//import chatsystem.ContactsManager;
 import chatsystem.MessagesManager;
-import database.Databasecon;
+import network.IpAddress;
+import network.UDPSend;
 import ressources.Interfacedisplay;
 
 import java.awt.event.WindowAdapter;
@@ -32,44 +33,38 @@ public class MainMenu extends javax.swing.JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private ContactList contactList;
-	private Contact me;
 	
 	private final String disconnected = "Images/gray.png";
 	private final String connected = "Images/green.png";
 	
 	private Modify modifyFrame;
 	
-	private ContactsManager cm;
+//	private ContactsManager cm;
 
 	private MessagesManager messMan;
-	
-	private Databasecon conDB;
 	
 	
     /**
      * Creates new form MainMenu
      */
-    public MainMenu(Contact m, ContactList l, ContactsManager cm) {
+    public MainMenu(ContactList l) {
 
     	this.setTitle(Interfacedisplay.mainmenutitle);
         initComponents();
         this.setLocationRelativeTo(null);
         
-        this.conDB = new Databasecon("date.db");
-        
-		this.me = m; 
 		this.contactList = l;
 		
-		jLabel1.setText(me.getPseudo());
+		jLabel1.setText(ContactList.getMe().getPseudo());
 		
 		//Envoyer et recevoir des messages 
 		this.messMan = new MessagesManager(this);
 		this.messMan.start();
 		
 		//gestion des contacts
-		this.cm = cm;
-		this.cm.setState();
-		this.cm.setRunning(true);
+//		this.cm = cm;
+//		this.cm.setState();
+//		this.cm.setRunning(true);
 		
         modifyFrame = new Modify();
         modifyFrame.getVerifyPseudo().addActionListener(new Action(this));
@@ -96,18 +91,19 @@ public class MainMenu extends javax.swing.JFrame {
 			 public void windowClosing(WindowEvent e) {
 				 
 				 //Telling everybody that we are disconnecting
-				 System.out.println("DISCONNECTING ...\n");
-				 if (cm!=null) {
-					 cm.signalDatagram("DISCONNECTED","255.255.255.255");
-				 }
-				 
-				 // Stopping the Contact manager
-				 if (cm!=null)
-					 cm.setRunning(false);
-				 
-				 //Stopping the message manager
-				 if (messMan!=null)
-					 messMan.setRunning(false);
+				 UDPSend.send("DC", IpAddress.getBroadcast());
+//				 System.out.println("DISCONNECTING ...\n");
+//				 if (cm!=null) {
+//					 cm.signalDatagram("DISCONNECTED","255.255.255.255");
+//				 }
+//				 
+//				 // Stopping the Contact manager
+//				 if (cm!=null)
+//					 cm.setRunning(false);
+//				 
+//				 //Stopping the message manager
+//				 if (messMan!=null)
+//					 messMan.setRunning(false);
 				 
 				 //Stopping the program
 			     System.exit(0);
@@ -248,10 +244,6 @@ public class MainMenu extends javax.swing.JFrame {
     	
     	return res;
     }
-    
-    public Contact getMe() {
-		return me;
-	}
 	
 	public ContactList getContactList() {
 		return contactList;
@@ -269,9 +261,9 @@ public class MainMenu extends javax.swing.JFrame {
 		return jLabel1;
 	}
 	
-	public ContactsManager getCm() {
-		return cm;
-	}
+//	public ContactsManager getCm() {
+//		return cm;
+//	}
 	
 	public MessagesManager getMessMan() {
 		return this.messMan;
@@ -287,10 +279,6 @@ public class MainMenu extends javax.swing.JFrame {
 
 	public String getDisconnected() {
 		return disconnected;
-	}
-
-	public Databasecon getConDB() {
-		return conDB;
 	}
 
 }
