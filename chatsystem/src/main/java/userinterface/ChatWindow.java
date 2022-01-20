@@ -63,7 +63,7 @@ public class ChatWindow extends javax.swing.JFrame {
 		this.main = m;
 		this.conv = conv;
 
-		this.sendMess = new Action(this);
+		this.sendMess = new Action();
 
 		chatInput = msg_input;
 		chatInput.addActionListener(this.sendMess);
@@ -90,7 +90,7 @@ public class ChatWindow extends javax.swing.JFrame {
 
 		bar.setValue(bar.getMaximum());
 
-		this.setVisible(true);
+		setVisible(true);
 
 	}
 
@@ -200,14 +200,14 @@ public class ChatWindow extends javax.swing.JFrame {
 					msg_display.setCaretPosition(0);
 				} catch (BadLocationException e) {
 					e.printStackTrace();
-					new Alert("Error : Please close the program!\n").setVisible(true);
+					new Alert("Error : Please close the program!\n");
 
 				}
 
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			new Alert("Error : Please close the program!\n").setVisible(true);
+			new Alert("Error : Please close the program!\n");
 		}
 	}
 

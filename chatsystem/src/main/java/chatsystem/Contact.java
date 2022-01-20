@@ -34,7 +34,7 @@ public class Contact implements Serializable{
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			new Alert("Error : Please close the program ! ").setVisible(true);
+			new Alert("Error : Please close the program ! ");
 		}
 	}
 	

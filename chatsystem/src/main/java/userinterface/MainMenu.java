@@ -32,12 +32,10 @@ public class MainMenu extends javax.swing.JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private ContactList contactList;
-	
 	private final String disconnected = "Images/gray.png";
 	private final String connected = "Images/green.png";
 	
-	private Modify modifyFrame;
+	private Connect modifyFrame;
 	
 //	private ContactsManager cm;
 
@@ -47,13 +45,11 @@ public class MainMenu extends javax.swing.JFrame {
     /**
      * Creates new form MainMenu
      */
-    public MainMenu(ContactList l) {
+    public MainMenu() {
 
     	this.setTitle(Interfacedisplay.mainmenutitle);
         initComponents();
         this.setLocationRelativeTo(null);
-        
-		this.contactList = l;
 		
 		jLabel1.setText(ContactList.getMe().getPseudo());
 		
@@ -66,12 +62,10 @@ public class MainMenu extends javax.swing.JFrame {
 //		this.cm.setState();
 //		this.cm.setRunning(true);
 		
-        modifyFrame = new Modify();
-        modifyFrame.getVerifyPseudo().addActionListener(new Action(this));
-        modifyFrame.getEnterpseudo().addActionListener(new Action(this));
+        modifyFrame = new Connect(Interfacedisplay.modifybutton);
 
         jButton1.setText(Interfacedisplay.modifybutton);
-        jButton1.addActionListener(new Action(this));
+        jButton1.addActionListener(new Action());
         
         jTable1.setColumnSelectionInterval(1, 1);
         jTable1.setCellSelectionEnabled(true);
@@ -79,7 +73,7 @@ public class MainMenu extends javax.swing.JFrame {
         jTable1.setRowSelectionAllowed(false);
         jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		ListSelectionModel listSelectionModel = jTable1.getSelectionModel();
-	    listSelectionModel.addListSelectionListener(new Action(this));
+	    listSelectionModel.addListSelectionListener(new Action());
         
 //        addUser("abc", connected);
 //        addUser("xyz", disconnected);
@@ -114,11 +108,11 @@ public class MainMenu extends javax.swing.JFrame {
         
         
         ///////////////adding the users to the connected users' table
-        for (Contact c : this.contactList.getList()) {
+        for (Contact c : ContactList.getList()) {
         	addUser(c.getPseudo(), connected);
         }
         
-        this.setVisible(true);
+        setVisible(true);
     }
 
     /**
@@ -136,8 +130,6 @@ public class MainMenu extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
 
         //setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setText(";sadkjfa;sadkjfasdf");
 
         jButton1.setText("Modify");
 
@@ -202,7 +194,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
+    private static javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
@@ -245,40 +237,12 @@ public class MainMenu extends javax.swing.JFrame {
     	return res;
     }
 	
-	public ContactList getContactList() {
-		return contactList;
-	}
-
-	public javax.swing.JButton getChangepseudo() {
-		return jButton1;
-	}
-
-	public Modify getModifyFrame() {
-		return modifyFrame;
-	}
-	
-	public javax.swing.JLabel getPseudoLabel() {
-		return jLabel1;
-	}
-	
-//	public ContactsManager getCm() {
-//		return cm;
-//	}
-	
 	public MessagesManager getMessMan() {
 		return this.messMan;
 	}
-
-	public javax.swing.JTable getPseudosList() {
-		return jTable1;
-	}
 	
-	public String getConnected() {
-		return connected;
-	}
-
-	public String getDisconnected() {
-		return disconnected;
+	public static void setUsernameLabel(String pseudo) {
+		jLabel1.setText(pseudo);
 	}
 
 }

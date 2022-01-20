@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import network.IpAddress;
-import service.Dbservice;
+import network.UDPReceive;
+import ressources.Interfacedisplay;
+import service.DbService;
 import userinterface.Connect;
 
 public class ChatSystem {
@@ -39,7 +41,7 @@ public class ChatSystem {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new Connect();
+				new Connect(Interfacedisplay.connectbutton);
 			}
 		});
 		
@@ -47,7 +49,10 @@ public class ChatSystem {
 		IpAddress.getAddresses();
 ;		
 		/* Start database connection */
-		Dbservice.dbInit();
+		DbService.dbInit();
+		
+		/* Start listening to UDP packet */
+		new UDPReceive();
 		
 	}
 

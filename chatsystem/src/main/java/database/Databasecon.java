@@ -139,7 +139,7 @@ public class Databasecon {
 	/*
 	 * Insert chat to database
 	 */
-	public static int insertChat(String person, String pseudo, String chatline, String time, boolean sent) {
+	public static void insertChat(String person, String pseudo, String chatline, String time, boolean sent) {
 		String sql = null;
 		if (sent) {
 			sql = Databasequerries.insertChat1;
@@ -152,11 +152,10 @@ public class Databasecon {
 			pstmt.setString(2, pseudo);
 			pstmt.setString(3, chatline);
 			pstmt.setString(4, time);
-			return pstmt.executeUpdate();
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return 0;
 		}
 	}
 

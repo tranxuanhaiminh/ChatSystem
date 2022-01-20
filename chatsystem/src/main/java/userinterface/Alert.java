@@ -24,6 +24,8 @@ public class Alert extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         jLabel1.setText(label);
         jLabel1.setHorizontalAlignment(JLabel.CENTER);
+        
+        setVisible(true);
     }
 
     /**

@@ -25,7 +25,7 @@ public class Conversation {
 			s = new MsgSender(new Socket(i.getIpaddress(), port));
 		} catch (IOException e) {
 			e.printStackTrace();
-			new Alert("Error : Please close the program!\n").setVisible(true);
+			new Alert("Error : Please close the program!\n");
 		}
 		main.getMessMan().getConvList().add(this);
 	}
@@ -68,7 +68,7 @@ public class Conversation {
 			s = new MsgSender(new Socket(this.interlocutor.getIpaddress(), port));
 		} catch (IOException e) {
 			e.printStackTrace();
-			new Alert("Error : Please close the program!\n").setVisible(true);
+			new Alert("Error : Please close the program!\n");
 		}
 
 		if (this.chatw == null) {

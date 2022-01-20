@@ -30,7 +30,7 @@ public class MsgReceiver extends Thread{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			new Alert("Error : Please close this chat window ! ").setVisible(true);
+			new Alert("Error : Please close this chat window ! ");
 		}
 	}
 
@@ -54,18 +54,18 @@ public class MsgReceiver extends Thread{
 
 				// adding to the chat history
 				dbcon.insertChat(conv.getInterlocutor().getIpaddress().getHostAddress(), conv.getInterlocutor().getPseudo(), mess.toString(),
-						mess.convertDateToFormat(), false);
+						mess.getDate(), false);
 				System.out.println("Adding the msg sent to you by "
 						+ conv.getInterlocutor().getIpaddress().getHostAddress() + " to the chat history\n");
 
 			} catch (ClassNotFoundException e1) {
 				e1.printStackTrace();
-				new Alert("Error : Please close this chat window ! ").setVisible(true);
+				new Alert("Error : Please close this chat window ! ");
 			} catch (EOFException e) {
 				//Do Nothing if the end of the ObjectInputStrem has been reached
 			}catch (IOException e) {
 				e.printStackTrace();
-				new Alert("Error : Please close this chat window ! ").setVisible(true);
+				new Alert("Error : Please close this chat window ! ");
 			}
 
 			mess = null;
@@ -78,7 +78,7 @@ public class MsgReceiver extends Thread{
 			System.out.println("Receiver socket closed.\n");
 		} catch (IOException e) {
 			e.printStackTrace();
-			new Alert("Error : Please close this chat window ! ").setVisible(true);
+			new Alert("Error : Please close this chat window ! ");
 
 		}
 	}

@@ -28,22 +28,22 @@ public class Message implements Serializable{
 	}
 	
 	public String toString() {
-		return msg +"\n------written at "+this.convertDateToFormat();
-	}
-
-	public Contact getDest() {
-		return dest;
+		return msg +"\n------written at "+getDate();
 	}
 	
-	public Date getDate() {
-		return date;
+	public String getPseudo() {
+		return dest.getPseudo();
+	}
+	
+	public String getIp() {
+		return dest.getIpaddress().getCanonicalHostName();
 	}
 	
 	public String getMsg() {
 		return msg;
 	}
 	
-	public String convertDateToFormat(){
+	public String getDate(){
 	    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    return sdf.format(date);
 	}

@@ -19,16 +19,14 @@ public class ContactList {
 	public static void removeContact(Contact c) {
 		list.remove(c);
 	}
-
-	public static boolean comparePseudo(Contact c) {
-		for (Contact ct : list) {
-			if (ct==null)
-				System.out.println("Contact null ??? This is not normal.\n");
-			else if (c.getPseudo().equals(ct.getPseudo())) {
-				return false;
+	
+	public static boolean isDuplicatedPseudo(String pseudo) {
+		for (Contact contact : list) {
+			if (contact.getPseudo().equalsIgnoreCase(pseudo)) {
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 	
 	public static Contact findIp(InetAddress ip) {

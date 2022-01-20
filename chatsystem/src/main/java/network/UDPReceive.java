@@ -39,6 +39,7 @@ public class UDPReceive extends Thread {
 	public void run() {
 		try {
 			socket = new DatagramSocket(port);
+
 			while (true) {
 				// Prepare packet to receive
 				packet = new DatagramPacket(buffer, buffer.length);

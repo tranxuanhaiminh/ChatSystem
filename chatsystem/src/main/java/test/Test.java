@@ -12,7 +12,6 @@ import com.sun.security.ntlm.Client;
 import chatsystem.Contact;
 import service.UDPService;
 import userinterface.Alert;
-import userinterface.Modify;
 
 public class Test {
 	
@@ -27,8 +26,11 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws UnknownHostException {
-		new Alert("Your username has already been chosen. Please choose a new username!").setVisible(true);
-		new Modify().setVisible(true);
+		
+		System.out.println(InetAddress.getByName("localhost").getCanonicalHostName());
+		
+//		new Alert("Your username has already been chosen. Please choose a new username!");
+//		new Modify();
 		
 		System.out.println(test);
 		test = false;

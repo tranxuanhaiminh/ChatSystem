@@ -37,7 +37,7 @@ public class Connect extends javax.swing.JFrame {
 	//Main Page
 	private MainMenu main;
 	
-    public Connect() {
+    public Connect(String buttonText) {
     	this.setTitle(Interfacedisplay.connecttitle);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -48,17 +48,19 @@ public class Connect extends javax.swing.JFrame {
 //		cm = new ContactsManager(this);
 //		cm.start();
 		
-		this.verify = new Action(this);
+		this.verify = new Action();
 		
         jLabel1.setText("Username");
 
-        jButton1.setText("Connect");
-        jButton1.addActionListener(this.verify);
+        buttonSubmit.setText(buttonText);
+        buttonSubmit.setName("buttonSubmit");
+        buttonSubmit.addActionListener(this.verify);
 
-        jTextField1.setText(null);
-        jTextField1.addActionListener(this.verify);
+        enterPseudo.setName("enterPseudo");
+        enterPseudo.addActionListener(this.verify);
         
-        this.setVisible(true);
+        getRootPane().setDefaultButton(buttonSubmit);
+        setVisible(true);
 
     }
 
@@ -71,23 +73,16 @@ public class Connect extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
+    	enterPseudo = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        buttonSubmit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jTextField1.setText("jTextField1");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText(Interfacedisplay.usernamelabel);
 
-        jButton1.setText(Interfacedisplay.connectbutton);
+        buttonSubmit.setText(Interfacedisplay.connectbutton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -97,11 +92,11 @@ public class Connect extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(enterPseudo, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(128, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(buttonSubmit)
                 .addContainerGap(128, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -110,23 +105,19 @@ public class Connect extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(enterPseudo, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16)
-                .addComponent(jButton1)
+                .addComponent(buttonSubmit)
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
     // End of variables declaration//GEN-END:variables// Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton buttonSubmit;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField jTextField1;
+    private static javax.swing.JTextField enterPseudo;
     // End of variables declaration//GEN-END:variables
 	
     
@@ -139,16 +130,16 @@ public class Connect extends javax.swing.JFrame {
 		return contactList;
 	}
 	
-	public JTextField getEnterPseudo() {
-		return jTextField1;
+	public static JTextField getEnterPseudo() {
+		return enterPseudo;
 	}
 
 	public JFrame getConnectionFrame() {
 		return this;
 	}
 
-	public JButton getVerifyPseudo() {
-		return jButton1;
+	public JButton getbuttonSubmit() {
+		return buttonSubmit;
 	}
 
 //	public ContactsManager getCm() {
@@ -165,5 +156,11 @@ public class Connect extends javax.swing.JFrame {
 
 	public void setMain(MainMenu main) {
 		this.main = main;
+	}
+	
+	public static void main(String[] args) {
+		new Connect(Interfacedisplay.modifybutton);
+		enterPseudo.setText("sdfds");
+		System.out.println(enterPseudo.getText() == null);
 	}
 }

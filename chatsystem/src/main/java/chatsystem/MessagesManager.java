@@ -31,7 +31,7 @@ public class MessagesManager extends Thread {
 			ss = new ServerSocket(port);
 		} catch (IOException e) {
 			e.printStackTrace();
-			new Alert("Error : Please close the program!").setVisible(true);
+			new Alert("Error : Please close the program!");
 		}
 	}
 
@@ -44,7 +44,7 @@ public class MessagesManager extends Thread {
 				doorbell = ss.accept();
 			} catch (IOException e) {
 				e.printStackTrace();
-				new Alert("Error : Please close the program!").setVisible(true);
+				new Alert("Error : Please close the program!");
 
 			}
 			
@@ -85,7 +85,7 @@ public class MessagesManager extends Thread {
 				
 				//The conversation was initiated by one of our contacts
 				new Thread(() -> {
-					Contact contact = getMain().getContactList().findIp(host);
+					Contact contact = ContactList.findIp(host);
 					if (contact ==null) {
 							System.out.println("This person is not in the contacts list !\n");
 					} else {
@@ -158,7 +158,7 @@ public class MessagesManager extends Thread {
 	}
 	
 	//To send a message from the Action class
-	public void sendMessTo(Conversation c, Message m) {
+	public static void sendMessTo(Conversation c, Message m) {
 			if (ConvList.contains(c)) {
 				c.getS().send(m);
 				System.out.println("A message was sent.\n");
@@ -179,7 +179,7 @@ public class MessagesManager extends Thread {
 			}
 			Contact me = new Contact("toto",InetAddress.getLoopbackAddress());
 			
-			new MainMenu(cl);
+			new MainMenu();
 	}
 	
 }

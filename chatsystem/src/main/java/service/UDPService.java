@@ -1,15 +1,15 @@
 package service;
 
 import java.net.InetAddress;
-
 import chatsystem.Contact;
 import chatsystem.ContactList;
 import chatsystem.Conversation;
 import chatsystem.MessagesManager;
 import network.IpAddress;
 import network.UDPSend;
+import ressources.Interfacedisplay;
 import userinterface.Alert;
-import userinterface.Modify;
+import userinterface.Connect;
 
 public class UDPService {
 	/* Fields */
@@ -36,11 +36,11 @@ public class UDPService {
 	 */
 	public void udpDup(InetAddress ip) {
 		UDPSend.send("DC", IpAddress.getBroadcast());
-		new Modify().setVisible(true);
+		new Connect(Interfacedisplay.modifybutton);
 		if (System.currentTimeMillis() >= (startVerification + 10000)) {
-			new Alert("An error occured. Please choose a new username!").setVisible(true);
+			new Alert("An error occured. Please choose a new username!");
 		} else {
-			new Alert("Username existed.").setVisible(true);
+			new Alert("Username existed. Please choose a new username!");
 		}
 	}
 
@@ -71,7 +71,7 @@ public class UDPService {
 	public void udpNew(Contact contact) {
 
 		// If the source pseudo is not duplicated
-		if (!ContactList.comparePseudo(contact)) {
+		if (!ContactList.isDuplicatedPseudo(contact.getPseudo()) && !contact.equals(ContactList.getMe())) {
 			// If the source IP is new
 			if (ContactList.findIp(contact.getIpaddress()) == null) {
 				ContactList.addContact(contact);
