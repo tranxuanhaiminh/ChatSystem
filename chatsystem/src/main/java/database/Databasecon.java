@@ -29,14 +29,16 @@ public class Databasecon {
 		}
 	}
 
-	/*
-	 * Check if table existed in database
+	/**
+	 * Check if database table with specified name existed in the database
+	 * @param String
+	 * @return boolean
 	 */
 	public static boolean checktable(String table) {
 		DatabaseMetaData md;
 		try {
 			md = c.getMetaData();
-			ResultSet rs = md.getTables(null, null, "chatHistory", null);
+			ResultSet rs = md.getTables(null, null, table, null);
 			return rs.next();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -45,8 +47,8 @@ public class Databasecon {
 		}
 	}
 
-	/*
-	 * Create table in database
+	/**
+	 * Create database table
 	 */
 	public static void createTable() {
 		String sql = Databasequerries.createTable;
@@ -60,8 +62,10 @@ public class Databasecon {
 		}
 	}
 
-	/*
-	 * Get the sender name from the chat id
+	/**
+	 * Get the sender of the line with specified id
+	 * @param int
+	 * @return String
 	 */
 	public static String getSender(int id) {
 		String sql = Databasequerries.getSender;
@@ -79,8 +83,10 @@ public class Databasecon {
 		}
 	}
 
-	/*
-	 * Get the receiver name from the chat id
+	/**
+	 * Get the receiver of the line with specified id
+	 * @param int
+	 * @return String
 	 */
 	public static String getReceiver(int id) {
 		String sql = Databasequerries.getReceiver;
@@ -98,8 +104,10 @@ public class Databasecon {
 		}
 	}
 
-	/*
-	 * Get the chat from the chat id
+	/**
+	 * Get the chatline with specified id
+	 * @param int
+	 * @return String
 	 */
 	public static String getChatLine(int id) {
 		String sql = Databasequerries.getChatLine;
@@ -117,8 +125,10 @@ public class Databasecon {
 		}
 	}
 
-	/*
-	 * Get the chat sent time from the chat id
+	/**
+	 * Get the sent time of the line with specified id
+	 * @param int
+	 * @return String
 	 */
 	public static String getSentTime(int id) {
 		String sql = Databasequerries.getSentTime;
@@ -136,8 +146,13 @@ public class Databasecon {
 		}
 	}
 
-	/*
+	/**
 	 * Insert chat to database
+	 * @param person
+	 * @param pseudo
+	 * @param chatline
+	 * @param time
+	 * @param sent
 	 */
 	public static void insertChat(String person, String pseudo, String chatline, String time, boolean sent) {
 		String sql = null;
@@ -159,7 +174,7 @@ public class Databasecon {
 		}
 	}
 
-	/*
+	/**
 	 * Get [limit] number of chat line in history with the most recent datetime starting from the [offset]th chat line
 	 */
 	public static ResultSet getChatHistory(String person, int limit, int offset) {
@@ -181,7 +196,7 @@ public class Databasecon {
 	
 	/**
 	 * Get all sender and receiver from database
-	 * @return
+	 * @return ResultSet
 	 */
 	public static ResultSet getContacts() {
 		String sql = Databasequerries.getContacts;
@@ -197,6 +212,10 @@ public class Databasecon {
 		
 	}
 	
+	/**
+	 * Get the database connection
+	 * @return Connection
+	 */
 	public static Connection getC() {
 		return c;
 	}

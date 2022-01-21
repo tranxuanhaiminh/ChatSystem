@@ -2,9 +2,7 @@ package ressources;
 
 public class Databasequerries {
 
-	/**
-	 * Properties
-	 */
+	/* Properties */
 	public static String createTable = "CREATE TABLE IF NOT EXISTS chatHistory (\n"
 			+ "	id integer NOT NULL PRIMARY KEY,\n" + "	sender varchar NULL DEFAULT NULL,\n"
 			+ "	receiver varchar NULL DEFAULT NULL,\n" + "	senderpseudo varchar NULL DEFAULT NULL,\n"

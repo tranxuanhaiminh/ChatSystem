@@ -6,6 +6,8 @@ package userinterface;
 
 import javax.swing.JLabel;
 
+import java.awt.event.KeyEvent;
+
 /**
  *
  * @author Minh
@@ -24,6 +26,8 @@ public class Alert extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         jLabel1.setText(label);
         jLabel1.setHorizontalAlignment(JLabel.CENTER);
+        getRootPane().setDefaultButton(jButton1);
+        jButton1.setMnemonic(KeyEvent.VK_ENTER);
         
         setVisible(true);
     }
@@ -43,9 +47,7 @@ public class Alert extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(365, 132));
 
-        jLabel1.setText("The program is already running. Please close this session !");
-
-        jButton1.setLabel("OK");
+        jButton1.setText("OK");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);

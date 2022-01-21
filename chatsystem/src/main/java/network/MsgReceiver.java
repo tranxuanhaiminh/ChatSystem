@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
-import chatsystem.Conversation;
-import chatsystem.Message;
 import database.Databasecon;
+import entities.Conversation;
+import entities.Message;
 import userinterface.Alert;
 
 

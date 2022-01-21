@@ -1,4 +1,4 @@
-package chatsystem;
+package entities;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -13,27 +13,34 @@ public class ContactList {
 	private static Contact me = null;
 	
 	/* Methods */
+	
+	/**
+	 * Add new contact to contact list and main menu table if exists
+	 * @param Contact
+	 */
 	public static void addContact(Contact c) {
 		list.add(c);
 		try {
 			MainMenu.addUser(c.getPseudo(), true);
-		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("Got ya");
-		}
+		} catch (NullPointerException e) {}
 	}
 	
+	/**
+	 * Remove new contact from contact list and main menu table if exists
+	 * @param Contact
+	 */
 	public static void removeContact(Contact c) {
 		list.remove(c);
-//		try {
+		try {
 			MainMenu.removeUser(c.getPseudo());
-//		} catch (NullPointerException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		} catch (NullPointerException e) {}
 	}
 	
+	/**
+	 * True if pseudo existed in the list | False if not existed
+	 * @param String
+	 * @return boolean
+	 */
 	public static boolean isDupPseudo(String pseudo) {
 		for (Contact contact : list) {
 			if (contact.getPseudo().equalsIgnoreCase(pseudo)) {
@@ -43,6 +50,11 @@ public class ContactList {
 		return false;
 	}
 	
+	/**
+	 * Get contact from IP address
+	 * @param InetAddress
+	 * @return Contact
+	 */
 	public static Contact findIp(InetAddress ip) {
 		for (Contact c : list) {
 			if (ip.equals(c.getIpaddress()))
@@ -50,7 +62,12 @@ public class ContactList {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Get contact from pseudo
+	 * @param pseudo
+	 * @return Contact
+	 */
 	public static Contact findP(String pseudo) {
 		for (Contact c : list) {
 			if (pseudo.compareTo(c.getPseudo())==0)
@@ -63,10 +80,18 @@ public class ContactList {
 		return list;
 	}
 	
+	/**
+	 * Get my contact
+	 * @return Contact
+	 */
 	public static Contact getMe() {
 		return me;
 	}
 	
+	/**
+	 * Set my contact
+	 * @param String
+	 */
 	public static void setMe(String pseudo) {
 		me = new Contact(pseudo, IpAddress.getIp());
 	}

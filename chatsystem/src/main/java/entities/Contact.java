@@ -1,4 +1,4 @@
-package chatsystem;
+package entities;
 
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -11,12 +11,13 @@ public class Contact implements Serializable{
 	/**
 	 * 
 	 */
-//	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
+	/* Fields */
 	private String pseudo;
 	private InetAddress ipaddress;
 	
-	
+	/* Constructor */
 	public Contact(String p) {
 		this.pseudo = p;
 		this.ipaddress = null;
@@ -43,6 +44,7 @@ public class Contact implements Serializable{
 		this.ipaddress=ip;
 	}
 	
+	/* Methods */
 	public String getPseudo() {
 		return pseudo;
 	}

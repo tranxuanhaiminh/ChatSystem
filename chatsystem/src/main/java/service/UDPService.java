@@ -1,12 +1,10 @@
 package service;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
-import chatsystem.Contact;
-import chatsystem.ContactList;
-import chatsystem.Conversation;
-import chatsystem.MessagesManager;
+import entities.Contact;
+import entities.ContactList;
+import entities.Conversation;
 import network.IpAddress;
 import network.UDPSend;
 import ressources.Interfacedisplay;
@@ -36,8 +34,11 @@ public class UDPService {
 	 * @param ip
 	 */
 	public void udpDup(InetAddress ip) {
+		// Disconnect the user and ask for new username
 		UDPSend.send("DC", IpAddress.getBroadcast());
 		new Connect(Interfacedisplay.modifybutton);
+		
+		// Display and alert window
 		if (startVerification != 0 && System.currentTimeMillis() >= (startVerification + 10000)) {
 			new Alert("An error occured. Please choose a new username!");
 		} else {
@@ -51,6 +52,8 @@ public class UDPService {
 	 * @param ip
 	 */
 	public void udpDc(InetAddress ip) {
+		
+		// Remove the disconnected user from contact list
 		Contact contact = ContactList.findIp(ip);
 		ContactList.removeContact(contact);
 
@@ -94,6 +97,7 @@ public class UDPService {
 		}
 	}
 
+	// Set the timer for verification
 	public static void setTimer() {
 		startVerification = System.currentTimeMillis();
 	}

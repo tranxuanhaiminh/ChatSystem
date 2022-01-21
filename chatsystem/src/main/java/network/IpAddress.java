@@ -1,24 +1,18 @@
 package network;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 
 public class IpAddress {
 
-	/*
-	 * Fields
-	 */
+	/* Fields */
 	private static InetAddress ipaddress;
 	private static InetAddress broadcast;
 	
-	/*
-	 * Methods
-	 */
+	/* Methods */
 	
 	/**
 	 * Set the Ip address and broadcast address of this machine
@@ -26,7 +20,7 @@ public class IpAddress {
 	public static void getAddresses() {
 		try {
 			// Get all network interfaces
-			Enumeration e = NetworkInterface.getNetworkInterfaces();
+			Enumeration<?> e = NetworkInterface.getNetworkInterfaces();
 			while (e.hasMoreElements()) {
 				// Get all ip addresses of each interfaces (Normally only 1 each and not treated
 				// if many)
@@ -47,9 +41,7 @@ public class IpAddress {
 		}
 	}
 	
-	/*
-	 * Getters
-	 */
+	/* Getters */
 	
 	/**
 	 * get Ip address of this machine that is used for the chatsystem

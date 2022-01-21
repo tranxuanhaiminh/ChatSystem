@@ -1,4 +1,4 @@
-package chatsystem;
+package entities;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;

@@ -1,12 +1,15 @@
-package chatsystem;
+package service;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import entities.Contact;
+import entities.ContactList;
+import entities.Conversation;
+import entities.Message;
 import userinterface.Alert;
 import userinterface.MainMenu;
 
@@ -22,10 +25,10 @@ public class MessagesManager extends Thread {
 	
 	public MessagesManager(MainMenu mainMenu) {
 		super();
-		this.main = mainMenu;
-		this.running = true;
-		this.ConvList = new ArrayList<Conversation>();
-		this.stoppedConvList = new ArrayList<Conversation>();
+		main = mainMenu;
+		running = true;
+		ConvList = new ArrayList<Conversation>();
+		stoppedConvList = new ArrayList<Conversation>();
 
 		try {
 			ss = new ServerSocket(port);
@@ -33,6 +36,7 @@ public class MessagesManager extends Thread {
 			e.printStackTrace();
 			new Alert("Error : Please close the program!");
 		}
+		start();
 	}
 
 	public void run() {
@@ -167,19 +171,4 @@ public class MessagesManager extends Thread {
 			}
 			
 	}
-	
-	public static void main(String[] args) {
-			
-			ContactList cl = new ContactList();
-			
-			try {
-				cl.addContact(new Contact("titi",InetAddress.getLocalHost().getHostName()));
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
-			Contact me = new Contact("toto",InetAddress.getLoopbackAddress());
-			
-			new MainMenu();
-	}
-	
 }

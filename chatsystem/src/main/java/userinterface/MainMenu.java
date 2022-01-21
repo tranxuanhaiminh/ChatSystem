@@ -6,14 +6,13 @@ package userinterface;
 
 import javax.swing.ListSelectionModel;
 
-import chatsystem.Action;
-import chatsystem.Contact;
-import chatsystem.ContactList;
-//import chatsystem.ContactsManager;
-import chatsystem.MessagesManager;
+import entities.Contact;
+import entities.ContactList;
 import network.IpAddress;
 import network.UDPSend;
 import ressources.Interfacedisplay;
+import service.Action;
+import service.MessagesManager;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -27,19 +26,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MainMenu extends javax.swing.JFrame {
 
-	/**
-	 * 
-	 */
+	/* Fields */
 	private static final long serialVersionUID = 1L;
-
 	private final static String disconnected = "Images/gray.png";
 	private final static String connected = "Images/green.png";
-
-//	private Connect modifyFrame;
-
-//	private ContactsManager cm;
-
-	private MessagesManager messMan;
 
 	/**
 	 * Creates new form MainMenu
@@ -53,15 +43,7 @@ public class MainMenu extends javax.swing.JFrame {
 		jLabel1.setText(ContactList.getMe().getPseudo());
 
 		// Envoyer et recevoir des messages
-		this.messMan = new MessagesManager(this);
-		this.messMan.start();
-
-		// gestion des contacts
-//		this.cm = cm;
-//		this.cm.setState();
-//		this.cm.setRunning(true);
-
-//        modifyFrame = new Connect(Interfacedisplay.modifybutton);
+		new MessagesManager(this);
 
 		addUser("abc", true);
 		addUser("xyz", false);
@@ -76,8 +58,6 @@ public class MainMenu extends javax.swing.JFrame {
 		jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		ListSelectionModel listSelectionModel = jTable1.getSelectionModel();
 		listSelectionModel.addListSelectionListener(new Action());
-//        
-//        System.out.println(((ImageIcon)jTable1.getModel().getValueAt(1, 0)).getDescription());
 
 		this.addWindowListener(new WindowAdapter() {
 
@@ -85,24 +65,8 @@ public class MainMenu extends javax.swing.JFrame {
 
 				// Telling everybody that we are disconnecting
 				UDPSend.send("DC", IpAddress.getBroadcast());
-//				 System.out.println("DISCONNECTING ...\n");
-//				 if (cm!=null) {
-//					 cm.signalDatagram("DISCONNECTED","255.255.255.255");
-//				 }
-//				 
-//				 // Stopping the Contact manager
-//				 if (cm!=null)
-//					 cm.setRunning(false);
-//				 
-//				 //Stopping the message manager
-//				 if (messMan!=null)
-//					 messMan.setRunning(false);
-
-				// Stopping the program
 				System.exit(0);
-
 			}
-
 		});
 
 		/////////////// adding the users to the connected users' table
@@ -134,7 +98,7 @@ public class MainMenu extends javax.swing.JFrame {
 
 		jTable1.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {},
 				new String[] { Interfacedisplay.tablestatuscol, Interfacedisplay.tableusercol }) {
-			public Class getColumnClass(int column) {
+			public Class<? extends Object> getColumnClass(int column) {
 				return getValueAt(0, column).getClass();
 			}
 
@@ -207,15 +171,6 @@ public class MainMenu extends javax.swing.JFrame {
 		model.addRow(new Object[] { imgicon, username });
 	}
 
-//    public int isInTable(String s) {
-//    	DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-//    	for (int i=0; i<model.getRowCount();i++) {
-//    		if (s.equals(model.getValueAt(i, 1)))
-//    			return i;
-//    	}
-//    	return -1;
-//    }
-
 	/**
 	 * Remove user from the table
 	 * 
@@ -276,18 +231,11 @@ public class MainMenu extends javax.swing.JFrame {
 		return (String) model.getValueAt(index, 1);
 	}
 
-	public MessagesManager getMessMan() {
-		return this.messMan;
-	}
-
+	/**
+	 * Set the usernamelabel
+	 * @param pseudo
+	 */
 	public static void setUsernameLabel(String pseudo) {
 		jLabel1.setText(pseudo);
-	}
-
-	static long startVerification;
-
-	public static void main(String[] args) {
-		System.out.println(startVerification);
-		System.out.println(System.currentTimeMillis() >= (startVerification + 10000));
 	}
 }

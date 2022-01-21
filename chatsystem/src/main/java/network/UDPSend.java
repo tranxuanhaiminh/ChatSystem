@@ -18,6 +18,12 @@ public class UDPSend {
 	private static byte[] buffer;
 
 	/* Methods */
+	
+	/**
+	 * Send the obj to the IP destination
+	 * @param obj
+	 * @param ip
+	 */
 	public static void send(Object obj, InetAddress ip) {
 		try {
 			// Prepare the socket and packet data in the stream

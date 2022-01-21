@@ -1,4 +1,4 @@
-package chatsystem;
+package service;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,27 +6,21 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.awt.Component;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import database.Databasecon;
-import service.ButtonService;
+import entities.Contact;
+import entities.ContactList;
+import entities.Conversation;
 import userinterface.Alert;
 import userinterface.ChatWindow;
 import userinterface.Connect;
 import userinterface.MainMenu;
 
 public class Action implements ActionListener, ListSelectionListener {
-	
-	/*
-	 * Fields
-	 */
-	private Databasecon dbcon; 
 
 	/**
 	 * Perform action based on which event occured

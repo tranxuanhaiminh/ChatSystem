@@ -10,7 +10,7 @@ import java.net.InetAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import chatsystem.Contact;
+import entities.Contact;
 import service.UDPService;
 
 public class UDPReceive extends Thread {

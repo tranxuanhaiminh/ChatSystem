@@ -1,10 +1,9 @@
 package service;
 
-import chatsystem.ContactList;
-import chatsystem.Conversation;
-import chatsystem.Message;
-import chatsystem.MessagesManager;
 import database.Databasecon;
+import entities.ContactList;
+import entities.Conversation;
+import entities.Message;
 import network.IpAddress;
 import network.UDPSend;
 import ressources.Interfacedisplay;
@@ -18,14 +17,14 @@ public class ButtonService {
 	/* Methods */
 
 	/**
-	 * Verify the pseudo entered and
+	 * Verify the pseudo entered then connect the user
 	 * 
 	 * @param frame
 	 */
 	public static void submitPseudo(Connect frame) {
 
 		// Get the username from the frame
-		String pseudo = frame.getEnterPseudo().getText();
+		String pseudo = Connect.getEnterPseudo().getText();
 		System.out.println(pseudo);
 
 		// If the username field is empty
@@ -46,7 +45,7 @@ public class ButtonService {
 			UDPSend.send(ContactList.getMe(), IpAddress.getBroadcast());
 
 			// If the event occured in the connecting phase
-			if (frame.getbuttonSubmit().getText().equals(Interfacedisplay.connectbutton)) {
+			if (Connect.getbuttonSubmit().getText().equals(Interfacedisplay.connectbutton)) {
 				new MainMenu();
 			}
 			// If the event occured in the main phase
@@ -60,10 +59,18 @@ public class ButtonService {
 		}
 	}
 
+	/**
+	 * Open the modify username frame
+	 * @param frame
+	 */
 	public static void modifyPseudo(MainMenu frame) {
 		new Connect(Interfacedisplay.modifybutton);
 	}
 
+	/**
+	 * Send the chat line on the specified frame to the corresponding user
+	 * @param frame
+	 */
 	public static void sendChat(ChatWindow frame) {
 
 		// Get chat line

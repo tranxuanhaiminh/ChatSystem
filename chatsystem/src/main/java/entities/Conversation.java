@@ -1,10 +1,11 @@
-package chatsystem;
+package entities;
 
 import java.io.IOException;
 import java.net.Socket;
 
 import network.MsgReceiver;
 import network.MsgSender;
+import service.MessagesManager;
 import userinterface.Alert;
 import userinterface.ChatWindow;
 import userinterface.MainMenu;

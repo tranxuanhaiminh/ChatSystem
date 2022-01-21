@@ -4,17 +4,14 @@
  */
 package userinterface;
 
-import java.net.InetAddress;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
-import chatsystem.Action;
-import chatsystem.Contact;
-import chatsystem.ContactList;
 //import chatsystem.ContactsManager;
 import ressources.Interfacedisplay;
+import service.Action;
 
 /**
  *
@@ -33,10 +30,6 @@ public class Connect extends javax.swing.JFrame {
     	this.setTitle(Interfacedisplay.connecttitle);
         initComponents();
         this.setLocationRelativeTo(null);
-		
-		// initialisation du contacts manager
-//		cm = new ContactsManager(this);
-//		cm.start();
 		
 		verify = new Action();
 		
@@ -105,7 +98,7 @@ public class Connect extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     // End of variables declaration//GEN-END:variables// Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonSubmit;
+    private static javax.swing.JButton buttonSubmit;
     private javax.swing.JLabel jLabel1;
     private static javax.swing.JTextField enterPseudo;
     // End of variables declaration//GEN-END:variables
@@ -120,17 +113,7 @@ public class Connect extends javax.swing.JFrame {
 		return enterPseudo;
 	}
 
-	public JFrame getConnectionFrame() {
-		return this;
-	}
-
-	public JButton getbuttonSubmit() {
+	public static JButton getbuttonSubmit() {
 		return buttonSubmit;
-	}
-	
-	public static void main(String[] args) {
-		new Connect(Interfacedisplay.modifybutton);
-		enterPseudo.setText("sdfds");
-		System.out.println(enterPseudo.getText() == null);
 	}
 }

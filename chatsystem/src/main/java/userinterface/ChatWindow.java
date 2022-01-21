@@ -14,12 +14,12 @@ import javax.swing.JScrollBar;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
-import chatsystem.Action;
-import chatsystem.Contact;
-import chatsystem.Conversation;
-import chatsystem.Message;
 import database.Databasecon;
+import entities.Contact;
+import entities.Conversation;
+import entities.Message;
 import ressources.Interfacedisplay;
+import service.Action;
 
 /**
  *
@@ -31,14 +31,8 @@ public class ChatWindow extends javax.swing.JFrame {
 	 * Fields
 	 */
 	private static final long serialVersionUID = 1L;
-
 	private final static String newline = "\n";
-
-	private javax.swing.JTextField chatInput;
-	private javax.swing.JButton sendChat;
 	private JScrollBar bar;
-
-	private Databasecon dbcon = new Databasecon();
 	private Contact dest;
 	private Conversation conv;
 
@@ -61,11 +55,9 @@ public class ChatWindow extends javax.swing.JFrame {
 
 		this.sendMess = new Action();
 
-		chatInput = msg_input;
-		chatInput.addActionListener(this.sendMess);
+		msg_input.addActionListener(this.sendMess);
 
-        sendChat = msg_send;
-        sendChat.addActionListener(this.sendMess);
+		msg_send.addActionListener(this.sendMess);
         
         javax.swing.JFrame frame = this; 
         this.addWindowListener(new WindowAdapter() {
@@ -185,7 +177,7 @@ public class ChatWindow extends javax.swing.JFrame {
 
 		System.out.println("Loading the chat history\n");
 
-		ResultSet rs = dbcon.getChatHistory(dest.getIpaddress().getHostAddress(), limit, offset);
+		ResultSet rs = Databasecon.getChatHistory(dest.getIpaddress().getHostAddress(), limit, offset);
 		System.out.println(rs);
 		try {
 			while (rs.next()) {
@@ -207,20 +199,12 @@ public class ChatWindow extends javax.swing.JFrame {
 		}
 	}
 
-	public Action getSendMess() {
-		return this.sendMess;
-	}
-
 	public JTextField getChatInput() {
-		return chatInput;
+		return msg_input;
 	}
 
 	public Contact getDest() {
 		return dest;
-	}
-
-	public JButton getSendChat() {
-		return sendChat;
 	}
 
 	public Conversation getConv() {
