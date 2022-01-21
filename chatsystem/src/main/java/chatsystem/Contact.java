@@ -68,7 +68,7 @@ public class Contact implements Serializable{
 	}
 	
 	// Two Contacts are equals if they have the same IPaddress
-	public boolean equals(Contact c) {
+	public boolean isEquals(Contact c) {
 		if (this.ipaddress.equals(c.getIpaddress())) {
 			return true;
 		} else {

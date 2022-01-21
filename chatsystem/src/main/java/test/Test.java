@@ -10,10 +10,12 @@ import java.net.UnknownHostException;
 import com.sun.security.ntlm.Client;
 
 import chatsystem.Contact;
+import network.UDPSend;
 import service.UDPService;
 import userinterface.Alert;
 
 public class Test {
+	
 	
 	private static boolean test = true;
 	
@@ -26,6 +28,11 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws UnknownHostException {
+		
+		InetAddress ip = InetAddress.getByName("10.1.5.30");
+		Contact contact = new Contact("abc", ip);
+		
+		UDPSend.send(contact, InetAddress.getByName("localhost"));
 		
 		System.out.println(InetAddress.getByName("localhost").getCanonicalHostName());
 		

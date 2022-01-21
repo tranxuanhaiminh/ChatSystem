@@ -35,7 +35,7 @@ public class MainMenu extends javax.swing.JFrame {
 	private final String disconnected = "Images/gray.png";
 	private final String connected = "Images/green.png";
 	
-	private Connect modifyFrame;
+//	private Connect modifyFrame;
 	
 //	private ContactsManager cm;
 
@@ -62,7 +62,7 @@ public class MainMenu extends javax.swing.JFrame {
 //		this.cm.setState();
 //		this.cm.setRunning(true);
 		
-        modifyFrame = new Connect(Interfacedisplay.modifybutton);
+//        modifyFrame = new Connect(Interfacedisplay.modifybutton);
 
         jButton1.setText(Interfacedisplay.modifybutton);
         jButton1.addActionListener(new Action());

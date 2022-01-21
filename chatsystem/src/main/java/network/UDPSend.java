@@ -14,7 +14,7 @@ public class UDPSend {
 	private static DatagramPacket packet;
 	private static ByteArrayOutputStream baos;
 	private static ObjectOutputStream oos;
-	private static int port;
+	private static int port = 58799;
 	private static byte[] buffer;
 
 	/* Methods */

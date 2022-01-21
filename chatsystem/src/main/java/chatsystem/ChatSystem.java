@@ -5,6 +5,7 @@ import java.util.Set;
 
 import network.IpAddress;
 import network.UDPReceive;
+import network.UDPSend;
 import ressources.Interfacedisplay;
 import service.DbService;
 import userinterface.Connect;
@@ -54,6 +55,8 @@ public class ChatSystem {
 		/* Start listening to UDP packet */
 		new UDPReceive();
 		
+		/* Ask for contacts */
+		UDPSend.send("ASK", IpAddress.getBroadcast());
 	}
 
 }

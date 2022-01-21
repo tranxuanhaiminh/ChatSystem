@@ -132,7 +132,7 @@ public class MessagesManager extends Thread {
 	public static Conversation getConv(Contact c) {
 		Conversation res = null;
 		for (Conversation cv : ConvList) {
-			if (cv.getInterlocutor().equals(c)) {
+			if (cv.getInterlocutor().isEquals(c)) {
 				res = cv;
 			}
 		}
@@ -142,7 +142,7 @@ public class MessagesManager extends Thread {
 	public static Conversation getStoppedConv(Contact c) {
 		Conversation res = null;
 		for (Conversation cv : stoppedConvList) {
-			if (cv.getInterlocutor().equals(c)) {
+			if (cv.getInterlocutor().isEquals(c)) {
 				res = cv;
 			}
 		}

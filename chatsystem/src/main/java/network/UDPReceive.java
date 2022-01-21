@@ -33,6 +33,7 @@ public class UDPReceive extends Thread {
 		buffer = new byte[256];
 		service = new UDPService();
 		threadpool = Executors.newCachedThreadPool();
+		port = 58799;
 		start();
 	}
 
@@ -43,46 +44,54 @@ public class UDPReceive extends Thread {
 			while (true) {
 				// Prepare packet to receive
 				packet = new DatagramPacket(buffer, buffer.length);
-				
+
 				// Ready to receive UDP packets
 				socket.receive(packet);
 
 				// Get the IP address of the source
 				ip = packet.getAddress();
 
-				// Try to get data in String format
-				try {
-					baos = new ByteArrayInputStream(buffer);
-					oos = new ObjectInputStream(baos);
-					msg = (String) oos.readObject();
-				
-				// If not we get it in Contact format
-				} catch (ClassCastException e) {
-					baos = new ByteArrayInputStream(buffer);
-					oos = new ObjectInputStream(baos);
-					contact = (Contact) oos.readObject();
-				}
+				// If the packet received is not from this machine itself
+				if (!ip.equals(IpAddress.getIp())) {
 
-				// If the data is String
-				if (msg != null) {
-					String[] data = msg.split(":", 2);
+					// Try to get data in String format
+					try {
+						baos = new ByteArrayInputStream(buffer);
+						oos = new ObjectInputStream(baos);
+						msg = (String) oos.readObject();
+						System.out.println("String received");
 
-					// Let service deal with data asynchronously for each case
-					switch (data[0]) {
-					case "ASK":
-						threadpool.submit(() -> service.udpAsk(ip));
-						break;
-					case "DUP":
-						threadpool.submit(() -> service.udpDup(ip));
-						break;
-					case "DC":
-						threadpool.submit(() -> service.udpDc(ip));
-						break;
+						// If not we get it in Contact format
+					} catch (ClassCastException e) {
+						baos = new ByteArrayInputStream(buffer);
+						oos = new ObjectInputStream(baos);
+						contact = (Contact) oos.readObject();
 					}
-					
-				// If the data is Contact
-				} else {
-					threadpool.submit(() -> service.udpNew(contact));
+
+					// If the data is String
+					if (msg != null) {
+						String[] data = msg.split(":", 2);
+
+						// Let service deal with data asynchronously for each case
+						switch (data[0]) {
+						case "ASK":
+							threadpool.submit(() -> service.udpAsk(ip));
+							break;
+						case "DUP":
+							threadpool.submit(() -> service.udpDup(ip));
+							break;
+						case "DC":
+							threadpool.submit(() -> service.udpDc(ip));
+							break;
+						}
+
+						// Reset msg variable
+						msg = null;
+
+						// If the data is Contact
+					} else {
+						threadpool.submit(() -> service.udpNew(contact));
+					}
 				}
 			}
 		} catch (IOException e) {
