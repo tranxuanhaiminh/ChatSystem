@@ -11,7 +11,7 @@ public class Contact implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+//	private static final long serialVersionUID = 1L;
 	
 	private String pseudo;
 	private InetAddress ipaddress;

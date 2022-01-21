@@ -89,7 +89,7 @@ public class MessagesManager extends Thread {
 					if (contact ==null) {
 							System.out.println("This person is not in the contacts list !\n");
 					} else {
-						Conversation cn = new Conversation(main,contact);
+						Conversation cn = new Conversation(contact);
 						cn.startConv(sock);
 						System.out.println("A conversation is accepted.\n");
 					}
@@ -108,8 +108,8 @@ public class MessagesManager extends Thread {
 		return main;
 	}
 
-	public ArrayList<Conversation> getConvList() {
-		return this.ConvList;
+	public static ArrayList<Conversation> getConvList() {
+		return ConvList;
 	}
 
 	/*
@@ -153,7 +153,7 @@ public class MessagesManager extends Thread {
 		this.running = b;
 	}
 
-	public ArrayList<Conversation> getStoppedConvList() {
+	public static ArrayList<Conversation> getStoppedConvList() {
 		return stoppedConvList;
 	}
 	

@@ -23,41 +23,31 @@ import ressources.Interfacedisplay;
 public class Connect extends javax.swing.JFrame {
 
 	private static final long serialVersionUID = 1L;
-	/**
-     * Creates new form Connect
-     */
 
 	private Action verify;
 	
-	private ContactList contactList;
-	
-	//Contacts Manager
-//	private ContactsManager cm;
-	
-	//Main Page
-	private MainMenu main;
-	
+	/**
+	 * Creates new form Connect
+	 */
     public Connect(String buttonText) {
     	this.setTitle(Interfacedisplay.connecttitle);
         initComponents();
         this.setLocationRelativeTo(null);
-       
-		contactList = new ContactList();
 		
 		// initialisation du contacts manager
 //		cm = new ContactsManager(this);
 //		cm.start();
 		
-		this.verify = new Action();
+		verify = new Action();
 		
         jLabel1.setText("Username");
 
         buttonSubmit.setText(buttonText);
         buttonSubmit.setName("buttonSubmit");
-        buttonSubmit.addActionListener(this.verify);
+        buttonSubmit.addActionListener(verify);
 
         enterPseudo.setName("enterPseudo");
-        enterPseudo.addActionListener(this.verify);
+        enterPseudo.addActionListener(verify);
         
         getRootPane().setDefaultButton(buttonSubmit);
         setVisible(true);
@@ -126,10 +116,6 @@ public class Connect extends javax.swing.JFrame {
     /*
      * Methods
      */
-	public ContactList getContactList() {
-		return contactList;
-	}
-	
 	public static JTextField getEnterPseudo() {
 		return enterPseudo;
 	}
@@ -140,22 +126,6 @@ public class Connect extends javax.swing.JFrame {
 
 	public JButton getbuttonSubmit() {
 		return buttonSubmit;
-	}
-
-//	public ContactsManager getCm() {
-//		return cm;
-//	}
-	
-//	public void setCm(ContactsManager m) {
-//		cm = m;
-//	}
-
-	public MainMenu getMain() {
-		return main;
-	}
-
-	public void setMain(MainMenu main) {
-		this.main = main;
 	}
 	
 	public static void main(String[] args) {

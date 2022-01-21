@@ -38,9 +38,8 @@ public class UDPService {
 	public void udpDup(InetAddress ip) {
 		UDPSend.send("DC", IpAddress.getBroadcast());
 		new Connect(Interfacedisplay.modifybutton);
-		if (System.currentTimeMillis() >= (startVerification + 10000)) {
+		if (startVerification != 0 && System.currentTimeMillis() >= (startVerification + 10000)) {
 			new Alert("An error occured. Please choose a new username!");
-			System.out.println("Error really occured");
 		} else {
 			new Alert("Username existed. Please choose a new username!");
 		}
@@ -72,15 +71,17 @@ public class UDPService {
 	 * @param contact
 	 */
 	public void udpNew(Contact contact) {
+		// Get my contact
+		Contact me = ContactList.getMe();
+		
+		// Get the contact pseudo
+		String pseudo = contact.getPseudo();
+		
 		// If the source pseudo is not duplicated
-		System.out.println("New contact added whose name is " + contact.getPseudo());
-		if (!ContactList.isDuplicatedPseudo(contact.getPseudo()) && !contact.equals(ContactList.getMe())) {
-
-			System.out.println("New contact added " + contact.getPseudo());
+		if (!ContactList.isDupPseudo(pseudo) && (me == null || !pseudo.equals(me.getPseudo()))) {
 			// If the source IP is new
 			if (ContactList.findIp(contact.getIpaddress()) == null) {
 				ContactList.addContact(contact);
-				System.out.println("New contact added " + contact.getPseudo());
 			}
 			// If the source IP already existed
 			else {
@@ -89,22 +90,11 @@ public class UDPService {
 		}
 		// If the source pseudo is duplicated
 		else {
-
-			System.out.println("New contact added whose name is " + contact.getPseudo());
 			UDPSend.send("DUP", contact.getIpaddress());
 		}
 	}
 
-	public void setTimer() {
+	public static void setTimer() {
 		startVerification = System.currentTimeMillis();
-	}
-
-	public static void main(String[] args) throws UnknownHostException {
-		Contact contact = new Contact("abc", InetAddress.getByName("10.1.5.30"));
-
-		System.out.println(ContactList.getMe());
-		String test = "abc";
-
-		System.out.println(test.equals(null));
 	}
 }

@@ -42,9 +42,6 @@ public class ChatWindow extends javax.swing.JFrame {
 	private Contact dest;
 	private Conversation conv;
 
-	// Main page
-	private MainMenu main;
-
 	// listeners
 	private Action sendMess;
 
@@ -54,13 +51,12 @@ public class ChatWindow extends javax.swing.JFrame {
 	/**
 	 * Creates new form NewJFrame
 	 */
-	public ChatWindow(MainMenu m, Contact dest, Conversation conv) {
+	public ChatWindow(Contact dest, Conversation conv) {
 
 		this.setTitle(dest.getPseudo());
 		initComponents();
 
 		this.dest = dest;
-		this.main = m;
 		this.conv = conv;
 
 		this.sendMess = new Action();
@@ -225,10 +221,6 @@ public class ChatWindow extends javax.swing.JFrame {
 
 	public JButton getSendChat() {
 		return sendChat;
-	}
-
-	public MainMenu getMain() {
-		return main;
 	}
 
 	public Conversation getConv() {

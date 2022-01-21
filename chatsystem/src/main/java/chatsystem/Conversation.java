@@ -15,27 +15,25 @@ public class Conversation {
 	private MsgSender s;
 	private Contact interlocutor;
 	private int port = 55555;
-	private MainMenu main;
 	private ChatWindow chatw = null;
 
-	public Conversation(MainMenu mm2, Contact i) {
+	public Conversation(Contact i) {
 		this.interlocutor = i;
-		this.main = mm2;
 		try {
 			s = new MsgSender(new Socket(i.getIpaddress(), port));
 		} catch (IOException e) {
 			e.printStackTrace();
 			new Alert("Error : Please close the program!\n");
 		}
-		main.getMessMan().getConvList().add(this);
+		MessagesManager.getConvList().add(this);
 	}
 
 	public void startConv(Socket saccepted) {
 
-		this.chatw = new ChatWindow(main, this.interlocutor, this);
+		this.chatw = new ChatWindow(interlocutor, this);
 		r = new MsgReceiver(saccepted, this);
 		r.start();
-		System.out.println("Starting the conversation with " + this.interlocutor + "\n");
+		System.out.println("Starting the conversation with " + interlocutor + "\n");
 
 	}
 
@@ -48,15 +46,15 @@ public class Conversation {
 		}
 
 		//We remove the conversation from the on-going conversations list in the messages manager
-		main.getMessMan().getConvList().remove(this);
+		MessagesManager.getConvList().remove(this);
 
 		//We put the conversation in the stopped conversations list as we can still receive messages
-		main.getMessMan().getStoppedConvList().add(this);
+		MessagesManager.getStoppedConvList().add(this);
 
 		//Closing the sender socket as we no longer want to send messages to this user
 		s.closeSend();
 
-		System.out.println("Stopping the conversation with " + this.interlocutor + "! \n");
+		System.out.println("Stopping the conversation with " + interlocutor + "! \n");
 
 	}
 
@@ -65,14 +63,14 @@ public class Conversation {
 		//messages manager can accept the connection and have a receiving socket
 		try {
 			this.s.closeSend();
-			s = new MsgSender(new Socket(this.interlocutor.getIpaddress(), port));
+			s = new MsgSender(new Socket(interlocutor.getIpaddress(), port));
 		} catch (IOException e) {
 			e.printStackTrace();
 			new Alert("Error : Please close the program!\n");
 		}
 
 		if (this.chatw == null) {
-			this.chatw = new ChatWindow(main, this.interlocutor, this);
+			this.chatw = new ChatWindow(interlocutor, this);
 		} else {
 			this.chatw.requestFocus();
 		}
@@ -83,14 +81,14 @@ public class Conversation {
 		r.start();
 
 		// Adding the conversation in the on-going conversations list if it was not in it
-		if (!(main.getMessMan().getConvList().contains(this)))
-			main.getMessMan().getConvList().add(this);
+		if (!(MessagesManager.getConvList().contains(this)))
+			MessagesManager.getConvList().add(this);
 
 		//Removing the ocnversation from the stopped conversations list if it was in it
-		if ((main.getMessMan().getStoppedConvList().contains(this)))
-			main.getMessMan().getStoppedConvList().remove(this);
+		if ((MessagesManager.getStoppedConvList().contains(this)))
+			MessagesManager.getStoppedConvList().remove(this);
 
-		System.out.println("Restarting the conversation with " + this.interlocutor + "! \n");
+		System.out.println("Restarting the conversation with " + interlocutor + "! \n");
 	}
 
 	public MsgReceiver getR() {
@@ -119,10 +117,6 @@ public class Conversation {
 
 	public ChatWindow getChatw() {
 		return chatw;
-	}
-
-	public MainMenu getMain() {
-		return main;
 	}
 
 }

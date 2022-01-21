@@ -29,8 +29,9 @@ public class Test {
 
 	public static void main(String[] args) throws UnknownHostException {
 		
-		InetAddress ip = InetAddress.getByName("10.1.5.30");
-		Contact contact = new Contact("abc", ip);
+		InetAddress ip = InetAddress.getByName("127.0.0.1");
+		// InetAddress ip = InetAddress.getByName("10.1.5.30");
+		Contact contact = new Contact("abcdefghi", ip);
 		
 		UDPSend.send(contact, InetAddress.getByName("localhost"));
 		

@@ -1,8 +1,5 @@
 package chatsystem;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import network.IpAddress;
 import network.UDPReceive;
 import network.UDPSend;
@@ -38,17 +35,10 @@ public class ChatSystem {
 			java.util.logging.Logger.getLogger(Connect.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
 		// </editor-fold>
-
-		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new Connect(Interfacedisplay.connectbutton);
-			}
-		});
 		
 		/* Set the ip and broadcast addresses of this machine that is used in the chatsystem */
 		IpAddress.getAddresses();
-;		
+		;		
 		/* Start database connection */
 		DbService.dbInit();
 		
@@ -57,6 +47,13 @@ public class ChatSystem {
 		
 		/* Ask for contacts */
 		UDPSend.send("ASK", IpAddress.getBroadcast());
+
+		/* Create and display the form */
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				new Connect(Interfacedisplay.connectbutton);
+			}
+		});
 	}
 
 }

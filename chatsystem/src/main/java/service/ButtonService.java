@@ -33,13 +33,12 @@ public class ButtonService {
 			new Alert("Please choose an username");
 		}
 		// If the username is duplicated
-		else if (ContactList.isDuplicatedPseudo(pseudo)) {
+		else if (ContactList.isDupPseudo(pseudo)) {
 			new Alert("Duplicate username");
 			System.out.println("username duplicated");
 		}
 		// If the username is valid
 		else {
-			
 			// Register new username
 			ContactList.setMe(pseudo);
 
@@ -56,6 +55,8 @@ public class ButtonService {
 			}
 			frame.dispose();
 
+			// Start timer for verification
+			UDPService.setTimer();
 		}
 	}
 
@@ -93,7 +94,6 @@ public class ButtonService {
 
 			// Add to database
 			Databasecon.insertChat(msg.getIp(), msg.getPseudo(), msg.getMsg(), msg.getDate(), true);
-
 		}
 	}
 }

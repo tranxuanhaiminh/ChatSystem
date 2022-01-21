@@ -3,6 +3,7 @@ package network;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -59,7 +60,6 @@ public class UDPReceive extends Thread {
 						baos = new ByteArrayInputStream(buffer);
 						oos = new ObjectInputStream(baos);
 						msg = (String) oos.readObject();
-						System.out.println("String received");
 
 						// If not we get it in Contact format
 					} catch (ClassCastException e) {
@@ -94,6 +94,10 @@ public class UDPReceive extends Thread {
 					}
 				}
 			}
+		} catch (BindException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(0);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

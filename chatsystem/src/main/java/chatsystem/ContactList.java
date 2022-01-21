@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 
 import network.IpAddress;
+import userinterface.MainMenu;
 
 public class ContactList {
 	
@@ -14,13 +15,26 @@ public class ContactList {
 	/* Methods */
 	public static void addContact(Contact c) {
 		list.add(c);
+		try {
+			MainMenu.addUser(c.getPseudo(), true);
+		} catch (NullPointerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Got ya");
+		}
 	}
 	
 	public static void removeContact(Contact c) {
 		list.remove(c);
+//		try {
+			MainMenu.removeUser(c.getPseudo());
+//		} catch (NullPointerException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
-	public static boolean isDuplicatedPseudo(String pseudo) {
+	public static boolean isDupPseudo(String pseudo) {
 		for (Contact contact : list) {
 			if (contact.getPseudo().equalsIgnoreCase(pseudo)) {
 				return true;
