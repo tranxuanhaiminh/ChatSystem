@@ -11,11 +11,9 @@ import entities.ContactList;
 import entities.Conversation;
 import entities.Message;
 import userinterface.Alert;
-import userinterface.MainMenu;
 
 public class MessagesManager extends Thread {
 
-	private MainMenu main;
 	private boolean running;
 	private int port = 55555;
 	private ServerSocket ss;
@@ -23,9 +21,8 @@ public class MessagesManager extends Thread {
 	private static ArrayList<Conversation> ConvList; // on-going conversations
 	private static ArrayList<Conversation> stoppedConvList; //stopped conversation
 	
-	public MessagesManager(MainMenu mainMenu) {
+	public MessagesManager() {
 		super();
-		main = mainMenu;
 		running = true;
 		ConvList = new ArrayList<Conversation>();
 		stoppedConvList = new ArrayList<Conversation>();
@@ -55,9 +52,9 @@ public class MessagesManager extends Thread {
 			InetAddress host = doorbell.getInetAddress();
 			Contact c = new Contact(host);
 			
-			Conversation ec = getConv(c);
-			
 			final Socket sock = doorbell;
+			
+			Conversation ec = getConv(c);
 			
 			if (ec != null) {
 				final Conversation encours = ec;
@@ -108,10 +105,6 @@ public class MessagesManager extends Thread {
 		
 	}
 
-	public MainMenu getMain() {
-		return main;
-	}
-
 	public static ArrayList<Conversation> getConvList() {
 		return ConvList;
 	}
@@ -151,10 +144,6 @@ public class MessagesManager extends Thread {
 			}
 		}
 		return res;
-	}
-
-	public void setRunning(boolean b) {
-		this.running = b;
 	}
 
 	public static ArrayList<Conversation> getStoppedConvList() {

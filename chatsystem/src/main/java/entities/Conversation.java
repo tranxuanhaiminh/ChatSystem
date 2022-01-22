@@ -8,7 +8,6 @@ import network.MsgSender;
 import service.MessagesManager;
 import userinterface.Alert;
 import userinterface.ChatWindow;
-import userinterface.MainMenu;
 
 public class Conversation {
 
@@ -34,7 +33,6 @@ public class Conversation {
 		this.chatw = new ChatWindow(interlocutor, this);
 		r = new MsgReceiver(saccepted, this);
 		r.start();
-		System.out.println("Starting the conversation with " + interlocutor + "\n");
 
 	}
 
@@ -96,16 +94,8 @@ public class Conversation {
 		return r;
 	}
 
-	public void setR(MsgReceiver r) {
-		this.r = r;
-	}
-
 	public MsgSender getS() {
 		return s;
-	}
-
-	public void setS(MsgSender s) {
-		this.s = s;
 	}
 
 	public Contact getInterlocutor() {

@@ -9,7 +9,6 @@ import java.awt.event.WindowEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.JButton;
 import javax.swing.JScrollBar;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;

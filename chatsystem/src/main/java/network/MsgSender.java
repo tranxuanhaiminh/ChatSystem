@@ -11,13 +11,11 @@ import userinterface.Alert;
 public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sinon �a close la connexion; //ON FERME LE receiver d'abord D4ABORD
 	
 	private Socket socketsend;
-	private boolean go;
 	private ObjectOutputStream out;
 
 	
 	public MsgSender(Socket socket) {
 		this.socketsend = socket;
-		this.setGo(true);
 		try {
 			out = new ObjectOutputStream(socketsend.getOutputStream());
 		} catch (IOException e) {
@@ -32,7 +30,6 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 		
 		try {
 			if (!socketsend.isOutputShutdown()) {
-				System.out.println("The message is sent.\n");
 				out.writeObject(msg);
 				out.flush();
 			} else {
@@ -55,17 +52,4 @@ public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sino
 			new Alert("Error : Please close the program !\n");
 		}
 	}
-	
-	public boolean isGo() {
-		return go;
-	}
-
-	public void setGo(boolean go) {
-		this.go = go;
-	}
-	
-	public Socket getSocketsend() {
-		return socketsend;
-	}
-
 }

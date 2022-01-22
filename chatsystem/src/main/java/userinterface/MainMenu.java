@@ -43,7 +43,7 @@ public class MainMenu extends javax.swing.JFrame {
 		jLabel1.setText(ContactList.getMe().getPseudo());
 
 		// Envoyer et recevoir des messages
-		new MessagesManager(this);
+		new MessagesManager();
 
 		addUser("abc", true);
 		addUser("xyz", false);

@@ -17,11 +17,9 @@ public class MsgReceiver extends Thread{
 	private boolean running;
 	private ObjectInputStream in = null;
 	private Conversation conv;
-	private Databasecon dbcon;
 
 	public MsgReceiver(Socket sock, Conversation conv) {
 		super();
-		dbcon = new Databasecon();
 		socketreceive = sock;
 		this.conv = conv;
 		this.setRunning(true);
@@ -53,7 +51,7 @@ public class MsgReceiver extends Thread{
 				}
 
 				// adding to the chat history
-				dbcon.insertChat(conv.getInterlocutor().getIpaddress().getHostAddress(), conv.getInterlocutor().getPseudo(), mess.toString(),
+				Databasecon.insertChat(conv.getInterlocutor().getIpaddress().getHostAddress(), conv.getInterlocutor().getPseudo(), mess.toString(),
 						mess.getDate(), false);
 				System.out.println("Adding the msg sent to you by "
 						+ conv.getInterlocutor().getIpaddress().getHostAddress() + " to the chat history\n");
@@ -81,10 +79,6 @@ public class MsgReceiver extends Thread{
 			new Alert("Error : Please close this chat window ! ");
 
 		}
-	}
-
-	public boolean isRunning() {
-		return running;
 	}
 
 	public void setRunning(boolean go) {

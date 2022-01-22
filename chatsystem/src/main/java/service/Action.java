@@ -67,6 +67,9 @@ public class Action implements ActionListener, ListSelectionListener {
             int maxIndex = lsm.getMaxSelectionIndex();
             for (int i = minIndex; i <= maxIndex; i++) {
                 if (lsm.isSelectedIndex(i)) {
+                	// Clear selection
+                	lsm.clearSelection();
+                	
                 	// Get the corresponding contact
                     Contact dest = ContactList.findP(MainMenu.getPseudo(i));
                     if (dest != null) {
