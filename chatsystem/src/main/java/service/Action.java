@@ -102,48 +102,5 @@ public class Action implements ActionListener, ListSelectionListener {
                 }
             }
         }
-
-//		int indexr = pageM.getPseudosList().getSelectedRow();
-//		int indexc = pageM.getPseudosList().getSelectedColumn();
-//
-//		if (indexr != -1 && indexc != -1) {
-//			lsm.clearSelection();
-//			if (indexc > 0) {
-//				String pseudo = (String) pageM.getPseudosList().getValueAt(indexr, indexc);
-//				Contact dest = pageM.getContactList().findP(pseudo);
-//
-//				if (dest != null) {
-//
-//					Conversation in = null;
-//					in = pageM.getMessMan().getConv(dest);
-//
-//					if (in != null) {
-//						System.out.println("You have already openned this conversation ! Check the open chat windows.\n");
-//						in.getChatw().requestFocus();
-//
-//					} else if ((in = pageM.getMessMan().getStoppedConv(dest)) != null) {
-//
-//						System.out.println("You stopped this conversation. We are restarting it.\n");
-//						new Conversation(pageM, dest);
-//
-//					} else {
-//						System.out.println("Contact found. We are starting the conversation.\n");
-//						new Conversation(pageM, dest);
-//					}
-//
-//				} else {
-//					System.out.println("This user is not connected, You can only look at the message history.\n");
-//					new Alert("This user is not connected ! You can only look at the message history !").setVisible(true);
-//					try {
-//						new ChatWindow(pageM, new Contact(InetAddress.getByName(pseudo)), null);
-//					} catch (UnknownHostException e1) {
-//						e1.printStackTrace();
-//						new Alert("Error : Please close the program (Main phase) !").setVisible(true);
-//					}
-//
-//				}
-//			}
-//		}
-		
 	}
 }

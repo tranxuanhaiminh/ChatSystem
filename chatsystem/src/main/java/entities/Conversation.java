@@ -75,7 +75,6 @@ public class Conversation {
 		}
 
 		//We create a new receiving flow directed to the new sending socket of the interlocutor
-		this.r.setRunning(false);
 		r = new MsgReceiver(saccepted, this);
 		r.start();
 
@@ -100,10 +99,6 @@ public class Conversation {
 
 	public Contact getInterlocutor() {
 		return interlocutor;
-	}
-
-	public void setInterlocutor(Contact interlocutor) {
-		this.interlocutor = interlocutor;
 	}
 
 	public ChatWindow getChatw() {

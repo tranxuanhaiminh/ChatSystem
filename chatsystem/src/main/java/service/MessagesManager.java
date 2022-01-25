@@ -100,7 +100,7 @@ public class MessagesManager extends Thread {
 		System.out.println("The messages manager is stopped !\n");
 		
 		for (Conversation c : stoppedConvList) {
-			c.getR().setRunning(false);
+//			c.getR().setRunning(false);
 		}
 		
 	}
@@ -115,7 +115,7 @@ public class MessagesManager extends Thread {
 	public static synchronized void removeConv(Conversation cv) {
 		cv.stopConv();
 		stoppedConvList.remove(cv);
-		cv.getR().setRunning(false);
+//		cv.getR().setRunning(false);
 	}
 	
 	/*
@@ -123,7 +123,7 @@ public class MessagesManager extends Thread {
 	 */
 	public static synchronized void removeStoppedConv(Conversation cv) {
 		stoppedConvList.remove(cv);
-		cv.getR().setRunning(false);
+//		cv.getR().setRunning(false);
 	}
 
 	public static Conversation getConv(Contact c) {

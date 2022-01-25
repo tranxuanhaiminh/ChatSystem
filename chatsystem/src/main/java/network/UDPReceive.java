@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 
 import entities.Contact;
 import service.UDPService;
+import userinterface.Connect;
 
 public class UDPReceive extends Thread {
 
@@ -107,5 +108,18 @@ public class UDPReceive extends Thread {
 		}
 		threadpool.shutdown();
 
+	}
+	
+	/**
+	 * 
+	 */
+	public void finalize() {
+		try {
+			new Connect("hello");
+			System.out.println("Socket closed");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

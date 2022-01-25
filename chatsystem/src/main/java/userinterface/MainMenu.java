@@ -16,8 +16,13 @@ import service.MessagesManager;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.TimeUnit;
+import java.awt.Component;
+import java.awt.Font;
 
 import javax.swing.ImageIcon;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -47,6 +52,7 @@ public class MainMenu extends javax.swing.JFrame {
 
 		addUser("abc", true);
 		addUser("xyz", false);
+		notifyMessage("abc");
 
 		jButton1.setText(Interfacedisplay.modifybutton);
 		jButton1.addActionListener(new Action());
@@ -180,13 +186,11 @@ public class MainMenu extends javax.swing.JFrame {
 		// Get table model for data manipulation
 		DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
 
-		// Find the table's row containing the user
-		for (int i = 0; i < jTable1.getRowCount(); i++) {
-			if (username.equals(model.getValueAt(i, 1))) {
-				model.removeRow(i);
-				break;
-			}
-		}
+		// Get index position
+		int i = getIndex(username);
+
+		// Remove user
+		model.removeRow(i);
 	}
 
 	/**
@@ -200,22 +204,18 @@ public class MainMenu extends javax.swing.JFrame {
 		// Get table model for data manipulation
 		DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
 
-		// Find the table's row containing the user
-		for (int i = 0; i < jTable1.getRowCount(); i++) {
-			if (oldname.equals(model.getValueAt(i, 1))) {
+		// Get index position
+		int i = getIndex(oldname);
 
-				// Create Image according to the user's connetion state (connected/disconnected)
-				String img = connecting ? connected : disconnected;
-				ImageIcon imgicon = new ImageIcon(
-						new ImageIcon(img).getImage().getScaledInstance(10, 10, java.awt.Image.SCALE_SMOOTH));
-				imgicon.setDescription(img);
+		// Create Image according to the user's connetion state (connected/disconnected)
+		String img = connecting ? connected : disconnected;
+		ImageIcon imgicon = new ImageIcon(
+				new ImageIcon(img).getImage().getScaledInstance(10, 10, java.awt.Image.SCALE_SMOOTH));
+		imgicon.setDescription(img);
 
-				// Modify user's state
-				model.setValueAt(imgicon, i, 0);
-				model.setValueAt(newname, i, 1);
-				break;
-			}
-		}
+		// Modify user's state
+		model.setValueAt(imgicon, i, 0);
+		model.setValueAt(newname, i, 1);
 	}
 
 	/**
@@ -233,9 +233,57 @@ public class MainMenu extends javax.swing.JFrame {
 
 	/**
 	 * Set the usernamelabel
+	 * 
 	 * @param pseudo
 	 */
 	public static void setUsernameLabel(String pseudo) {
 		jLabel1.setText(pseudo);
+	}
+
+	
+	/**
+	 * Notify user about new messages by bolding the table row
+	 * @param pseudo
+	 */
+	public static void notifyMessage(String pseudo) {
+		// Get table model for data manipulation
+		DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+		// Get index position
+		int i = getIndex(pseudo);
+		
+		// Set text to bold
+		model.setValueAt("<html><b>" + model.getValueAt(i, 1) + "</b></html>", i, 1);
+	}
+
+	/**
+	 * Unbold the table row
+	 * @param pseudo
+	 */
+	public static void undoMessageNoti(int i) {
+		// Get table model for data manipulation
+		DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+		
+		// Set text to bold
+		model.setValueAt("<html><b>" + model.getValueAt(i, 1) + "</b></html>", i, 1);
+	}
+	
+	/**
+	 * Get the table's row index of the username
+	 * 
+	 * @param pseudo
+	 * @return int
+	 */
+	private static int getIndex(String pseudo) {
+		// Get table model for data manipulation
+		DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+		// Find the table's row containing the user
+		for (int i = 0; i < jTable1.getRowCount(); i++) {
+			if (pseudo.equals(model.getValueAt(i, 1))) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }
