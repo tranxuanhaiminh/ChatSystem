@@ -13,9 +13,9 @@ public class Databasequerries {
 
 	public static String getContacts = "SELECT sender, senderpseudo, receiver, receiverpseudo FROM chatHistory";
 
-	public static String insertChat1 = "INSERT INTO chatHistory(sender, senderpseudo, sentChat, createdDate) VALUES(?, ?, ?)";
+	public static String insertChat1 = "INSERT INTO chatHistory(sender, senderpseudo, sentChat, createdDate) VALUES(?, ?, ?, ?)";
 
-	public static String insertChat2 = "INSERT INTO chatHistory(receiver, receiverpseudo, sentChat, createdDate) VALUES(?, ?, ?)";
+	public static String insertChat2 = "INSERT INTO chatHistory(receiver, receiverpseudo, sentChat, createdDate) VALUES(?, ?, ?, ?)";
 
 	public static String getChatHistory = "SELECT sender, receiver, sentChat " + "FROM chatHistory "
 			+ "WHERE sender = ? OR receiver = ? " + "ORDER BY datetime(createdDate) DESC Limit ? OFFSET ?";
