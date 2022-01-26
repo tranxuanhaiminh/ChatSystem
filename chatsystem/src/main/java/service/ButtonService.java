@@ -10,6 +10,7 @@ import entities.Conversation;
 import entities.ConversationList;
 import entities.Message;
 import network.IpAddress;
+import network.TCPListener;
 import network.UDPSend;
 import ressources.Interfacedisplay;
 import userinterface.Alert;
@@ -50,6 +51,7 @@ public class ButtonService {
 			// If the event occured in the connecting phase
 			if (Connect.getbuttonSubmit().getText().equals(Interfacedisplay.connectbutton)) {
 				new MainMenu();
+				new TCPListener();
 			}
 			// If the event occured in the main phase
 			else {
@@ -127,7 +129,7 @@ public class ButtonService {
         	
         	// Get the conversation
 			Conversation conv = ConversationList.findConv(pseudo);
-
+			
 			// If a TCP connection with the contact existed
 			if (conv != null) {
 				// Show chat window

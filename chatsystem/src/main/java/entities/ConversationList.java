@@ -33,6 +33,7 @@ public class ConversationList {
 	 * @return Conversation or null if not found
 	 */
 	public static Conversation findConv(String pseudo) {
+    	if (convList == null) return null;
 		for (Conversation conv : convList) {
 			if (conv.getDest().getPseudo().equals(pseudo)) {
 				return conv;
@@ -47,6 +48,7 @@ public class ConversationList {
 	 * @return Conversation or null if not found
 	 */
 	public static Conversation findConv(InetAddress ip) {
+    	if (convList == null) return null;
 		for (Conversation conv : convList) {
 			if (conv.getDest().getIpaddress().equals(ip)) {
 				return conv;
