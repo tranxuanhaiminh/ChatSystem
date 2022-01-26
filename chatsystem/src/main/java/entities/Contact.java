@@ -2,80 +2,42 @@ package entities;
 
 import java.io.Serializable;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
-import userinterface.Alert;
+import network.IpAddress;
+import userinterface.MainMenu;
 
-public class Contact implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
+public class Contact implements Serializable {
+
 	/* Fields */
+	private static final long serialVersionUID = 1L;
 	private String pseudo;
 	private InetAddress ipaddress;
-	
+
 	/* Constructor */
 	public Contact(String p) {
-		this.pseudo = p;
-		this.ipaddress = null;
-	}
-	
-	public Contact(String p, InetAddress ip) {
-		this.pseudo = p;
-		this.ipaddress = ip;
-	}
-	
-	public Contact(String p, String ip) {
-		this.pseudo = p;
-		try {
-			this.ipaddress = InetAddress.getByName(ip);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			new Alert("Error : Please close the program ! ");
-		}
-	}
-	
-	public Contact(InetAddress ip) {
-		this.pseudo = ip.getHostName();
-		this.ipaddress=ip;
-	}
-	
-	/* Methods */
-	public String getPseudo() {
-		return pseudo;
+		pseudo = p;
+		ipaddress = IpAddress.getIp();
 	}
 
-	public void setPseudo(String pseudo) {
-			this.pseudo = pseudo;
+	/* Methods */
+
+	/**
+	 * Change pseudo in the list and in the main menu frame
+	 * @param psd
+	 */
+	public void setPseudo(String psd) {
+		try {
+			MainMenu.modUser(pseudo, psd, true);
+		} catch (NullPointerException e) {}
+		pseudo = psd;
 	}
-	
-	public void delPseudo() {
-		this.pseudo = this.ipaddress.getHostName();
+
+	/* Getters */
+	public String getPseudo() {
+		return pseudo;
 	}
 
 	public InetAddress getIpaddress() {
 		return ipaddress;
 	}
-	
-	public String toString() {
-		return this.pseudo;
-	}
-	
-	public String ContactToString() {
-		return this.pseudo + "("+this.ipaddress+")";
-	}
-	
-	// Two Contacts are equals if they have the same IPaddress
-	public boolean isEquals(Contact c) {
-		if (this.ipaddress.equals(c.getIpaddress())) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 }

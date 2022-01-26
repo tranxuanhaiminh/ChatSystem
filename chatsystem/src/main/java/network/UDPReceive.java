@@ -10,9 +10,9 @@ import java.net.InetAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import chatsystem.ChatSystem;
 import entities.Contact;
 import service.UDPService;
-import userinterface.Connect;
 
 public class UDPReceive extends Thread {
 
@@ -27,14 +27,12 @@ public class UDPReceive extends Thread {
 	private InetAddress ip;
 	private String msg = null;
 	private Contact contact;
-	ExecutorService threadpool;
 
 	/* Constructor */
 	public UDPReceive() {
 		super();
 		buffer = new byte[256];
 		service = new UDPService();
-		threadpool = Executors.newCachedThreadPool();
 		port = 58799;
 		start();
 	}
@@ -76,13 +74,19 @@ public class UDPReceive extends Thread {
 						// Let service deal with data asynchronously for each case
 						switch (data[0]) {
 						case "ASK":
-							threadpool.submit(() -> service.udpAsk(ip));
+							ChatSystem.threadpool.submit(() -> service.udpAsk(ip));
 							break;
 						case "DUP":
-							threadpool.submit(() -> service.udpDup(ip));
+							ChatSystem.threadpool.submit(() -> service.udpDup(ip));
 							break;
 						case "DC":
-							threadpool.submit(() -> service.udpDc(ip));
+							ChatSystem.threadpool.submit(() -> service.udpDc(ip));
+							break;
+						case "HC":
+							ChatSystem.threadpool.submit(() -> service.udpHalfClose(ip));
+							break;
+						case "RO":
+							ChatSystem.threadpool.submit(() -> service.udpReopen(ip));
 							break;
 						}
 
@@ -91,7 +95,7 @@ public class UDPReceive extends Thread {
 
 						// If the data is Contact
 					} else {
-						threadpool.submit(() -> service.udpNew(contact));
+						ChatSystem.threadpool.submit(() -> service.udpNew(contact));
 					}
 				}
 			}
@@ -103,21 +107,6 @@ public class UDPReceive extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		threadpool.shutdown();
-
-	}
-	
-	/**
-	 * 
-	 */
-	public void finalize() {
-		try {
-			new Connect("hello");
-			System.out.println("Socket closed");
-		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

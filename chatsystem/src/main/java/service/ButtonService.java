@@ -1,8 +1,13 @@
 package service;
 
+import java.io.IOException;
+import java.net.Socket;
+
 import database.Databasecon;
+import entities.Contact;
 import entities.ContactList;
 import entities.Conversation;
+import entities.ConversationList;
 import entities.Message;
 import network.IpAddress;
 import network.UDPSend;
@@ -13,8 +18,6 @@ import userinterface.Connect;
 import userinterface.MainMenu;
 
 public class ButtonService {
-
-	/* Methods */
 
 	/**
 	 * Verify the pseudo entered then connect the user
@@ -88,10 +91,10 @@ public class ButtonService {
 		else if (!chatline.equals("")) {
 
 			// Create message
-			Message msg = new Message(frame.getDest(), chatline);
+			Message msg = new Message(frame.getConv().getDest(), chatline);
 
 			// Send message
-			MessagesManager.sendMessTo(conv, msg);
+			frame.getConv().sendChat(msg);
 
 			// Add to chat window
 			frame.addChatLine(msg, true);
@@ -101,6 +104,62 @@ public class ButtonService {
 
 			// Add to database
 			Databasecon.insertChat(msg.getIp(), msg.getPseudo(), msg.getMsg(), msg.getDate(), true);
+		}
+	}
+	
+	/**
+	 * Open chat with clicked user. Start conversation if not existed
+	 * @param i
+	 */
+	public static void startChat(int i) {
+
+    	// Remove bold font from the main menu
+    	MainMenu.undoMessageNoti(i);
+    	
+    	// Get the pseudo clicked
+    	String pseudo = MainMenu.getPseudo(i);
+    	
+    	// Get the corresponding contact
+        Contact contact = ContactList.findContact(pseudo);
+        
+        // If contact exists in the list
+        if (contact != null) {
+        	
+        	// Get the conversation
+			Conversation conv = ConversationList.findConv(pseudo);
+
+			// If a TCP connection with the contact existed
+			if (conv != null) {
+				// Show chat window
+				if (conv.getChatw() != null) {								
+					conv.getChatw().requestFocus();
+				} else {
+					conv.showChat();
+				}
+			}
+			
+			// If no TCP connection with the contact exists
+			else {
+				try {
+					// establish a tcp connection and show chat window
+					Conversation conversation = new Conversation(new Socket(contact.getIpaddress(), 55555));
+					conversation.showChat();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+
+		} else {
+			new Alert("This user is not connected ! You can only look at the message history !")
+					.setVisible(true);
+//			try {
+//				new ChatWindow(new Contact(InetAddress.getByName(dest.getPseudo())), null);
+//			} catch (UnknownHostException e1) {
+//				e1.printStackTrace();
+//				new Alert("Error : Please close the program (Main phase) !").setVisible(true);
+//			}
+
 		}
 	}
 }

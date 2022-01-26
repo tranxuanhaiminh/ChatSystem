@@ -11,9 +11,7 @@ public class Databasecon {
 	private static Connection c;
 
 
-	/*
-	 * Methods
-	 */
+	/* Methods */
 	
 	/**
 	 * Connect to the database from the databasefile name (dbfile)
@@ -59,69 +57,6 @@ public class Databasecon {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Get the sender of the line with specified id
-	 * @param int
-	 * @return String
-	 */
-	public static String getSender(int id) {
-		String sql = Databasequerries.getSender;
-		PreparedStatement pstmt;
-		try {
-			pstmt = c.prepareStatement(sql);
-			pstmt.setInt(1, id);
-			ResultSet rs = pstmt.executeQuery();
-			rs.next();
-			return rs.getString("sender");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Get the receiver of the line with specified id
-	 * @param int
-	 * @return String
-	 */
-	public static String getReceiver(int id) {
-		String sql = Databasequerries.getReceiver;
-		PreparedStatement pstmt;
-		try {
-			pstmt = c.prepareStatement(sql);
-			pstmt.setInt(1, id);
-			ResultSet rs = pstmt.executeQuery();
-			rs.next();
-			return rs.getString("receiver");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Get the chatline with specified id
-	 * @param int
-	 * @return String
-	 */
-	public static String getChatLine(int id) {
-		String sql = Databasequerries.getChatLine;
-		PreparedStatement pstmt;
-		try {
-			pstmt = c.prepareStatement(sql);
-			pstmt.setInt(1, id);
-			ResultSet rs = pstmt.executeQuery();
-			rs.next();
-			return rs.getString("sentChat");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
 		}
 	}
 
@@ -210,13 +145,5 @@ public class Databasecon {
 			return null;
 		}
 		
-	}
-	
-	/**
-	 * Get the database connection
-	 * @return Connection
-	 */
-	public static Connection getC() {
-		return c;
 	}
 }

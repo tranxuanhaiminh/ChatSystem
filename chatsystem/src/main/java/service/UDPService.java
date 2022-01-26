@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import entities.Contact;
 import entities.ContactList;
 import entities.Conversation;
+import entities.ConversationList;
 import network.IpAddress;
 import network.UDPSend;
 import ressources.Interfacedisplay;
@@ -37,7 +38,7 @@ public class UDPService {
 		// Disconnect the user and ask for new username
 		UDPSend.send("DC", IpAddress.getBroadcast());
 		new Connect(Interfacedisplay.modifybutton);
-		
+
 		// Display and alert window
 		if (startVerification != 0 && System.currentTimeMillis() >= (startVerification + 10000)) {
 			new Alert("An error occured. Please choose a new username!");
@@ -52,20 +53,36 @@ public class UDPService {
 	 * @param ip
 	 */
 	public void udpDc(InetAddress ip) {
-		
+
 		// Remove the disconnected user from contact list
-		Contact contact = ContactList.findIp(ip);
-		ContactList.removeContact(contact);
+		ContactList.removeContact(ContactList.findContact(ip));
 
-		///////////////////////////////////////////////////////////////////////
+		// Remove the disconnected user from the conversation list
 		Conversation conv;
-		if ((conv = MessagesManager.getConv(contact)) != null) {
-			MessagesManager.removeConv(conv);
-		} else if ((conv = MessagesManager.getStoppedConv(contact)) != null) {
-			MessagesManager.removeStoppedConv(conv);
+		if ((conv = ConversationList.findConv(ip)) != null) {
+			ConversationList.removeConv(conv);
 		}
-		///////////////////////////////////////////////////////////////////////
 
+	}
+
+	/**
+	 * Set halfclose flag of the conversation to true in order to start closing TCP
+	 * connection when needed
+	 * 
+	 * @param ip
+	 */
+	public void udpHalfClose(InetAddress ip) {
+		ConversationList.findConv(ip).setHalfClose(true);
+	}
+
+	/**
+	 * Set halfclose flag of the conversation to false in order to prevent closing TCP
+	 * connection when not needed
+	 * 
+	 * @param ip
+	 */
+	public void udpReopen(InetAddress ip) {
+		ConversationList.findConv(ip).setHalfClose(false);
 	}
 
 	/**
@@ -76,19 +93,19 @@ public class UDPService {
 	public void udpNew(Contact contact) {
 		// Get my contact
 		Contact me = ContactList.getMe();
-		
-		// Get the contact pseudo
+
+		// Get the pseudo of new contact
 		String pseudo = contact.getPseudo();
-		
+
 		// If the source pseudo is not duplicated
 		if (!ContactList.isDupPseudo(pseudo) && (me == null || !pseudo.equals(me.getPseudo()))) {
 			// If the source IP is new
-			if (ContactList.findIp(contact.getIpaddress()) == null) {
+			if (ContactList.findContact(contact.getIpaddress()) == null) {
 				ContactList.addContact(contact);
 			}
 			// If the source IP already existed
 			else {
-				ContactList.findIp(contact.getIpaddress()).setPseudo(contact.getPseudo());
+				ContactList.findContact(contact.getIpaddress()).setPseudo(contact.getPseudo());
 			}
 		}
 		// If the source pseudo is duplicated
@@ -97,7 +114,9 @@ public class UDPService {
 		}
 	}
 
-	// Set the timer for verification
+	/**
+	 * Start timer for verification
+	 */
 	public static void setTimer() {
 		startVerification = System.currentTimeMillis();
 	}

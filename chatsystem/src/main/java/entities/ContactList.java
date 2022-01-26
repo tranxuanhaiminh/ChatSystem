@@ -3,7 +3,6 @@ package entities;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-import network.IpAddress;
 import userinterface.MainMenu;
 
 public class ContactList {
@@ -51,11 +50,11 @@ public class ContactList {
 	}
 	
 	/**
-	 * Get contact from IP address
+	 * Find contact from IP address
 	 * @param InetAddress
 	 * @return Contact
 	 */
-	public static Contact findIp(InetAddress ip) {
+	public static Contact findContact(InetAddress ip) {
 		for (Contact c : list) {
 			if (ip.equals(c.getIpaddress()))
 				return c;
@@ -64,11 +63,11 @@ public class ContactList {
 	}
 
 	/**
-	 * Get contact from pseudo
+	 * Find contact from pseudo
 	 * @param pseudo
 	 * @return Contact
 	 */
-	public static Contact findP(String pseudo) {
+	public static Contact findContact(String pseudo) {
 		for (Contact c : list) {
 			if (pseudo.compareTo(c.getPseudo())==0)
 				return c;
@@ -76,23 +75,22 @@ public class ContactList {
 		return null;
 	}
 	
+	/**
+	 * Create my contact
+	 * @param pseudo
+	 */
+	public static void setMe(String pseudo) {
+		me = new Contact(pseudo);
+	}
+
+	
+	/* Getters */
 	public static ArrayList<Contact> getList() {
 		return list;
 	}
 	
-	/**
-	 * Get my contact
-	 * @return Contact
-	 */
 	public static Contact getMe() {
 		return me;
 	}
 	
-	/**
-	 * Set my contact
-	 * @param String
-	 */
-	public static void setMe(String pseudo) {
-		me = new Contact(pseudo, IpAddress.getIp());
-	}
 }

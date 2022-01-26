@@ -9,12 +9,6 @@ public class Databasequerries {
 			+ "	receiverpseudo varchar NULL DEFAULT NULL,\n" + "	createdDate datetime NOT NULL,\n"
 			+ "	sentChat varchar " + "NOT NULL\n" + ");";
 
-	public static String getSender = "SELECT sender FROM chatHistory WHERE id = ?";
-
-	public static String getReceiver = "SELECT receiver FROM chatHistory WHERE id = ?";
-
-	public static String getChatLine = "SELECT sentChat FROM chatHistory WHERE id = ?";
-
 	public static String getSentTime = "SELECT createdDate FROM chatHistory WHERE id = ?";
 
 	public static String getContacts = "SELECT sender, senderpseudo, receiver, receiverpseudo FROM chatHistory";

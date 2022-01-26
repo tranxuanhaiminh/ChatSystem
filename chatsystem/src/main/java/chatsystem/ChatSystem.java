@@ -1,5 +1,8 @@
 package chatsystem;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import network.IpAddress;
 import network.UDPReceive;
 import network.UDPSend;
@@ -8,7 +11,11 @@ import service.DbService;
 import userinterface.Connect;
 
 public class ChatSystem {
+	
+	/* Properties */
+	public static ExecutorService threadpool;
 
+	/* main */
 	public static void main(String args[]) {
 		/* Set the Nimbus look and feel */
 		// <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
@@ -35,6 +42,9 @@ public class ChatSystem {
 			java.util.logging.Logger.getLogger(Connect.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
 		// </editor-fold>
+
+		// Initiate threadpool
+		threadpool = Executors.newCachedThreadPool();
 		
 		/* Set the ip and broadcast addresses of this machine that is used in the chatsystem */
 		IpAddress.getAddresses();
@@ -55,5 +65,4 @@ public class ChatSystem {
 			}
 		});
 	}
-
 }

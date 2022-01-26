@@ -26,12 +26,12 @@ public class UDPSend {
 	 */
 	public static void send(Object obj, InetAddress ip) {
 		try {
-			// Prepare the socket and packet data in the stream
 			socket = new DatagramSocket();
 			baos = new ByteArrayOutputStream();
 			oos = new ObjectOutputStream(baos);
+			
+			// Prepare the socket and packet data in the stream
 			oos.writeObject(obj);
-//			oos.flush();
 			buffer = baos.toByteArray();
 			packet = new DatagramPacket(buffer, buffer.length, ip, port);
 

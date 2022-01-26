@@ -2,8 +2,8 @@ package service;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.IOException;
+import java.net.Socket;
 import java.awt.Component;
 
 import javax.swing.JFrame;
@@ -12,9 +12,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import chatsystem.ChatSystem;
 import entities.Contact;
 import entities.ContactList;
 import entities.Conversation;
+import entities.ConversationList;
 import userinterface.Alert;
 import userinterface.ChatWindow;
 import userinterface.Connect;
@@ -59,8 +61,6 @@ public class Action implements ActionListener, ListSelectionListener {
 		
 		ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 		
-		System.out.println(lsm);
-		
 		if (!lsm.isSelectionEmpty()) {
 			// Find out which indexes are selected.
             int minIndex = lsm.getMinSelectionIndex();
@@ -70,34 +70,9 @@ public class Action implements ActionListener, ListSelectionListener {
                 	// Clear selection
                 	lsm.clearSelection();
                 	
-                	// Get the corresponding contact
-                    Contact dest = ContactList.findP(MainMenu.getPseudo(i));
-                    if (dest != null) {
-                    	
-						Conversation in = null;
-						in = MessagesManager.getConv(dest);
-
-						if (in != null) {
-							in.getChatw().requestFocus();
-
-						} else if ((in = MessagesManager.getStoppedConv(dest)) != null) {
-							new Conversation(dest);
-
-						} else {
-							new Conversation(dest);
-						}
-
-					} else {
-						new Alert("This user is not connected ! You can only look at the message history !")
-								.setVisible(true);
-						try {
-							new ChatWindow(new Contact(InetAddress.getByName(dest.getPseudo())), null);
-						} catch (UnknownHostException e1) {
-							e1.printStackTrace();
-							new Alert("Error : Please close the program (Main phase) !").setVisible(true);
-						}
-
-					}
+                	// Handle contact click
+                	final int index = i;
+					ChatSystem.threadpool.submit(() -> ButtonService.startChat(index));
                 	break;
                 }
             }
