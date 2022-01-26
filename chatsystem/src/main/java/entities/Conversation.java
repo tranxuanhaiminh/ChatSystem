@@ -30,7 +30,7 @@ public class Conversation {
 	/**
 	 * Show chat window and signal the other end
 	 */
-	public void showChat() {
+	public void startChat() {
 		UDPSend.send("RO", dest.getIpaddress());
 		chatW = new ChatWindow(this);
 	}

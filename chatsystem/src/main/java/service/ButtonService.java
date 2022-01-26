@@ -133,10 +133,10 @@ public class ButtonService {
 			// If a TCP connection with the contact existed
 			if (conv != null) {
 				// Show chat window
-				if (conv.getChatw() != null) {								
+				if (conv.getChatw().isVisible()) {								
 					conv.getChatw().requestFocus();
 				} else {
-					conv.showChat();
+					conv.getChatw().setVisible(true);
 				}
 			}
 			
@@ -145,7 +145,7 @@ public class ButtonService {
 				try {
 					// establish a tcp connection and show chat window
 					Conversation conversation = new Conversation(new Socket(contact.getIpaddress(), 55555));
-					conversation.showChat();
+					conversation.startChat();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
