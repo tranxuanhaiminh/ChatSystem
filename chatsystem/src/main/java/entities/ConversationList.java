@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class ConversationList {
 
 	/* Fields */
-	private static ArrayList<Conversation> convList;
+	private static ArrayList<Conversation> convList = new ArrayList<Conversation>();
 
 	/* Methods */
 	

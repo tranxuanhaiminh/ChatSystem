@@ -19,7 +19,7 @@ public class DbService {
 	 * @return
 	 */
 	public static void dbInit() {
-		Databasecon.connect("test");
+		Databasecon.connect("test.db");
 		Databasecon.createTable();
 //		retrieveContacts();
 	}
