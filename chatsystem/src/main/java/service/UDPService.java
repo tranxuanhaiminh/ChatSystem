@@ -106,6 +106,9 @@ public class UDPService {
 			// If the source IP already existed
 			else {
 				ContactList.findContact(contact.getIpaddress()).setPseudo(contact.getPseudo());
+				try {
+					ConversationList.findConv(contact.getIpaddress()).getChatw().setTitle(contact.getPseudo());
+				} catch (NullPointerException e) {}
 			}
 		}
 		// If the source pseudo is duplicated

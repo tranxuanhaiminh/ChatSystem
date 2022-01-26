@@ -30,6 +30,7 @@ public class ButtonService {
 		// Get the username from the frame
 		String pseudo = Connect.getEnterPseudo().getText();
 		System.out.println(pseudo);
+		frame.setTitle("TEST");
 
 		// If the username field is empty
 		if (pseudo.equals("")) {
@@ -133,10 +134,10 @@ public class ButtonService {
 			// If a TCP connection with the contact existed
 			if (conv != null) {
 				// Show chat window
-				if (conv.getChatw().isVisible()) {								
+				if ((conv.getChatw() != null) && (conv.getChatw().isVisible())) {								
 					conv.getChatw().requestFocus();
 				} else {
-					conv.getChatw().setVisible(true);
+					conv.startChat();;
 				}
 			}
 			

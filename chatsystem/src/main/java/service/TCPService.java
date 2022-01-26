@@ -18,7 +18,7 @@ public class TCPService {
 	 * @param conv
 	 */
 	public static void msgReceive(Message message, Conversation conv) {
-		if (conv.getChatw().isVisible()) {
+		if ((conv.getChatw() != null) && (conv.getChatw().isVisible())) {
 			// Displaying the message
 			conv.getChatw().addChatLine(message, false);
 		} else {

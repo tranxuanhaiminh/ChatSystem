@@ -50,8 +50,6 @@ public class ChatWindow extends javax.swing.JFrame {
 
 		// Loading the history
 		loadHistory(nbMsgToLoad, 0);
-		bar = jScrollPane1.getVerticalScrollBar();
-		bar.setValue(bar.getMaximum());
 
 		setVisible(true);
 	}
@@ -153,6 +151,7 @@ public class ChatWindow extends javax.swing.JFrame {
 		} else {
 			msg_display.append(conversation.getDest().getPseudo() + " : " + chatline.toString() + newline);
 		}
+		bar = jScrollPane1.getVerticalScrollBar();
 		bar.setValue(bar.getMaximum());
 		this.requestFocus();
 	}
@@ -187,6 +186,8 @@ public class ChatWindow extends javax.swing.JFrame {
 			e.printStackTrace();
 			new Alert("Error : Please close the program!\n");
 		}
+		bar = jScrollPane1.getVerticalScrollBar();
+		bar.setValue(bar.getMaximum());
 	}
 
 	/* Getters */
