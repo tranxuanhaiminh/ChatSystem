@@ -103,7 +103,7 @@ public class ButtonService {
 			frame.getChatInput().setText("");
 
 			// Add to database
-			Databasecon.insertChat(msg.getIp(), msg.getPseudo(), msg.getMsg(), msg.getDate(), true);
+			Databasecon.insertChat(msg.getIp(), msg.getPseudo(), msg.toString(), msg.getDate(), true);
 		}
 	}
 

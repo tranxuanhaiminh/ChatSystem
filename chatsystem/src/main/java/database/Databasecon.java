@@ -114,8 +114,8 @@ public class Databasecon {
 		try {
 			PreparedStatement pstmt = c.prepareStatement(sql);
 			pstmt.setString(1, person);
-			pstmt.setInt(3, limit);
-			pstmt.setInt(4, offset);
+			pstmt.setInt(2, limit);
+			pstmt.setInt(3, offset);
 			return pstmt.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

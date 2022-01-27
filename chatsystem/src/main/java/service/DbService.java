@@ -40,8 +40,9 @@ public class DbService {
 				String ip = rs.getString("ip");
 				String pseudo = rs.getString("pseudo");
 				
+				
 				// If the contacts is not in current list then add it to offline list
-				if (!ipSet.contains(ip) || (ContactList.findContact(ip) == null)) {
+				if (!ipSet.contains(ip) && (ContactList.findContact(InetAddress.getByName(ip)) == null)) {
 					ipSet.add(ip);
 					ContactList.addOffline(new Contact(pseudo, InetAddress.getByName(ip)));
 				}

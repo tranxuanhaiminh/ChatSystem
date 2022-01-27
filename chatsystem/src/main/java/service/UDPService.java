@@ -72,6 +72,7 @@ public class UDPService {
 			ConversationList.removeConv(conv);
 		}
 		ConversationList.getWindow(ip).setConv(null);
+		ConversationList.getWindow(ip).dispose();
 	}
 
 	/**
@@ -122,9 +123,10 @@ public class UDPService {
 
 				// If the source IP is in the offline list
 				if (ContactList.findOffline(ip) != null) {
+					String oldPseudo = ContactList.findOffline(ip).getPseudo();
 					ContactList.addContact(contact);
 					try {
-						MainMenu.modUser(pseudo, pseudo, true);
+						MainMenu.modUser(oldPseudo, pseudo, true);
 					} catch (NullPointerException e) {
 					}
 				}
