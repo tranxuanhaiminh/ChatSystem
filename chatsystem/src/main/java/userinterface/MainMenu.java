@@ -12,6 +12,7 @@ import network.IpAddress;
 import network.UDPSend;
 import ressources.Interfacedisplay;
 import service.Action;
+import service.DbService;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -35,11 +36,18 @@ public class MainMenu extends javax.swing.JFrame {
 	 */
 	public MainMenu() {
 		initComponents();
-		
+
 		// Add connected users
 		for (Contact c : ContactList.getList()) {
 			addUser(c.getPseudo(), true);
 		}
+
+		// Add offline users
+		DbService.getOfflineContacts();
+		for (Contact contact : ContactList.getOffline()) {
+			addUser(contact.getPseudo(), false);
+		}
+
 		setVisible(true);
 	}
 
@@ -59,7 +67,6 @@ public class MainMenu extends javax.swing.JFrame {
 		jButton1 = new javax.swing.JButton();
 		jScrollPane1 = new javax.swing.JScrollPane();
 		jTable1 = new javax.swing.JTable();
-
 
 		jTable1.setModel(new javax.swing.table.DefaultTableModel(new Object[][] {},
 				new String[] { Interfacedisplay.tablestatuscol, Interfacedisplay.tableusercol }) {
@@ -85,14 +92,14 @@ public class MainMenu extends javax.swing.JFrame {
 		jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		ListSelectionModel listSelectionModel = jTable1.getSelectionModel();
 		listSelectionModel.addListSelectionListener(new Action());
-		
+
 		jTable1.setRowHeight(20);
 		jTable1.setShowGrid(true);
 		jScrollPane1.setViewportView(jTable1);
 		if (jTable1.getColumnModel().getColumnCount() > 0) {
-			jTable1.getColumnModel().getColumn(0).setMinWidth(45);
-			jTable1.getColumnModel().getColumn(0).setPreferredWidth(45);
-			jTable1.getColumnModel().getColumn(0).setMaxWidth(45);
+			jTable1.getColumnModel().getColumn(0).setMinWidth(55);
+			jTable1.getColumnModel().getColumn(0).setPreferredWidth(55);
+			jTable1.getColumnModel().getColumn(0).setMaxWidth(55);
 			jTable1.getColumnModel().getColumn(1).setResizable(false);
 			jTable1.getColumnModel().getColumn(1).setPreferredWidth(1000);
 		}
@@ -119,7 +126,8 @@ public class MainMenu extends javax.swing.JFrame {
 						.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
 						.addContainerGap()));
 
-		// Signal other of the disconnection and exit program when closing the main menu window
+		// Signal other of the disconnection and exit program when closing the main menu
+		// window
 		addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
@@ -129,9 +137,9 @@ public class MainMenu extends javax.swing.JFrame {
 				System.exit(0);
 			}
 		});
-		
+
 		pack();
-		
+
 		this.setLocationRelativeTo(null);
 	}// </editor-fold>//GEN-END:initComponents
 
@@ -158,8 +166,20 @@ public class MainMenu extends javax.swing.JFrame {
 				new ImageIcon(img).getImage().getScaledInstance(10, 10, java.awt.Image.SCALE_SMOOTH));
 		imgicon.setDescription(img);
 
-		// Add user
-		model.addRow(new Object[] { imgicon, username });
+		if (connecting) {
+			int i;
+			// Find the table's row containing the last connected user
+			for (i = 0; i < jTable1.getRowCount(); i++) {
+				if (!img.equals(model.getValueAt(i, 0).toString())) {
+					break;
+				}
+			}
+			// Add user
+			model.insertRow(i, new Object[] { imgicon, username });
+		} else {
+			// Add user to the bottom of the table
+			model.addRow(new Object[] { imgicon, username });
+		}
 	}
 
 	/**
@@ -194,13 +214,19 @@ public class MainMenu extends javax.swing.JFrame {
 
 		// Create Image according to the user's connetion state (connected/disconnected)
 		String img = connecting ? connected : disconnected;
-		ImageIcon imgicon = new ImageIcon(
-				new ImageIcon(img).getImage().getScaledInstance(10, 10, java.awt.Image.SCALE_SMOOTH));
-		imgicon.setDescription(img);
+		if (!img.equals(model.getValueAt(i, 0).toString())) {
+			ImageIcon imgicon = new ImageIcon(
+					new ImageIcon(img).getImage().getScaledInstance(10, 10, java.awt.Image.SCALE_SMOOTH));
+			imgicon.setDescription(img);
 
-		// Modify user's state
-		model.setValueAt(imgicon, i, 0);
-		model.setValueAt(newname, i, 1);
+			// Modify user's state
+			model.setValueAt(imgicon, i, 0);
+		}
+
+		if (!oldname.equals(newname)) {
+			// Modify user's name
+			model.setValueAt(newname, i, 1);
+		}
 	}
 
 	/**
@@ -226,9 +252,9 @@ public class MainMenu extends javax.swing.JFrame {
 		jLabel1.setText(pseudo);
 	}
 
-	
 	/**
 	 * Notify user about new messages by bolding the table row
+	 * 
 	 * @param pseudo
 	 */
 	public static void notifyMessage(String pseudo) {
@@ -237,24 +263,25 @@ public class MainMenu extends javax.swing.JFrame {
 
 		// Get index position
 		int i = getIndex(pseudo);
-		
+
 		// Set text to bold
 		model.setValueAt("<html><b>" + model.getValueAt(i, 1) + "</b></html>", i, 1);
 	}
 
 	/**
 	 * Unbold the table row
+	 * 
 	 * @param pseudo
 	 */
 	public static void undoMessageNoti(int i) {
 		// Get table model for data manipulation
 		DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-		
+
 		// Set text to bold
 		String pseudo = (String) model.getValueAt(i, 1);
 		model.setValueAt(pseudo.replace("<html><b>", "").replace("</b></html>", ""), i, 1);
 	}
-	
+
 	/**
 	 * Get the table's row index of the username
 	 * 

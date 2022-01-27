@@ -33,7 +33,9 @@ public class Conversation {
 	 */
 	public void startChat() {
 		UDPSend.send("RO", dest.getIpaddress());
-		chatW = new ChatWindow(this);
+		chatW = new ChatWindow(dest);
+		chatW.setConv(this);
+		ConversationList.addWindow(chatW);
 	}
 
 	/**

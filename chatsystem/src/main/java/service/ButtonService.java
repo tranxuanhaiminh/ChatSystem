@@ -47,9 +47,6 @@ public class ButtonService {
 			// Register new username
 			ContactList.setMe(pseudo);
 
-			// Broadcast for confirmation
-			UDPSend.send(ContactList.getMe(), IpAddress.getBroadcast());
-
 			// If the event occured in the connecting phase
 			if (Connect.getbuttonSubmit().getText().equals(Interfacedisplay.connectbutton)) {
 				new MainMenu();
@@ -63,11 +60,15 @@ public class ButtonService {
 
 			// Start timer for verification
 			UDPService.setTimer();
+
+			// Broadcast for confirmation
+			UDPSend.send(ContactList.getMe(), IpAddress.getBroadcast());
 		}
 	}
 
 	/**
 	 * Open the modify username frame
+	 * 
 	 * @param frame
 	 */
 	public static void modifyPseudo(MainMenu frame) {
@@ -76,6 +77,7 @@ public class ButtonService {
 
 	/**
 	 * Send the chat line on the specified frame to the corresponding user
+	 * 
 	 * @param frame
 	 */
 	public static void sendChat(ChatWindow frame) {
@@ -83,8 +85,8 @@ public class ButtonService {
 		// Get chat line
 		String chatline = frame.getChatInput().getText();
 
-		// If the user has disconnected
-		if (ConversationList.findConv(frame.getConv().getDest().getIpaddress()) == null) {
+		// If the user is not connected
+		if (ConversationList.findConv(frame.getContact().getIpaddress()) == null) {
 			new Alert("This user is not connected ! You can't send messages !");
 		}
 
@@ -107,38 +109,40 @@ public class ButtonService {
 			Databasecon.insertChat(msg.getIp(), msg.getPseudo(), msg.getMsg(), msg.getDate(), true);
 		}
 	}
-	
+
 	/**
 	 * Open chat with clicked user. Start conversation if not existed
+	 * 
 	 * @param i
 	 */
 	public static void startChat(int i) {
 
-    	// Remove bold font from the main menu
-    	MainMenu.undoMessageNoti(i);
-    	
-    	// Get the pseudo clicked
-    	String pseudo = MainMenu.getPseudo(i);
-    	
-    	// Get the corresponding contact
-        Contact contact = ContactList.findContact(pseudo);
-        
-        // If contact exists in the list
-        if (contact != null) {
-        	
-        	// Get the conversation
+		// Remove bold font from the main menu
+		MainMenu.undoMessageNoti(i);
+
+		// Get the pseudo clicked
+		String pseudo = MainMenu.getPseudo(i);
+
+		// Get the corresponding contact
+		Contact contact;
+
+		// If contact exists in the list
+		if ((contact  = ContactList.findContact(pseudo)) != null) {
+
+			// Get the conversation
 			Conversation conv = ConversationList.findConv(pseudo);
-			
+
 			// If a TCP connection with the contact existed
 			if (conv != null) {
 				// Show chat window
-				if ((conv.getChatw() != null) && (conv.getChatw().isVisible())) {								
+				if ((conv.getChatw() != null) && (conv.getChatw().isVisible())) {
 					conv.getChatw().requestFocus();
 				} else {
-					conv.startChat();;
+					conv.startChat();
+					;
 				}
 			}
-			
+
 			// If no TCP connection with the contact exists
 			else {
 				try {
@@ -148,6 +152,9 @@ public class ButtonService {
 				} catch (ConnectException e1) {
 					// The other user's program ended unexpectedly
 					ContactList.removeContact(contact);
+					try {
+						MainMenu.modUser(contact.getPseudo(), contact.getPseudo(), false);
+					} catch (NullPointerException e) {}
 					new Alert("This user has disconnected");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -155,16 +162,10 @@ public class ButtonService {
 				}
 			}
 
-		} else {
-			new Alert("This user is not connected ! You can only look at the message history !")
-					.setVisible(true);
-//			try {
-//				new ChatWindow(new Contact(InetAddress.getByName(dest.getPseudo())), null);
-//			} catch (UnknownHostException e1) {
-//				e1.printStackTrace();
-//				new Alert("Error : Please close the program (Main phase) !").setVisible(true);
-//			}
-
+		}
+		// User not connected, read chat history only
+		else if ((contact = ContactList.findOffline(pseudo)) != null) {
+			ConversationList.addWindow(new ChatWindow(contact));
 		}
 	}
 }

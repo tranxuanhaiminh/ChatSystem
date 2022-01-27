@@ -11,6 +11,7 @@ import network.UDPSend;
 import ressources.Interfacedisplay;
 import userinterface.Alert;
 import userinterface.Connect;
+import userinterface.MainMenu;
 
 public class UDPService {
 	/* Fields */
@@ -55,14 +56,18 @@ public class UDPService {
 	public void udpDc(InetAddress ip) {
 
 		// Remove the disconnected user from contact list
-		ContactList.removeContact(ContactList.findContact(ip));
+		Contact contact = ContactList.findContact(ip);
+		ContactList.removeContact(contact);
+		try {
+			MainMenu.modUser(contact.getPseudo(), contact.getPseudo(), false);
+		} catch (NullPointerException e) {}
 
 		// Remove the disconnected user from the conversation list
 		Conversation conv;
 		if ((conv = ConversationList.findConv(ip)) != null) {
 			ConversationList.removeConv(conv);
 		}
-
+		ConversationList.getWindow(ip).setConv(null);
 	}
 
 	/**
@@ -99,15 +104,25 @@ public class UDPService {
 
 		// If the source pseudo is not duplicated
 		if (!ContactList.isDupPseudo(pseudo) && (me == null || !pseudo.equals(me.getPseudo()))) {
-			// If the source IP is new
-			if (ContactList.findContact(contact.getIpaddress()) == null) {
-				ContactList.addContact(contact);
-			}
 			// If the source IP already existed
-			else {
+			if (ContactList.findContact(contact.getIpaddress()) != null) {
 				ContactList.findContact(contact.getIpaddress()).setPseudo(contact.getPseudo());
 				try {
 					ConversationList.findConv(contact.getIpaddress()).getChatw().setTitle(contact.getPseudo());
+				} catch (NullPointerException e) {}
+			}
+			// If the source IP is in the offline list
+			else if (ContactList.findOffline(contact.getIpaddress()) != null) {
+				ContactList.addContact(contact);
+				try {
+					MainMenu.modUser(pseudo, pseudo, true);
+				} catch (NullPointerException e) {}
+			}
+			// If the source IP is new
+			else {
+				ContactList.addContact(contact);
+				try {
+					MainMenu.addUser(pseudo, true);
 				} catch (NullPointerException e) {}
 			}
 		}

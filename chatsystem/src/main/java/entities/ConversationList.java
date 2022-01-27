@@ -3,10 +3,13 @@ package entities;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
+import userinterface.ChatWindow;
+
 public class ConversationList {
 
 	/* Fields */
 	private static ArrayList<Conversation> convList = new ArrayList<Conversation>();
+	private static ArrayList<ChatWindow> windowList = new ArrayList<ChatWindow>();
 
 	/* Methods */
 	
@@ -25,6 +28,12 @@ public class ConversationList {
 	public static void removeConv(Conversation conv) {
 		conv.close();
 		convList.remove(conv);
+		for (ChatWindow window : windowList) {
+			if (conv.getDest().getIpaddress().equals(window.getContact().getIpaddress())) {
+				window.setConv(null);
+				break;
+			}
+		}
 	}
 
 	/**
@@ -52,6 +61,24 @@ public class ConversationList {
 		for (Conversation conv : convList) {
 			if (conv.getDest().getIpaddress().equals(ip)) {
 				return conv;
+			}
+		}
+		return null;
+	}
+	
+	public static void addWindow(ChatWindow chatW) {
+		windowList.add(chatW);
+	}
+	
+	/**
+	 * Get the window correspond to the contact
+	 * @param contact
+	 * @return chatwindow or null if not in window list
+	 */
+	public static ChatWindow getWindow(InetAddress ip) {
+		for (ChatWindow window : windowList) {
+			if (ip.equals(window.getContact().getIpaddress())) {
+				return window;
 			}
 		}
 		return null;

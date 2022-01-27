@@ -9,6 +9,7 @@ public class ContactList {
 	
 	/* Fields */
 	private static ArrayList<Contact> list = new ArrayList<Contact>();
+	private static ArrayList<Contact> offlineList = new ArrayList<Contact>();
 	private static Contact me = null;
 	
 	/* Methods */
@@ -19,20 +20,38 @@ public class ContactList {
 	 */
 	public static void addContact(Contact c) {
 		list.add(c);
-		try {
-			MainMenu.addUser(c.getPseudo(), true);
-		} catch (NullPointerException e) {}
+		if (findOffline(c.getIpaddress()) != null) {
+			offlineList.remove(c);
+		}
 	}
 	
 	/**
-	 * Remove new contact from contact list and main menu table if exists
+	 * Remove contact from contact list and main menu table if exists
 	 * @param Contact
 	 */
 	public static void removeContact(Contact c) {
 		list.remove(c);
-		try {
-			MainMenu.removeUser(c.getPseudo());
-		} catch (NullPointerException e) {}
+		offlineList.add(c);
+	}
+	
+	
+	/**
+	 * Add new contact to offline list
+	 * @param contact
+	 */
+	public static void addOffline(Contact contact) {
+		offlineList.add(contact);
+		if (findContact(contact.getIpaddress()) != null) {
+			list.remove(contact);
+		}
+	}
+	
+	/**
+	 * Remove contact from offline list
+	 * @param contact
+	 */
+	public static void removeOffline(Contact contact) {
+		offlineList.remove(contact);
 	}
 	
 	/**
@@ -76,6 +95,32 @@ public class ContactList {
 	}
 	
 	/**
+	 * Find offline contact from IP address
+	 * @param InetAddress
+	 * @return Contact
+	 */
+	public static Contact findOffline(InetAddress ip) {
+		for (Contact c : offlineList) {
+			if (ip.equals(c.getIpaddress()))
+				return c;
+		}
+		return null;
+	}
+	
+	/**
+	 * Find offline contact from pseudo
+	 * @param InetAddress
+	 * @return Contact
+	 */
+	public static Contact findOffline(String pseudo) {
+		for (Contact c : offlineList) {
+			if (pseudo.equals(c.getPseudo()))
+				return c;
+		}
+		return null;
+	}
+	
+	/**
 	 * Create my contact
 	 * @param pseudo
 	 */
@@ -87,6 +132,10 @@ public class ContactList {
 	/* Getters */
 	public static ArrayList<Contact> getList() {
 		return list;
+	}
+	
+	public static ArrayList<Contact> getOffline() {
+		return offlineList;
 	}
 	
 	public static Contact getMe() {

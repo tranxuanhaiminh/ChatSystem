@@ -89,19 +89,16 @@ public class Databasecon {
 	 * @param time
 	 * @param sent
 	 */
-	public static void insertChat(String person, String pseudo, String chatline, String time, boolean sent) {
-		String sql = null;
-		if (sent) {
-			sql = Databasequerries.insertChat1;
-		} else {
-			sql = Databasequerries.insertChat2;
-		}
+	public static void insertChat(String person, String pseudo, String chatline, String time, boolean s) {
+		String sql = Databasequerries.insertChat1;
 		try {
 			PreparedStatement pstmt = c.prepareStatement(sql);
 			pstmt.setString(1, person);
 			pstmt.setString(2, pseudo);
 			pstmt.setString(3, chatline);
-			pstmt.setString(4, time);
+			int sent = s ? 1 : 0;
+			pstmt.setInt(4, sent);
+			pstmt.setString(5, time);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -117,7 +114,6 @@ public class Databasecon {
 		try {
 			PreparedStatement pstmt = c.prepareStatement(sql);
 			pstmt.setString(1, person);
-			pstmt.setString(2, person);
 			pstmt.setInt(3, limit);
 			pstmt.setInt(4, offset);
 			return pstmt.executeQuery();

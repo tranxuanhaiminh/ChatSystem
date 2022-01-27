@@ -7,8 +7,6 @@ import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import chatsystem.ChatSystem;
 import entities.Contact;

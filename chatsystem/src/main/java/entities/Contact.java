@@ -18,6 +18,11 @@ public class Contact implements Serializable {
 		pseudo = p;
 		ipaddress = IpAddress.getIp();
 	}
+	
+	public Contact(String p, InetAddress ip) {
+		pseudo = p;
+		ipaddress = ip;
+	}
 
 	/* Methods */
 

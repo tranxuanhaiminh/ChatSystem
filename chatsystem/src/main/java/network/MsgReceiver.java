@@ -5,13 +5,11 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 
 import chatsystem.ChatSystem;
-import database.Databasecon;
 import entities.Conversation;
 import entities.ConversationList;
 import entities.Message;
 import service.TCPService;
 import userinterface.Alert;
-import userinterface.MainMenu;
 
 public class MsgReceiver extends Thread {
 

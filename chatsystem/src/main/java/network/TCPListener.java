@@ -1,14 +1,10 @@
 package network;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import chatsystem.ChatSystem;
-import entities.ContactList;
-import entities.Conversation;
-import entities.ConversationList;
 import service.TCPService;
 
 public class TCPListener extends Thread {

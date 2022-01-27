@@ -2,8 +2,6 @@ package service;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.Socket;
 import java.awt.Component;
 
 import javax.swing.JFrame;
@@ -13,11 +11,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import chatsystem.ChatSystem;
-import entities.Contact;
-import entities.ContactList;
-import entities.Conversation;
-import entities.ConversationList;
-import userinterface.Alert;
 import userinterface.ChatWindow;
 import userinterface.Connect;
 import userinterface.MainMenu;

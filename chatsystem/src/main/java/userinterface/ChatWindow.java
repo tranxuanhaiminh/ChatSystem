@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
 import database.Databasecon;
+import entities.Contact;
 import entities.Conversation;
 import entities.ConversationList;
 import entities.Message;
@@ -33,6 +34,7 @@ public class ChatWindow extends javax.swing.JFrame {
 	private static final long serialVersionUID = 1L;
 	private final static String newline = "\n";
 	private JScrollBar bar;
+	private Contact contact;
 	private Conversation conversation;
 
 	// listeners
@@ -44,12 +46,24 @@ public class ChatWindow extends javax.swing.JFrame {
 	/**
 	 * Creates new form NewJFrame
 	 */
-	public ChatWindow(Conversation conv) {
-		conversation = conv;
+	public ChatWindow(Contact contact) {
 		initComponents();
+		
+		// Remove conversation and send HC flag change when closing this chat window
+		addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+				if ((conversation != null) && conversation.getHalfClose()) {					
+					ConversationList.removeConv(conversation);
+				} else {
+					UDPSend.send("HC", contact.getIpaddress());
+				}
+				dispose();
+			}
+		});
 
 		// Loading the history
-		loadHistory(nbMsgToLoad, 0);
+		loadHistory(contact, nbMsgToLoad, 0);
 
 		setVisible(true);
 	}
@@ -63,7 +77,7 @@ public class ChatWindow extends javax.swing.JFrame {
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// Code">//GEN-BEGIN:initComponents
 	private void initComponents() {
-		setTitle(conversation.getDest().getPseudo());
+		setTitle(contact.getPseudo());
 
 		msg_input = new javax.swing.JTextField();
 		msg_send = new javax.swing.JButton();
@@ -85,6 +99,8 @@ public class ChatWindow extends javax.swing.JFrame {
 		msg_display.setRows(5);
 		msg_display.setText("");
 		jScrollPane1.setViewportView(msg_display);
+		
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -112,18 +128,7 @@ public class ChatWindow extends javax.swing.JFrame {
 		msg_input.addActionListener(sendMess);
 		msg_send.addActionListener(sendMess);
 		
-		// Remove conversation and send HC flag change when closing this chat window
-		addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				if (conversation.getHalfClose()) {					
-					ConversationList.removeConv(conversation);
-				} else {
-					UDPSend.send("HC", conversation.getDest().getIpaddress());
-				}
-				dispose();
-			}
-		});
+		
 		
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
@@ -149,7 +154,7 @@ public class ChatWindow extends javax.swing.JFrame {
 		if (isMe) {
 			msg_display.append("Me : " + chatline.toString() + newline);
 		} else {
-			msg_display.append(conversation.getDest().getPseudo() + " : " + chatline.toString() + newline);
+			msg_display.append(contact.getPseudo() + " : " + chatline.toString() + newline);
 		}
 		bar = jScrollPane1.getVerticalScrollBar();
 		bar.setValue(bar.getMaximum());
@@ -162,16 +167,16 @@ public class ChatWindow extends javax.swing.JFrame {
 	 * @param limit
 	 * @param offset
 	 */
-	public void loadHistory(int limit, int offset) {
+	public void loadHistory(Contact contact, int limit, int offset) {
 
 		System.out.println("Loading the chat history\n");
 
-		ResultSet rs = Databasecon.getChatHistory(conversation.getDest().getIpaddress().getHostAddress(), limit, offset);
+		ResultSet rs = Databasecon.getChatHistory(contact.getIpaddress().getHostAddress(), limit, offset);
 		System.out.println(rs);
 		try {
 			while (rs.next()) {
 				String chatline = rs.getString("sentChat");
-				String person = (rs.getString("sender") == null) ? conversation.getDest().getPseudo() : "Me";
+				String person = (rs.getInt("sent") == 1) ? "Me" : contact.getPseudo();
 				try {
 					msg_display.getDocument().insertString(0, person + " : " + chatline + newline, null);
 					msg_display.setCaretPosition(0);
@@ -190,13 +195,20 @@ public class ChatWindow extends javax.swing.JFrame {
 		bar.setValue(bar.getMaximum());
 	}
 
-	/* Getters */
+	/* Getters and setters */
 	public JTextField getChatInput() {
 		return msg_input;
+	}
+
+	public Contact getContact() {
+		return contact;
 	}
 
 	public Conversation getConv() {
 		return conversation;
 	}
-
+	
+	public void setConv(Conversation conv) {
+		conversation = conv;
+	}
 }
