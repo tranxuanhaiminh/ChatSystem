@@ -1,6 +1,7 @@
 package entities;
 
 import java.net.Socket;
+import java.net.SocketException;
 
 import network.MsgReceiver;
 import network.MsgSender;
@@ -47,7 +48,12 @@ public class Conversation {
 	 * @param message
 	 */
 	public void sendChat(Message message) {
-		sender.send(message);
+		try {
+			sender.send(message);
+		} catch (SocketException e) {
+			// The other end has closed the connection unexpectedly
+			ConversationList.removeConv(this);
+		}
 	}
 	
 	/* Getters and setters */

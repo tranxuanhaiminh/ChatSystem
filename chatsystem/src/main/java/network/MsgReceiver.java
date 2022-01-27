@@ -7,6 +7,7 @@ import java.net.Socket;
 import chatsystem.ChatSystem;
 import database.Databasecon;
 import entities.Conversation;
+import entities.ConversationList;
 import entities.Message;
 import service.TCPService;
 import userinterface.Alert;
@@ -50,6 +51,7 @@ public class MsgReceiver extends Thread {
 			// shut down output stream on this side
 			if (!socketreceive.isOutputShutdown()) {
 				socketreceive.shutdownOutput();
+				ConversationList.removeConv(conv);
 			}
 
 		} catch (IOException | ClassNotFoundException e) {

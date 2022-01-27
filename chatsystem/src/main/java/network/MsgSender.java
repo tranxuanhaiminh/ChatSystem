@@ -3,6 +3,7 @@ package network;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 import entities.Message;
 import userinterface.Alert;
@@ -31,7 +32,7 @@ public class MsgSender {
 	 * Send msg
 	 * @param msg
 	 */
-	public void send(Message msg) {
+	public void send(Message msg) throws SocketException {
 		try {
 			out.writeObject(msg);
 			out.flush();
@@ -47,6 +48,8 @@ public class MsgSender {
 	public void closeSend() {
 		try {
 			socketsend.shutdownOutput();
+		} catch (SocketException e) { 
+			// Socket is already shutdown
 		} catch (IOException e) {
 			e.printStackTrace();
 			new Alert("Error : Please close the program !\n");
