@@ -111,7 +111,7 @@ public class MainMenu extends javax.swing.JFrame {
 						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 								.addGroup(layout.createSequentialGroup().addComponent(jLabel1)
 										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-										.addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 65,
+										.addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 70,
 												javax.swing.GroupLayout.PREFERRED_SIZE)
 										.addGap(0, 0, Short.MAX_VALUE))
 								.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE))
