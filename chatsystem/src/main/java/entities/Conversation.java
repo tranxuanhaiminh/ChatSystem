@@ -41,6 +41,9 @@ public class Conversation {
 	 */
 	public void close() {
 		sender.closeSend();
+		try {
+			chatW.dispose();
+		} catch (NullPointerException e) {}
 	}
 
 	/**

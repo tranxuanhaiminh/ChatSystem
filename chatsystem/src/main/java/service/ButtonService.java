@@ -1,6 +1,7 @@
 package service;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 
 import database.Databasecon;
@@ -82,11 +83,8 @@ public class ButtonService {
 		// Get chat line
 		String chatline = frame.getChatInput().getText();
 
-		// Get conversation
-		Conversation conv = frame.getConv();
-
 		// If the user has disconnected
-		if (conv == null) {
+		if (ConversationList.findConv(frame.getConv().getDest().getIpaddress()) == null) {
 			new Alert("This user is not connected ! You can't send messages !");
 		}
 
@@ -147,6 +145,10 @@ public class ButtonService {
 					// establish a tcp connection and show chat window
 					Conversation conversation = new Conversation(new Socket(contact.getIpaddress(), 55555));
 					conversation.startChat();
+				} catch (ConnectException e1) {
+					// The other user's program ended unexpectedly
+					ContactList.removeContact(contact);
+					new Alert("This user has disconnected");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
