@@ -22,7 +22,6 @@ public class Conversation {
 		sender = new MsgSender(socket);
 		halfClosed = false;
 		ConversationList.addConv(this);
-		System.out.println("test");
 		new MsgReceiver(socket, this);
 	}
 

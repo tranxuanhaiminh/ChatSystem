@@ -46,7 +46,10 @@ public class ChatWindow extends javax.swing.JFrame {
 	/**
 	 * Creates new form NewJFrame
 	 */
-	public ChatWindow(Contact contact) {
+	public ChatWindow(Contact c) {
+		
+		contact = c;
+		
 		initComponents();
 		
 		// Remove conversation and send HC flag change when closing this chat window

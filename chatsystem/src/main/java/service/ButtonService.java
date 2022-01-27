@@ -30,8 +30,6 @@ public class ButtonService {
 
 		// Get the username from the frame
 		String pseudo = Connect.getEnterPseudo().getText();
-		System.out.println(pseudo);
-		frame.setTitle("TEST");
 
 		// If the username field is empty
 		if (pseudo.equals("")) {
@@ -40,7 +38,6 @@ public class ButtonService {
 		// If the username is duplicated
 		else if (ContactList.isDupPseudo(pseudo)) {
 			new Alert("Duplicate username");
-			System.out.println("username duplicated");
 		}
 		// If the username is valid
 		else {

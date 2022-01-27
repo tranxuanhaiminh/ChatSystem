@@ -4,12 +4,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.Map.Entry;
 
 import database.Databasecon;
 import entities.Contact;
