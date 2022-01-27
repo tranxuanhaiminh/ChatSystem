@@ -119,35 +119,35 @@ public class UDPService {
 					ConversationList.findConv(ip).getChatw().setTitle(contact.getPseudo());
 				} catch (NullPointerException e) {
 				}
-			} else {
-
-				// If the source IP is in the offline list
-				if (ContactList.findOffline(ip) != null) {
-					String oldPseudo = ContactList.findOffline(ip).getPseudo();
-					ContactList.addContact(contact);
-					try {
-						MainMenu.modUser(oldPseudo, pseudo, true);
-					} catch (NullPointerException e) {
-					}
+			} else if (ContactList.findOffline(ip) != null) {
+				String oldPseudo = ContactList.findOffline(ip).getPseudo();
+				ContactList.addContact(contact);
+				try {
+					MainMenu.modUser(oldPseudo, pseudo, true);
+				} catch (NullPointerException e) {
 				}
-				// If the source IP is new
-				else {
-					ContactList.addContact(contact);
-					try {
-						MainMenu.addUser(pseudo, true);
-					} catch (NullPointerException e) {
-					}
-				}
-
 				// If the source IP has an opened chat window
 				ChatWindow chatW;
 				if ((chatW = ConversationList.getWindow(ip)) != null) {
+					// establish a tcp connection and show chat window
+					chatW.setConv(null);
+					chatW.dispose();
+					Conversation conversation;
 					try {
-						chatW.setConv(new Conversation(new Socket(ip, 55555)));
-					} catch (IOException e) {
+						conversation = new Conversation(new Socket(contact.getIpaddress(), 55555));
+						conversation.startChat();
+					} catch (IOException e1) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						e1.printStackTrace();
 					}
+				}
+			}
+			// If the source IP is new
+			else {
+				ContactList.addContact(contact);
+				try {
+					MainMenu.addUser(pseudo, true);
+				} catch (NullPointerException e) {
 				}
 			}
 		}
