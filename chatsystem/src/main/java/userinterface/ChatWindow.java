@@ -65,8 +65,10 @@ public class ChatWindow extends javax.swing.JFrame {
 			}
 		});
 
-		// Loading the history
+		// Loading the historygetWindow
 		loadHistory(contact, nbMsgToLoad, 0);
+
+		msg_input.requestFocus();
 
 		setVisible(true);
 	}
