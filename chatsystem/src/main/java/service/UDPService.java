@@ -1,6 +1,8 @@
 package service;
 
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
 
 import entities.Contact;
 import entities.ContactList;
@@ -10,6 +12,7 @@ import network.IpAddress;
 import network.UDPSend;
 import ressources.Interfacedisplay;
 import userinterface.Alert;
+import userinterface.ChatWindow;
 import userinterface.Connect;
 import userinterface.MainMenu;
 
@@ -60,7 +63,8 @@ public class UDPService {
 		ContactList.removeContact(contact);
 		try {
 			MainMenu.modUser(contact.getPseudo(), contact.getPseudo(), false);
-		} catch (NullPointerException e) {}
+		} catch (NullPointerException e) {
+		}
 
 		// Remove the disconnected user from the conversation list
 		Conversation conv;
@@ -81,8 +85,8 @@ public class UDPService {
 	}
 
 	/**
-	 * Set halfclose flag of the conversation to false in order to prevent closing TCP
-	 * connection when not needed
+	 * Set halfclose flag of the conversation to false in order to prevent closing
+	 * TCP connection when not needed
 	 * 
 	 * @param ip
 	 */
@@ -102,33 +106,52 @@ public class UDPService {
 		// Get the pseudo of new contact
 		String pseudo = contact.getPseudo();
 
+		// Get the IP address of new contact
+		InetAddress ip = contact.getIpaddress();
+
 		// If the source pseudo is not duplicated
 		if (!ContactList.isDupPseudo(pseudo) && (me == null || !pseudo.equals(me.getPseudo()))) {
 			// If the source IP already existed
-			if (ContactList.findContact(contact.getIpaddress()) != null) {
-				ContactList.findContact(contact.getIpaddress()).setPseudo(contact.getPseudo());
+			if (ContactList.findContact(ip) != null) {
+				ContactList.findContact(ip).setPseudo(contact.getPseudo());
 				try {
-					ConversationList.findConv(contact.getIpaddress()).getChatw().setTitle(contact.getPseudo());
-				} catch (NullPointerException e) {}
-			}
-			// If the source IP is in the offline list
-			else if (ContactList.findOffline(contact.getIpaddress()) != null) {
-				ContactList.addContact(contact);
-				try {
-					MainMenu.modUser(pseudo, pseudo, true);
-				} catch (NullPointerException e) {}
-			}
-			// If the source IP is new
-			else {
-				ContactList.addContact(contact);
-				try {
-					MainMenu.addUser(pseudo, true);
-				} catch (NullPointerException e) {}
+					ConversationList.findConv(ip).getChatw().setTitle(contact.getPseudo());
+				} catch (NullPointerException e) {
+				}
+			} else {
+
+				// If the source IP is in the offline list
+				if (ContactList.findOffline(ip) != null) {
+					ContactList.addContact(contact);
+					try {
+						MainMenu.modUser(pseudo, pseudo, true);
+					} catch (NullPointerException e) {
+					}
+				}
+				// If the source IP is new
+				else {
+					ContactList.addContact(contact);
+					try {
+						MainMenu.addUser(pseudo, true);
+					} catch (NullPointerException e) {
+					}
+				}
+
+				// If the source IP has an opened chat window
+				ChatWindow chatW;
+				if ((chatW = ConversationList.getWindow(ip)) != null) {
+					try {
+						chatW.setConv(new Conversation(new Socket(ip, 55555)));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		// If the source pseudo is duplicated
 		else {
-			UDPSend.send("DUP", contact.getIpaddress());
+			UDPSend.send("DUP", ip);
 		}
 	}
 
