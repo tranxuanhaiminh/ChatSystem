@@ -3,8 +3,6 @@ package entities;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-import userinterface.MainMenu;
-
 public class ContactList {
 	
 	/* Fields */
