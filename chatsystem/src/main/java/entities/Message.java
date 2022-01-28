@@ -24,7 +24,7 @@ public class Message implements Serializable{
 	 * No
 	 */
 	public String toString() {
-		return msg +"\n------written at "+getDate();
+		return msg +"\n------written the "+getDate();
 	}
 	
 	/**

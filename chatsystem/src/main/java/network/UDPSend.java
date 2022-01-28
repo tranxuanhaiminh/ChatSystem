@@ -7,6 +7,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import ressources.AlertMessage;
+import userinterface.Alert;
+
 public class UDPSend {
 
 	/* Fields */
@@ -41,6 +44,7 @@ public class UDPSend {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			new Alert(AlertMessage.error);
 		}
 	}
 }

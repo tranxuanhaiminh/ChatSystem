@@ -1,4 +1,10 @@
-# INSA Project ChatSystem : Xuan Hai Minh Tran and Mariétou Sarr
+# INSA Project ChatSystem : 
+
+# Team : Xuan Hai Minh Tran and Mariétou Sarr
+
+You can download the project with the option Download ZIP or clone the repository on your computer.
+You must have Maven and Java to be able to install the project. 
+Once you have the ChatSystem-jar-with-dependencies.jar file you will just need Java to use the ChatSystem.
 
 The source code is in ./chatsystem.
 
@@ -8,8 +14,10 @@ In the directory ./chatsystem, you can :
 
 - Create the .jar files with the command : mvn package 
 
-- Compile and create the .jar files with the command : make build or mvn compile package
+- Compile and create the .jar files with the command : make install or mvn compile package
 
-- Run the program with the command : java -cp target/ChatSystem-jar-with-dependencies.jar chatsystem.ChatSystem
+- Clean the repository with the command : make clean
 
-To run the program, you can also double click on the file ./chatsystem/target/ChatSystem-jar-with-dependencies.jar.
+- Run the program with the command : make launch or 
+									java -jar target/ChatSystem-jar-with-dependencies.jar or
+									java -cp target/ChatSystem-jar-with-dependencies chatsystem.ChatSystem

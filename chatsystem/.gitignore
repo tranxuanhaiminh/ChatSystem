@@ -1,8 +1,0 @@
-/target/
-.classpath
-.project
-.settings
-*.class
-/bin/
-*.db
-.metadata

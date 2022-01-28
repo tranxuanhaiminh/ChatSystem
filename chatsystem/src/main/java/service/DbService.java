@@ -10,6 +10,8 @@ import java.util.Set;
 import database.Databasecon;
 import entities.Contact;
 import entities.ContactList;
+import ressources.AlertMessage;
+import userinterface.Alert;
 
 public class DbService {
 	
@@ -20,7 +22,7 @@ public class DbService {
 	 * @return
 	 */
 	public static void dbInit() {
-		Databasecon.connect("test.db");
+		Databasecon.connect("ChatSystemHistory.db");
 		Databasecon.createTable();
 	}
 	
@@ -52,9 +54,11 @@ public class DbService {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			new Alert(AlertMessage.error);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			new Alert(AlertMessage.error);
 		}
 	}
 }

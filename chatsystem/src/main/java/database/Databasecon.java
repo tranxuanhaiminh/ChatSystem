@@ -2,7 +2,9 @@ package database;
 
 import java.sql.*;
 
+import ressources.AlertMessage;
 import ressources.Databasequerries;
+import userinterface.Alert;
 
 public class Databasecon {
 
@@ -24,6 +26,7 @@ public class Databasecon {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			new Alert(AlertMessage.error);
 		}
 	}
 
@@ -57,6 +60,7 @@ public class Databasecon {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			new Alert(AlertMessage.error);
 		}
 	}
 
@@ -103,6 +107,7 @@ public class Databasecon {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			new Alert(AlertMessage.error);
 		}
 	}
 
