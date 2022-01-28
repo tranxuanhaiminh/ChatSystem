@@ -18,6 +18,4 @@ In the directory ./chatsystem, you can :
 
 - Clean the repository with the command : make clean
 
-- Run the program with the command : make launch or 
-									java -jar target/ChatSystem-jar-with-dependencies.jar or
-									java -cp target/ChatSystem-jar-with-dependencies chatsystem.ChatSystem
+- Run the program with the command : make launch or java -jar target/ChatSystem-jar-with-dependencies.jar or java -cp target/ChatSystem-jar-with-dependencies.jar chatsystem.ChatSystem
