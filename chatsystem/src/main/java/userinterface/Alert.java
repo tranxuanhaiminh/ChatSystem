@@ -6,6 +6,8 @@ package userinterface;
 
 import javax.swing.JLabel;
 
+import ressources.Interfacedisplay;
+
 import java.awt.event.KeyEvent;
 
 /**
@@ -42,7 +44,7 @@ public class Alert extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(365, 132));
 
         jLabel1.setText(label);
-        jButton1.setText("OK");
+        jButton1.setText(Interfacedisplay.confirmAlertButton);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);

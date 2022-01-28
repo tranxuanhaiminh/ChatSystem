@@ -10,6 +10,7 @@ import entities.Conversation;
 import entities.ConversationList;
 import network.IpAddress;
 import network.UDPSend;
+import ressources.AlertMessage;
 import ressources.Interfacedisplay;
 import userinterface.Alert;
 import userinterface.ChatWindow;
@@ -45,9 +46,9 @@ public class UDPService {
 
 		// Display and alert window
 		if (startVerification != 0 && System.currentTimeMillis() >= (startVerification + 10000)) {
-			new Alert("An error occured. Please choose a new username!");
+			new Alert(AlertMessage.errorUsername);
 		} else {
-			new Alert("Username existed. Please choose a new username!");
+			new Alert(AlertMessage.dupUsername);
 		}
 	}
 

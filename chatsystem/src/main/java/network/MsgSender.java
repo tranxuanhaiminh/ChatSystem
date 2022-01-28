@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import entities.Message;
+import ressources.AlertMessage;
 import userinterface.Alert;
 
 public class MsgSender {
@@ -22,7 +23,7 @@ public class MsgSender {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			new Alert("Error : Please close the program !\n");
+			new Alert(AlertMessage.error);
 		}
 	}
 
@@ -38,7 +39,7 @@ public class MsgSender {
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-			new Alert("Error : Please close the program !\n");
+			new Alert(AlertMessage.error);
 		}
 	}
 	
@@ -52,7 +53,7 @@ public class MsgSender {
 			// Socket is already shutdown
 		} catch (IOException e) {
 			e.printStackTrace();
-			new Alert("Error : Please close the program !\n");
+			new Alert(AlertMessage.error);
 		}
 	}
 }

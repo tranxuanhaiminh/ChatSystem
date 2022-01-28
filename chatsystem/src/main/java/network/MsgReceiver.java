@@ -8,6 +8,7 @@ import chatsystem.ChatSystem;
 import entities.Conversation;
 import entities.ConversationList;
 import entities.Message;
+import ressources.AlertMessage;
 import service.TCPService;
 import userinterface.Alert;
 
@@ -54,7 +55,7 @@ public class MsgReceiver extends Thread {
 
 		} catch (IOException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			new Alert("Error : Please close this chat window ! ");
+			new Alert(AlertMessage.error);
 		}
 	}
 

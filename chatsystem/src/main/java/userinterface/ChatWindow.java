@@ -19,6 +19,7 @@ import entities.Conversation;
 import entities.ConversationList;
 import entities.Message;
 import network.UDPSend;
+import ressources.AlertMessage;
 import ressources.Interfacedisplay;
 import service.Action;
 
@@ -173,9 +174,6 @@ public class ChatWindow extends javax.swing.JFrame {
 	 * @param offset
 	 */
 	public void loadHistory(Contact contact, int limit, int offset) {
-
-		System.out.println("Loading the chat history\n");
-
 		ResultSet rs = Databasecon.getChatHistory(contact.getIpaddress().getHostAddress(), limit, offset);
 		System.out.println(rs);
 		try {
@@ -187,14 +185,14 @@ public class ChatWindow extends javax.swing.JFrame {
 					msg_display.setCaretPosition(0);
 				} catch (BadLocationException e) {
 					e.printStackTrace();
-					new Alert("Error : Please close the program!\n");
+					new Alert(AlertMessage.error);
 
 				}
 
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			new Alert("Error : Please close the program!\n");
+			new Alert(AlertMessage.error);
 		}
 		bar = jScrollPane1.getVerticalScrollBar();
 		bar.setValue(bar.getMaximum());

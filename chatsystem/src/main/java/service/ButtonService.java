@@ -13,6 +13,7 @@ import entities.Message;
 import network.IpAddress;
 import network.TCPListener;
 import network.UDPSend;
+import ressources.AlertMessage;
 import ressources.Interfacedisplay;
 import userinterface.Alert;
 import userinterface.ChatWindow;
@@ -33,11 +34,11 @@ public class ButtonService {
 
 		// If the username field is empty
 		if (pseudo.equals("")) {
-			new Alert("Please choose an username");
+			new Alert(AlertMessage.emptyUsername);
 		}
 		// If the username is duplicated
 		else if (ContactList.isDupPseudo(pseudo)) {
-			new Alert("Duplicate username");
+			new Alert(AlertMessage.dupUsername);
 		}
 		// If the username is valid
 		else {
@@ -84,7 +85,7 @@ public class ButtonService {
 
 		// If the user is not connected
 		if (ConversationList.findConv(frame.getContact().getIpaddress()) == null) {
-			new Alert("This user is not connected ! You can't send messages !");
+			new Alert(AlertMessage.offlineUser);
 		}
 
 		// If the chat is not empty
@@ -152,7 +153,7 @@ public class ButtonService {
 					try {
 						MainMenu.modUser(contact.getPseudo(), contact.getPseudo(), false);
 					} catch (NullPointerException e) {}
-					new Alert("This user has disconnected");
+					new Alert(AlertMessage.disconnectedUser);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

@@ -18,4 +18,6 @@ public class Interfacedisplay {
 	public static String tableusercol = "Username";	
 
 	public static String sendbutton = "Send";
+
+	public static String confirmAlertButton = "Ok";
 }

@@ -219,8 +219,21 @@ public class MainMenu extends javax.swing.JFrame {
 					new ImageIcon(img).getImage().getScaledInstance(10, 10, java.awt.Image.SCALE_SMOOTH));
 			imgicon.setDescription(img);
 
-			// Modify user's state
-			model.setValueAt(imgicon, i, 0);
+			model.removeRow(i);
+
+			if (connecting) {
+				// Find the table's row containing the last connected user
+				for (i = 0; i < jTable1.getRowCount(); i++) {
+					if (!img.equals(model.getValueAt(i, 0).toString())) {
+						break;
+					}
+				}
+				// Add user
+				model.insertRow(i, new Object[] { imgicon, newname });
+			} else {
+				// Add user to the bottom of the table
+				model.addRow(new Object[] { imgicon, newname });
+			}
 		}
 
 		if (!oldname.equals(newname)) {

@@ -53,10 +53,8 @@ public class Connect extends javax.swing.JFrame {
 		verify = new Action();
 		
         buttonSubmit.setText(buttonText);
-        buttonSubmit.setName("buttonSubmit");
         buttonSubmit.addActionListener(verify);
 
-        enterPseudo.setName("enterPseudo");
         enterPseudo.addActionListener(verify);
         
         getRootPane().setDefaultButton(buttonSubmit);
