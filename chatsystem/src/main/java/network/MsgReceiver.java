@@ -1,93 +1,62 @@
 package network;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
-import chatsystem.Conversation;
-import chatsystem.Message;
-
+import chatsystem.ChatSystem;
+import entities.Conversation;
+import entities.ConversationList;
+import entities.Message;
+import ressources.AlertMessage;
+import service.TCPService;
 import userinterface.Alert;
 
+public class MsgReceiver extends Thread {
 
-public class MsgReceiver extends Thread{
-	
+	/* Fields */
 	private Socket socketreceive;
-	private boolean running;
 	private ObjectInputStream in = null;
 	private Conversation conv;
-	private Databasecon dbcon = new Databasecon();
+	private Message message;
 
+	/* Constructor */
 	public MsgReceiver(Socket sock, Conversation conv) {
 		super();
-		this.socketreceive = sock;
+		socketreceive = sock;
 		this.conv = conv;
-		this.setRunning(true);
-		try {
-			in = new ObjectInputStream(socketreceive.getInputStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			new Alert("Error : Please close this chat window ! ").setVisible(true);
-		}
+		start();
 	}
 
 	public void run() {
 
-		System.out.println("The mess receiver starts for the user with the address : " 
-													+ socketreceive.getInetAddress() + " \n");
+		try {
 
-		Message mess = null;
-
-		while (running) {
-
-			try {
-				mess = (Message) in.readObject();
-				System.out.println("Received Message = " + mess + "\n");
-
-				if (conv.getChatw() != null) {
-					// displaying the message
-					conv.getChatw().addChatLine(mess, false);
+			// Set the Input to receive Message
+			in = new ObjectInputStream(socketreceive.getInputStream());
+			while (true) {
+				try {
+					// Waiting for new message
+					message = (Message) in.readObject();
+					
+					// Handle new message
+					ChatSystem.threadpool.submit(() -> TCPService.msgReceive(message, conv));
+				} catch (IOException e) {
+					// If the other end had closed output stream
+					break;
 				}
-
-				// adding to the chat history
-				dbcon.insertChat(conv.getInterlocutor().getIpaddress().getHostAddress(), mess.toString(),
-						mess.convertDateToFormat(), false);
-				System.out.println("Adding the msg sent to you by "
-						+ conv.getInterlocutor().getIpaddress().getHostAddress() + " to the chat history\n");
-
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
-				new Alert("Error : Please close this chat window ! ").setVisible(true);
-			} catch (EOFException e) {
-				//Do Nothing if the end of the ObjectInputStrem has been reached
-			}catch (IOException e) {
-				e.printStackTrace();
-				new Alert("Error : Please close this chat window ! ").setVisible(true);
 			}
 
-			mess = null;
+			// shut down output stream on this side
+			if (!socketreceive.isOutputShutdown()) {
+				socketreceive.shutdownOutput();
+				ConversationList.removeConv(conv);
+			}
 
+		} catch (IOException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			new Alert(AlertMessage.error);
 		}
-
-		try {
-			socketreceive.close();
-			in.close();
-			System.out.println("Receiver socket closed.\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-			new Alert("Error : Please close this chat window ! ").setVisible(true);
-
-		}
-	}
-
-	public boolean isRunning() {
-		return running;
-	}
-
-	public void setRunning(boolean go) {
-		this.running = go;
 	}
 
 }

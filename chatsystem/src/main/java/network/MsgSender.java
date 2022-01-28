@@ -1,71 +1,59 @@
 package network;
 
-
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
-import chatsystem.Message;
+import entities.Message;
+import ressources.AlertMessage;
 import userinterface.Alert;
 
-public class MsgSender /*extends Thread*/{ // on ne doit pas sortir du send sinon �a close la connexion; //ON FERME LE receiver d'abord D4ABORD
-	
+public class MsgSender {
+
+	/* Fields */
 	private Socket socketsend;
-	private boolean go;
 	private ObjectOutputStream out;
 
-	
+	/* Constructor */
 	public MsgSender(Socket socket) {
 		this.socketsend = socket;
-		this.setGo(true);
 		try {
 			out = new ObjectOutputStream(socketsend.getOutputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			new Alert("Error : Please close the program !\n").setVisible(true);
+			new Alert(AlertMessage.error);
 		}
+	}
 
-	}
+	/* Methods */
 	
-	public void send(Message msg) {
-		
+	/**
+	 * Send msg
+	 * @param msg
+	 */
+	public void send(Message msg) throws SocketException {
 		try {
-			if (!socketsend.isOutputShutdown()) {
-				System.out.println("The message is sent.\n");
-				out.writeObject(msg);
-				out.flush();
-			} else {
-				System.out.println("Cannot send the msg because the socket output is shutdown.\n");
-			}
-			
-		} catch (IOException e){
-			e.printStackTrace();
-			new Alert("Error : Please close the program !\n").setVisible(true);
-		}
-	}
-	
-	public void closeSend() {
-		try {
-			socketsend.close();
-			out.close();
-			System.out.println("Sending socket closed\n");
+			out.writeObject(msg);
+			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-			new Alert("Error : Please close the program !\n").setVisible(true);
+			new Alert(AlertMessage.error);
 		}
 	}
 	
-	public boolean isGo() {
-		return go;
+	/**
+	 * Start closing the TCP connection by closing the output stream
+	 */
+	public void closeSend() {
+		try {
+			socketsend.shutdownOutput();
+		} catch (SocketException e) { 
+			// Socket is already shutdown
+		} catch (IOException e) {
+			e.printStackTrace();
+			new Alert(AlertMessage.error);
+		}
 	}
-
-	public void setGo(boolean go) {
-		this.go = go;
-	}
-	
-	public Socket getSocketsend() {
-		return socketsend;
-	}
-
 }

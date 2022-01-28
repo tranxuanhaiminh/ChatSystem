@@ -2,9 +2,7 @@ package ressources;
 
 public class Interfacedisplay {
 
-	/**
-	 * Properties
-	 */
+	/* Properties */
 	public static String connecttitle= "Choose your username";
 
 	public static String usernamelabel = "Username";
@@ -20,4 +18,6 @@ public class Interfacedisplay {
 	public static String tableusercol = "Username";	
 
 	public static String sendbutton = "Send";
+
+	public static String confirmAlertButton = "Ok";
 }
